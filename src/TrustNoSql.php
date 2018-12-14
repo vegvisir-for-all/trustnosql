@@ -2,4 +2,131 @@
 
 namespace Vegvisir\TrustNoSql;
 
-class TrustNoSql {}
+/**
+ * This class is the main entry point of TrustNoSql. Usually this the interaction
+ * with this class will be done through the Laratrust Facade
+ *
+ * @license GPL-3.0-or-later
+ */
+class TrustNoSql {
+
+    /**
+     * Laravel application.
+     *
+     * @var \Illuminate\Foundation\Application
+     */
+    public $app;
+
+    /**
+     * Create a new confide instance.
+     *
+     * @param \Illuminate\Foundation\Application
+     * @return void
+     */
+    public function __construct($app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * Get the currently authenticated user or null.
+     *
+     * @return \Illuminate\Auth\UserInterface|null
+     */
+    public function user()
+    {
+        return $this->app->auth->user();
+    }
+
+    /**
+     * Checks if the current user has a role by its name.
+     *
+     * @param  string  $role  Role name.
+     * @return bool
+     */
+    public function hasRole($role, $team = null, $requireAll = false)
+    {
+        if ($user = $this->user()) {
+            return $user->hasRole($role, $team, $requireAll);
+        }
+        return false;
+    }
+
+    /**
+     * Check if the current user has a permission by its name.
+     *
+     * @param  string  $permission Permission string.
+     * @return bool
+     */
+    public function can($permission, $team = null, $requireAll = false)
+    {
+        if ($user = $this->user()) {
+            return $user->hasPermission($permission, $team, $requireAll);
+        }
+        return false;
+    }
+
+    /**
+     * Check if the current user has a role or permission by its name.
+     *
+     * @param  array|string  $roles            The role(s) needed.
+     * @param  array|string  $permissions      The permission(s) needed.
+     * @param  array  $options                 The Options.
+     * @return bool
+     */
+    public function ability($roles, $permissions, $team = null, $options = [])
+    {
+        if ($user = $this->user()) {
+            return $user->ability($roles, $permissions, $team, $options);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the user has access to the thing.
+     *
+     * @param  Object  $thing
+     * @param  string  $foreignKeyName
+     * @return boolean
+     */
+    public function canAccess($thing, $foreignKeyName = null)
+    {
+        if ($user = $this->user()) {
+            return $user->canAccess($thing, $foreignKeyName);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the user has some role and if he can access the thing.
+     *
+     * @param  string|array  $role
+     * @param  Object  $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function hasRoleAndCanAccess($role, $thing, $options = [])
+    {
+        if ($user = $this->user()) {
+            return $user->hasRoleAndCanAccess($role, $thing, $options);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the user can do something and if he can access the thing.
+     *
+     * @param  string|array  $permission
+     * @param  Object  $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function canAndCanAccess($permission, $thing, $options = [])
+    {
+        if ($user = $this->user()) {
+            return $user->canAndCanAccess($permission, $thing, $options);
+        }
+        return false;
+    }
+
+}
