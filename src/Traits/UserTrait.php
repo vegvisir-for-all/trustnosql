@@ -7,7 +7,9 @@ trait UserTrait
 
     public function roles()
     {
+        $roles = $this->belongsTo(\Vegvisir\TrustNoSql\Models\Role::class);
 
+        return $roles;
     }
 
     public function rolesTeams()
