@@ -2,4 +2,31 @@
 
 namespace Vegvisir\TrustNoSql\Traits;
 
-trait UserTrait {}
+trait UserTrait {
+
+    public function roles()
+    {
+
+    }
+
+    public function rolesTeams()
+    {
+
+    }
+
+    public function permissions()
+    {
+
+    }
+
+    public function hasRole()
+    {
+
+    }
+
+    public function hasPermission()
+    {
+
+    }
+
+}
