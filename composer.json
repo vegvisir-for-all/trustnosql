@@ -1,0 +1,33 @@
+{
+    "name": "vegvisir/trustnosql",
+    "autoload": {
+        "psr-4": {
+            "Vegvisir\\TrustNoSql\\": "src/"
+        }
+    },
+    "description": "Laravel role/permission package working with MongoDB database",
+    "keywords": [
+        "acl", "authorization", "laravel","trustnosql","permissions","php","roles","teams","nosql","mongodb"
+    ],
+    "type": "library",
+    "require": {
+        "jenssegers/mongodb": "^3.4",
+        "php": "^7.0"
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Marek Ognicki",
+            "email": "marek@vegvisir.pl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel":{
+            "providers": [
+                "Vegvisir\\TrustNoSql\\TrustNoSqlServiceProvider"
+            ]
+        }
+}
+}
