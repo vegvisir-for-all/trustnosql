@@ -2,7 +2,8 @@
 
 namespace Vegvisir\TrustNoSql\Traits;
 
-trait AccessibleTrait {
+trait AccessibleTrait
+{
 
     /**
      * Override function to make more complex accessibility request. Default
