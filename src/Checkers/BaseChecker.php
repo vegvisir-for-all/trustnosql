@@ -18,7 +18,6 @@ class BaseChecker
      * Role model used for checking.
      *
      * @var \Jenssegers\Mongodb\Eloquent\Model
-     * @return void
      */
     protected $model;
 
@@ -32,7 +31,8 @@ class BaseChecker
     /**
      * Creates new instance.
      *
-     * @param $model \Jenssegers\Mongodb\Eloquent\Model Role model used for checking
+     * @param \Jenssegers\Mongodb\Eloquent\Model $model Role model used for checking
+     * @return void
      */
     public function __construct(Model $model)
     {
