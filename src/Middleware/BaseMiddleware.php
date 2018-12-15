@@ -2,4 +2,4 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
-class Ability extends Base {}
+class BaseMiddleware {}

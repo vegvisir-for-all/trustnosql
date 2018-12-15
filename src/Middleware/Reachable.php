@@ -2,4 +2,4 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
-class Base {}
+class Reachable extends BaseMiddleware {}

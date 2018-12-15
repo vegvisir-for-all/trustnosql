@@ -2,16 +2,16 @@
 
 namespace Vegvisir\TrustNoSql\Traits;
 
-trait AccessibleTrait
+trait ReachableTrait
 {
 
     /**
-     * Override function to make more complex accessibility request. Default
+     * Override function to make more complex reachabilty request. Default true
      *
      * @param $user
      * @return bool Default true (thanks to AccessibleTrait)
      */
-    public function isAccessibleFor($user)
+    public function isReachableBy($user)
     {
         return true;
     }

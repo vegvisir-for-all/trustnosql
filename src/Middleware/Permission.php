@@ -2,4 +2,4 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
-class Permission extends Base {}
+class Permission extends BaseMiddleware {}
