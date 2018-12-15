@@ -9,6 +9,7 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Models\Role;
 
 class Create extends BaseCommand
 {
