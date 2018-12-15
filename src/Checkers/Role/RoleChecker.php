@@ -109,7 +109,11 @@ class RoleChecker extends BaseChecker {
          * List of all permissions for a namespace ([city:view, city:update, city:create, ...])
          */
         $availablePermissions = Permission::getPermissionsInNamespace($permissionExploded[0]);
-        $rolePermissions = $this->model->getRoleCurrentPermissions();
+
+        /**
+         * Current permissions for a role, with a given namespace
+         */
+        $rolePermissions = $this->model->getRoleCurrentPermissions($permissionExploded[0]);
 
         /**
          * Since $availablePermissions and $rolePermissions must have the very same values, we use

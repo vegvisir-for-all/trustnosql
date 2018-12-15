@@ -54,7 +54,7 @@ trait RoleTrait {
         $permissionsCollection = $this->permissions();
 
         if($namespace !== null) {
-            $permissionsCollection = $permissionsCollection->where('name', 'like', $namespace . ':');
+            $permissionsCollection = $permissionsCollection->where('name', 'like', $namespace . ':%');
         }
 
         return collect($permissionsCollection->get())->map(function ($item, $key) {
