@@ -8,11 +8,13 @@ use Vegvisir\TrustNoSql\Helpers\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
 use Vegvisir\TrustNoSql\Models\Team;
-use Vegvisir\TrustNoSql\Traits\Commands\ErrorTrait;
-use Vegvisir\TrustNoSql\Traits\Commands\SuccessTrait;
+use Vegvisir\TrustNoSql\Traits\Commands\ErrorCommandTrait;
+use Vegvisir\TrustNoSql\Traits\Commands\SuccessCommandTrait;
 
 class BaseCommand extends Command
 {
+
+    use ErrorCommandTrait, SuccessCommandTrait;
 
     protected function getPermission($permissionName, $shouldExist)
     {
@@ -93,7 +95,7 @@ class BaseCommand extends Command
     protected function isTeamFunctionalityOn($shouldBeOn)
     {
         // Checking if team functionality is on
-        if (Config::get('laratrust.use_teams')) {
+        if (Config::get('trustnosql.teams.use_teams')) {
 
             if(!$shouldBeOn) {
                 $this->noTeamFunctionality();
@@ -101,6 +103,7 @@ class BaseCommand extends Command
             }
 
             return true;
+
         } else {
 
             if($shouldBeOn) {
@@ -109,6 +112,7 @@ class BaseCommand extends Command
             }
 
             return true;
+
         }
     }
 }
