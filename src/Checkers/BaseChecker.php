@@ -9,6 +9,7 @@ namespace Vegvisir\TrustNoSql\Checkers;
  * @license GPL-3.0-or-later
  */
 use Jenssegers\Mongodb\Eloquent\Model;
+use Vegvisir\TrustNoSql\Helpers\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class BaseChecker
@@ -37,8 +38,7 @@ class BaseChecker
     public function __construct(Model $model)
     {
         $this->model = $model;
-
-        $this->wildcards = Permission::getWildcards();
+        $this->wildcards = Helper::getPermissionWildcards();
     }
 
 }

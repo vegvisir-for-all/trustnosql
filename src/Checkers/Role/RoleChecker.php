@@ -4,6 +4,7 @@ namespace Vegvisir\TrustNoSql\Checkers\Role;
 
 use Vegvisir\TrustNoSql\Checkers\BaseChecker;
 use Vegvisir\TrustNoSql\Exceptions\Permission\NoWildcardPermissionException;
+use Vegvisir\TrustNoSql\Helpers\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
@@ -19,11 +20,9 @@ class RoleChecker extends BaseChecker {
         }
 
         /**
-         * Changing string $permissions to array $permissions
+         * Get array of permissions
          */
-        if(!is_array($permissions)) {
-            $permissions = explode(',', $permissions);
-        }
+        $permissions = Helper::getPermissionsArray($permissions);
 
         foreach($permissions as $permissionName)
         {

@@ -10,6 +10,9 @@ namespace Vegvisir\TrustNoSql\Traits;
  */
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Checkers\CheckManager;
+use Vegvisir\TrustNoSql\Exceptions\Permission\AttachPermissionsException;
+use Vegvisir\TrustNoSql\Exceptions\Permission\DetachPermissionsException;
+use Vegvisir\TrustNoSql\Helpers\Helper;
 
 trait RoleTrait {
 
@@ -34,7 +37,7 @@ trait RoleTrait {
     }
 
     /**
-     * Retrieves an array of Role's permission names, excluding wildcard permissions
+     * Retrieves an array of Role's permission names
      *
      * @return array
      */
@@ -73,5 +76,71 @@ trait RoleTrait {
     {
         return $this->roleChecker()->currentRoleHasPermissions($permissions, $requireAll);
     }
+
+    /**
+     * Syncs permission(s) to a Role.
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return \Vegvisir\TrustNoSql\Models\Role
+     */
+    public function syncPermissions($permissions)
+    {
+
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+        $changes = $this->permissions()->sync($permissionsKeys);
+
+        $this->flushCache();
+        $this->fireEvent('permissions.synced', [$this, $changes]);
+
+        return $this;
+
+    }
+
+    /**
+     * Attaches permission(s) to a Role
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return void
+     */
+    public function attachPermissions($permissions)
+    {
+
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+
+        try {
+            $this->permissions()->attach($permissionsKeys);
+        } catch (\Exception $e) {
+            throw new AttachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent('permissions.attached', [$this, $permissionsKeys]);
+
+        return $this;
+    }
+
+    /**
+     * Detaches permission(s) from a Role
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return void
+     */
+    public function detachPermissions($permissions)
+    {
+
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+
+        try {
+            $this->permissions()->detach($permissionsKeys);
+        } catch (\Exception $e) {
+            throw new DetachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent('permissions.attached', [$this, $permissionsKeys]);
+
+        return $this;
+    }
+
 
 }
