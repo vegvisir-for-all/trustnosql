@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Commands;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helpers\Helper;
@@ -16,6 +22,13 @@ class BaseCommand extends Command
 
     use ErrorCommandTrait, SuccessCommandTrait;
 
+    /**
+     * Function retrieves permission by its name. It can output an error message
+     * if existence or non-existence of the permission is undesirable.
+     *
+     * @param string $permissionName Name of the permission.
+     * @param bool $shouldExist Set to true if a permission should exist.
+     */
     protected function getPermission($permissionName, $shouldExist)
     {
         $permission = Permission::where('name', $permissionName)->first();
@@ -35,6 +48,13 @@ class BaseCommand extends Command
         return $permission;
     }
 
+    /**
+     * Function retrieves role by its name. It can output an error message
+     * if existence or non-existence of the role is undesirable.
+     *
+     * @param string $roleName Name of the role.
+     * @param bool $shouldExist Set to true if a permission should exist.
+     */
     protected function getRole($roleName, $shouldExist)
     {
         $role = Role::where('name', $roleName)->first();
@@ -54,6 +74,13 @@ class BaseCommand extends Command
         return $role;
     }
 
+    /**
+     * Function retrieves team by its name. It can output an error message
+     * if existence or non-existence of the team is undesirable.
+     *
+     * @param string $teamName Name of the team.
+     * @param bool $shouldExist Set to true if a permission should exist.
+     */
     protected function getTeam($teamName, $shouldExist)
     {
         $team = Team::where('name', $teamName)->first();
@@ -73,6 +100,13 @@ class BaseCommand extends Command
         return $team;
     }
 
+    /**
+     * Function retrieves user by its email. It can output an error message
+     * if existence or non-existence of the user is undesirable.
+     *
+     * @param string $email E-mail address of the user.
+     * @param bool $shouldExist Set to true if a permission should exist.
+     */
     protected function getUser($email, $shouldExist)
     {
         $userModel = Helper::getUserModel();
@@ -92,6 +126,10 @@ class BaseCommand extends Command
         return $user;
     }
 
+    /**
+     * Function checks whether team functionality is set to on in the configs.
+     * It can output an error message if current settings are undesirable.
+     */
     protected function isTeamFunctionalityOn($shouldBeOn)
     {
         // Checking if team functionality is on

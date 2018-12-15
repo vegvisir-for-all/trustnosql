@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Checkers\Role;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Vegvisir\TrustNoSql\Checkers\BaseChecker;
 use Vegvisir\TrustNoSql\Exceptions\Permission\NoWildcardPermissionException;
 use Vegvisir\TrustNoSql\Helpers\Helper;
@@ -9,6 +15,12 @@ use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
 
+    /**
+     * Checks whether current role has given permissions.
+     *
+     * @param string|array $permissions Array of permission names or comma-separated string
+     * @param bool $requireAll If set to true, role must have all of the given permissions
+     */
     public function currentRoleHasPermissions($permissions, $requireAll)
     {
 
@@ -45,6 +57,12 @@ class RoleChecker extends BaseChecker {
         return false;
     }
 
+    /**
+     * Checks whether Role has a single permission, by its name.
+     *
+     * @param string $permission Permission name.
+     * @return bool
+     */
     protected function currentRoleCheckSinglePermission($permission)
     {
 
@@ -94,8 +112,15 @@ class RoleChecker extends BaseChecker {
         return $hasPermission;
     }
 
+    /**
+     * Checks whether a Role has appropriate permissions, pointed by a wildcard permission.
+     *
+     * @param string $permission Wildcard permission name
+     * @return bool
+     */
     protected function currentRoleCheckSingleWildcardPermission($permission)
     {
+
         $permissionExploded = explode(':', $permission);
         $namespace = $permissionExploded[0];
 
@@ -119,7 +144,6 @@ class RoleChecker extends BaseChecker {
          * array_diff should be empty.
          */
         return empty(array_diff($availablePermissions, $rolePermissions));
-
 
     }
 
