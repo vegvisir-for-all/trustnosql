@@ -3,6 +3,8 @@
 namespace Vegvisir\TrustNoSql\Checkers\Role;
 
 use Vegvisir\TrustNoSql\Checkers\BaseChecker;
+use Vegvisir\TrustNoSql\Exceptions\Permission\NoWildcardPermissionException;
+use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
 
@@ -98,22 +100,21 @@ class RoleChecker extends BaseChecker {
     protected function currentRoleCheckSingleWildcardPermission($permission)
     {
         $permissionExploded = explode(':', $permission);
+        $namespace = $permissionExploded[0];
 
         if(!in_array($permissionExploded[1], $this->wildcards)) {
-            // Permission is not a wildcard permission. Should throw an exception
-
-            return;
+            throw new NoWildcardPermissionException($permission);
         }
 
         /**
          * List of all permissions for a namespace ([city:view, city:update, city:create, ...])
          */
-        $availablePermissions = Permission::getPermissionsInNamespace($permissionExploded[0]);
+        $availablePermissions = Permission::getPermissionsInNamespace($namespace);
 
         /**
          * Current permissions for a role, with a given namespace
          */
-        $rolePermissions = $this->model->getRoleCurrentPermissions($permissionExploded[0]);
+        $rolePermissions = $this->model->getRoleCurrentPermissions($namespace);
 
         /**
          * Since $availablePermissions and $rolePermissions must have the very same values, we use
