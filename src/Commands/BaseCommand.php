@@ -10,7 +10,7 @@ namespace Vegvisir\TrustNoSql\Commands;
  */
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Vegvisir\TrustNoSql\Helpers\Helper;
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
 use Vegvisir\TrustNoSql\Models\Team;

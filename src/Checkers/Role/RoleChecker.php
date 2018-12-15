@@ -8,9 +8,9 @@ namespace Vegvisir\TrustNoSql\Checkers\Role;
  *
  * @license GPL-3.0-or-later
  */
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Checkers\BaseChecker;
 use Vegvisir\TrustNoSql\Exceptions\Permission\NoWildcardPermissionException;
-use Vegvisir\TrustNoSql\Helpers\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {

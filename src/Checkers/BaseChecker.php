@@ -9,7 +9,7 @@ namespace Vegvisir\TrustNoSql\Checkers;
  * @license GPL-3.0-or-later
  */
 use Jenssegers\Mongodb\Eloquent\Model;
-use Vegvisir\TrustNoSql\Helpers\Helper;
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class BaseChecker

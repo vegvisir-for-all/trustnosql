@@ -9,10 +9,10 @@ namespace Vegvisir\TrustNoSql\Traits;
  * @license GPL-3.0-or-later
  */
 use Illuminate\Support\Facades\Config;
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Checkers\CheckManager;
 use Vegvisir\TrustNoSql\Exceptions\Permission\AttachPermissionsException;
 use Vegvisir\TrustNoSql\Exceptions\Permission\DetachPermissionsException;
-use Vegvisir\TrustNoSql\Helpers\Helper;
 
 trait RoleTrait {
 
