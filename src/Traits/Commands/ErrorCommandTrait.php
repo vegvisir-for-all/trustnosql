@@ -12,6 +12,23 @@ trait ErrorCommandTrait
 {
 
     /**
+     * Outputs an error message, and if in development environment, add exception message
+     *
+     * @param string $message Message for the end-user
+     * @param string $exceptionMsg (Optional) Thrown exception message (for development purposes)
+     */
+    protected function outputError($message, $exceptionMsg = null)
+    {
+        //if(env('APP_ENV') == 'local' && env('APP_DEBUG')) {
+            if($exceptionMsg !== null) {
+                $message .= ' (' . $exceptionMsg . ')';
+            }
+        //}
+
+        return $this->error($message);
+    }
+
+    /**
      * Outputs a does-not-exist error message.
      *
      * @param string $what Resource type
@@ -19,7 +36,7 @@ trait ErrorCommandTrait
      */
     protected function doesNotExist($what, $name)
     {
-        return $this->error("The $what '$name' does not exist. Sorry :(");
+        return $this->outputError("The $what '$name' does not exist. Sorry :(");
     }
 
     /**
@@ -30,7 +47,7 @@ trait ErrorCommandTrait
      */
     protected function alreadyExists($what, $name)
     {
-        return $this->error("The $what '$name' already exists. Sorry :(");
+        return $this->outputError("The $what '$name' already exists. Sorry :(");
     }
 
     /**
@@ -50,7 +67,7 @@ trait ErrorCommandTrait
             $teamInfo = " within '$teamName' team";
         }
 
-        return $this->error("The $what '$whatName' is not attached to $whatTo '$whatToName'$teamInfo. Sorry :(");
+        return $this->outputError("The $what '$whatName' is not attached to $whatTo '$whatToName'$teamInfo. Sorry :(");
     }
 
     /**
@@ -70,7 +87,7 @@ trait ErrorCommandTrait
             $teamInfo = " on '$teamName' team";
         }
 
-        return $this->error("The $what '$whatName' is already attached to $whatTo '$whatToName'$teamInfo. Sorry :(");
+        return $this->outputError("The $what '$whatName' is already attached to $whatTo '$whatToName'$teamInfo. Sorry :(");
     }
 
     /**
@@ -78,20 +95,22 @@ trait ErrorCommandTrait
      *
      * @param string $what Resource being created type
      * @param string $whatName Resource being created name
+     * @param string $exceptionMsg (Optional) Thrown exception message (for development purposes)
      */
-    protected function errorCreating($what, $whatName)
+    protected function errorCreating($what, $whatName, $exceptionMsg = null)
     {
-        return $this->error("Error creating $what '$whatName'. Sorry :(");
+        return $this->outputError("Error creating $what '$whatName'. Sorry :(", $exceptionMsg);
     }
     /**
      * Outputs a deletion error message.
      *
      * @param string $what Resource being created type
      * @param string $whatName Resource being created name
+     * @param string $exceptionMsg (Optional) Thrown exception message (for development purposes)
      */
-    protected function errorDeleting($what, $whatName)
+    protected function errorDeleting($what, $whatName, $exceptionMsg = null)
     {
-        return $this->error("Error deleting $what '$whatName'. Sorry :(");
+        return $this->outputError("Error deleting $what '$whatName'. Sorry :(", $exceptionMsg);
     }
 
     /**
@@ -102,8 +121,9 @@ trait ErrorCommandTrait
      * @param string $whatTo Resource being attached to type
      * @param string $whatToName Resource being attached to name
      * @param string $teamName (Optional) Team name
+     * @param string $exceptionMsg (Optional) Thrown exception message (for development purposes)
      */
-    protected function errorAttaching($what, $whatName, $whatTo, $whatToName, $teamName = null)
+    protected function errorAttaching($what, $whatName, $whatTo, $whatToName, $teamName = null, $exceptionMsg = null)
     {
         $teamInfo = '';
 
@@ -111,7 +131,7 @@ trait ErrorCommandTrait
             $teamInfo = " within '$teamName' team";
         }
 
-        return $this->error("Error attaching $what '$whatName' to $whatTo '$whatToName'$teamInfo. Sorry :(");
+        return $this->outputError("Error attaching $what '$whatName' to $whatTo '$whatToName'$teamInfo. Sorry :(", $exceptionMsg);
     }
 
     /**
@@ -122,8 +142,9 @@ trait ErrorCommandTrait
      * @param string $whatTo Resource being attached to type
      * @param string $whatToName Resource being attached to name
      * @param string $teamName (Optional) Team name
+     * @param string $exceptionMsg (Optional) Thrown exception message (for development purposes)
      */
-    protected function errorDetaching($what, $whatName, $whatTo, $whatToName, $teamName = null)
+    protected function errorDetaching($what, $whatName, $whatTo, $whatToName, $teamName = null, $exceptionMsg = nul)
     {
         $teamInfo = '';
 
@@ -131,7 +152,7 @@ trait ErrorCommandTrait
             $teamInfo = " within '$teamName' team";
         }
 
-        return $this->error("Error detaching $what '$whatName' from $whatTo '$whatToName'$teamInfo. Sorry :(");
+        return $this->outputError("Error detaching $what '$whatName' from $whatTo '$whatToName'$teamInfo. Sorry :(", $exceptionMsg);
     }
 
     /**
@@ -139,7 +160,7 @@ trait ErrorCommandTrait
      */
     protected function noTeamFunctionality()
     {
-        return $this->error('Team functionality is off (and it should be). Set `teams.use_teams` in `config/trustnosql.php` to `true` to turn it on');
+        return $this->outputError('Team functionality is off (and it should be). Set `teams.use_teams` in `config/trustnosql.php` to `true` to turn it on');
     }
 
     /**
@@ -147,7 +168,7 @@ trait ErrorCommandTrait
      */
     protected function erroTeamFunctionality()
     {
-        return $this->error('Team functionality is on (and it shouldn\'t be). Set `teams.use_teams` in `config/trustnosql.php` to `false` to turn it off');
+        return $this->outputError('Team functionality is on (and it shouldn\'t be). Set `teams.use_teams` in `config/trustnosql.php` to `false` to turn it off');
     }
 
 }

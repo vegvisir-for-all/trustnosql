@@ -56,7 +56,7 @@ class Create extends BaseCommand
 
             $this->successCreating('role', $roleName);
         } catch (\Exception $e) {
-            $this->errorCreating('role', $roleName);
+            $this->errorCreating('role', $roleName, $e->getMessage());
         }
     }
 }

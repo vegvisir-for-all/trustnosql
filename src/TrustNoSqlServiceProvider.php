@@ -9,9 +9,12 @@ namespace Vegvisir\TrustNoSql;
  * @license GPL-3.0-or-later
  */
 use Illuminate\Support\ServiceProvider;
+use Vegvisir\TrustNoSql\Traits\Providers\CommandsProviderTrait;
 
 class TrustNoSqlServiceProvider extends ServiceProvider
 {
+
+    use CommandsProviderTrait;
 
     public function boot()
     {
@@ -20,7 +23,7 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function register()
     {
-
+        $this->registerRoleCommands();
     }
 
 }

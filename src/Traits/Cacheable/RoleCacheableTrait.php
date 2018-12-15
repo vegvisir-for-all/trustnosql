@@ -17,7 +17,7 @@ trait RoleCacheableTrait {
      * @param string|null $namespace Namespace of permissions to be retrieved
      * @return array
      */
-    public function getRoleCachedPermissions($namespace) {}
+    public function getRoleCachedPermissions($namespace = null) {}
 
     /**
      * Flush the role's cache.
