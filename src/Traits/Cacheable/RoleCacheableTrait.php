@@ -12,11 +12,18 @@ namespace Vegvisir\TrustNoSql\Traits\Cacheable;
 trait RoleCacheableTrait {
 
     /**
-     * Retrieves (from cache) an array of Role's permission names, excluding wildcard permissions
+     * Retrieves (from cache) an array of Role's permission names
      *
      * @param string|null $namespace Namespace of permissions to be retrieved
      * @return array
      */
     public function getRoleCachedPermissions($namespace) {}
+
+    /**
+     * Flush the role's cache.
+     *
+     * @return void
+     */
+    public function flushCache() {}
 
 }

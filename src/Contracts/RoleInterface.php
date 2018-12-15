@@ -65,4 +65,11 @@ interface RoleInterface {
      */
     public function detachPermissions($permissions);
 
+    /**
+     * Flush the role's cache.
+     *
+     * @return void
+     */
+    public function flushCache();
+
 }

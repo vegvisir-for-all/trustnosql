@@ -4,6 +4,7 @@ namespace Vegvisir\TrustNoSql\Helpers;
 
 use Vegvisir\TrustNoSql\Helpers\PermissionHelper;
 use Vegvisir\TrustNoSql\Helpers\RoleHelper;
+use Vegvisir\TrustNoSql\Helpers\UserHelper;
 
 class Helper
 {
@@ -36,6 +37,11 @@ class Helper
     public static function getRolesArray($roles)
     {
         return RoleHelper::getArray($roles);
+    }
+
+    public static function getUserModel()
+    {
+        return UserHelper::getModel();
     }
 
     protected static function getArray($rolesOrPermissions)
