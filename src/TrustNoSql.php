@@ -89,10 +89,10 @@ class TrustNoSql {
      * @param  string  $foreignKeyName
      * @return boolean
      */
-    public function canAccess($thing, $foreignKeyName = null)
+    public function reaches($thing, $foreignKeyName = null)
     {
         if ($user = $this->user()) {
-            return $user->canAccess($thing, $foreignKeyName);
+            return $user->reaches($thing, $foreignKeyName);
         }
         return false;
     }
@@ -105,10 +105,10 @@ class TrustNoSql {
      * @param  array  $options
      * @return boolean
      */
-    public function hasRoleAndCanAccess($role, $thing, $options = [])
+    public function hasRoleAndReaches($role, $thing, $options = [])
     {
         if ($user = $this->user()) {
-            return $user->hasRoleAndCanAccess($role, $thing, $options);
+            return $user->hasRoleAndReaches($role, $thing, $options);
         }
         return false;
     }
@@ -121,10 +121,10 @@ class TrustNoSql {
      * @param  array  $options
      * @return boolean
      */
-    public function canAndCanAccess($permission, $thing, $options = [])
+    public function canAndReaches($permission, $thing, $options = [])
     {
         if ($user = $this->user()) {
-            return $user->canAndCanAccess($permission, $thing, $options);
+            return $user->canAndReaches($permission, $thing, $options);
         }
         return false;
     }
