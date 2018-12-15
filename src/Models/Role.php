@@ -28,6 +28,17 @@ class Role extends Model implements RoleInterface
     protected $collection = 'roles';
 
     /**
+     * Fillable fields of the model.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'display_name',
+        'description'
+    ];
+
+    /**
      * Creates new instance of the model
      *
      * @param array $attributes

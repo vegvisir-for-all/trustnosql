@@ -38,7 +38,7 @@ class BaseCommand extends Command
                 $this->doesNotExist('permission', $permissionName);
                 return false;
             } else {
-                return false;
+                return true;
             }
         } elseif(!$shouldExist) {
             $this->alreadyExists('permission', $permissionName);
@@ -64,7 +64,7 @@ class BaseCommand extends Command
                 $this->doesNotExist('role', $roleName);
                 return false;
             } else {
-                return false;
+                return true;
             }
         } elseif(!$shouldExist) {
             $this->alreadyExists('role', $roleName);
@@ -90,7 +90,7 @@ class BaseCommand extends Command
                 $this->doesNotExist('team', $teamName);
                 return false;
             } else {
-                return false;
+                return true;
             }
         } elseif(!$shouldExist) {
             $this->alreadyExists('team', $teamName);
@@ -116,8 +116,9 @@ class BaseCommand extends Command
             if ($shouldExist) {
                 $this->doesNotExist('user', $email);
                 return false;
+            } else {
+                return true;
             }
-            return true;
         } elseif (!$shouldExist) {
             $this->alreadyExists('user', $email);
             return false;

@@ -43,7 +43,22 @@ class Create extends BaseCommand
      */
     public function handle()
     {
-        $roleName = $this->ask('Name of the role');
+
+        $keepAsking = true;
+
+        while($keepAsking) {
+            $roleName = $this->ask('Name of the role');
+
+            /**
+             * $keepAsking should change only when role doesn't exist
+             * It should NOT change when role exist (also, an error should be displayed)
+             */
+
+             if($this->getRole($roleName, false) == true) {
+                 $keepAsking = false;
+             }
+        }
+
         $displayName = $this->ask('Display name', false);
         $description = $this->ask('Description', false);
 
