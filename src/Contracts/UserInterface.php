@@ -6,24 +6,31 @@ interface UserInterface
 {
 
     /**
-     * Many-to-Many relations with Role.
+     * BelongsToMany relations with Role.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
      */
     public function roles();
 
     /**
-     * Many-to-Many relations with Permission.
+     * BelongsToMany relations with Permission.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
      */
     public function permissions();
+
+    /**
+     * BelongsToMany relations with Teams.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
+    public function teams();
 
     /**
      * Checks if the user has a role by its name.
      *
      * @param  string|array  $name       Role name or array of role names.
-     * @param  string|bool   $team      Team name or requiredAll roles.
+     * @param  string|bool   $team      Team name.
      * @param  bool          $requireAll All roles in the array are required.
      * @return bool
      */
@@ -33,38 +40,48 @@ interface UserInterface
      * Check if user has a permission by its name.
      *
      * @param  string|array  $permission Permission string or array of permissions.
-     * @param  string|bool  $team      Team name or requiredAll roles.
+     * @param  string|bool  $team      Team name.
      * @param  bool  $requireAll All roles in the array are required.
      * @return bool
      */
     public function hasPermission($permission, $team = null, $requireAll = false);
 
     /**
+     * Check if user is a member of team by its name.
+     *
+     * @param string|array $team Team name or array of teams names
+     * @param bool $checkAll User must be a member of all given teams.
+     * @return bool
+     */
+    public function memberOf($team, $checkAll = false);
+
+    /**
      * Checks role(s) and permission(s).
      *
      * @param  string|array  $roles       Array of roles or comma separated string
      * @param  string|array  $permissions Array of permissions or comma separated string.
-     * @param  string|bool  $team      Team name or requiredAll roles.
-     * @param  array  $options     validate_all (true|false) or return_type (boolean|array|both)
+     * @param  string|bool  $team      Team name.
+     * @param  array|bool  $options     require_all_roles (true|false) or require_all_permissions (true|false) or require_all_teams (true|false)
      * @throws \InvalidArgumentException
-     * @return array|bool
+     * @return \Vegvisir\TrustNoSql\Models\Ability
      */
-    public function ability($roles, $permissions, $team = null, $options = []);
+    public function ability($roles, $permissions, $team = null, $options = [],
+        $requireAllRoles = false, $requireAllPermissions = false, $requireAllTeams = false);
 
     /**
-     * Alias to eloquent many-to-many relation's attach() method.
+     * Alias to moloquent belongs-to-many relation's attach() method.
      *
-     * @param  mixed  $role
-     * @param  mixed  $team
+     * @param  string  $role Role name.
+     * @param  string|bool  $team      Team name.
      * @return static
      */
     public function attachRole($role, $team = null);
 
     /**
-     * Alias to eloquent many-to-many relation's detach() method.
+     * Alias to moloquent belongs-to-many relation's detach() method.
      *
-     * @param  mixed  $role
-     * @param  mixed  $team
+     * @param  string  $role Role name.
+     * @param  string|bool  $team      Team name.
      * @return static
      */
     public function detachRole($role, $team = null);
@@ -72,44 +89,44 @@ interface UserInterface
     /**
      * Attach multiple roles to a user.
      *
-     * @param  mixed  $roles
-     * @param  mixed  $team
+     * @param  string|array  $role Array of roles or comma separated string
+     * @param  string|bool  $team      Team name.
      * @return static
      */
-    public function attachRoles($roles = [], $team = null);
+    public function attachRoles($roles, $team = null);
 
     /**
      * Detach multiple roles from a user.
      *
-     * @param  mixed  $roles
-     * @param  mixed  $team
+     * @param  string|array  $roles Array of roles or comma separated string
+     * @param  string|bool  $team      Team name.
      * @return static
      */
-    public function detachRoles($roles = [], $team = null);
+    public function detachRoles($roles, $team = null);
 
     /**
      * Sync roles to the user.
      *
-     * @param  array  $roles
-     * @param  mixed  $team
+     * @param  string|array  $roles Array of roles or comma separated string
+     * @param  string|bool  $team      Team name.
      * @return static
      */
-    public function syncRoles($roles = [], $team = null);
+    public function syncRoles($roles, $team = null);
 
     /**
-     * Alias to eloquent many-to-many relation's attach() method.
+     * Alias to moloquent belongs-to-many relation's attach() method.
      *
-     * @param  mixed  $permission
-     * @param  mixed  $team
+     * @param  string  $permission Permission name.
+     * @param  string|bool  $team      Team name.
      * @return static
      */
     public function attachPermission($permission, $team = null);
 
     /**
-     * Alias to eloquent many-to-many relation's detach() method.
+     * Alias to moloquent belongs-to-many relation's detach() method.
      *
-     * @param  mixed  $permission
-     * @param  mixed  $team
+     * @param  string  $permission Permission name.
+     * @param  string|bool  $team      Team name.
      * @return static
      */
     public function detachPermission($permission, $team = null);
@@ -117,36 +134,36 @@ interface UserInterface
     /**
      * Attach multiple permissions to a user.
      *
-     * @param  mixed  $permissions
-     * @param  mixed  $team
+     * @param  string|array  $permissions Array of permissions or comma separated string
+     * @param  string|bool  $team      Team name.
      * @return static
      */
-    public function attachPermissions($permissions = [], $team = null);
+    public function attachPermissions($permissions, $team = null);
 
     /**
      * Detach multiple permissions from a user.
      *
-     * @param  mixed  $permissions
-     * @param  mixed  $team
+     * @param  string|array  $permissions Array of permissions or comma separated string
+     * @param  string|bool  $team      Team name.
      * @return static
      */
-    public function detachPermissions($permissions = [], $team = null);
+    public function detachPermissions($permissions, $team = null);
 
     /**
-     * Sync roles to the user.
+     * Sync permissions to the user.
      *
      * @param  array  $permissions
      * @return static
      */
-    public function syncPermissions($permissions = [], $team = null);
+    public function syncPermissions($permissions, $team = null);
 
     /**
-     * Checks if the user owns the thing.
+     * Checks if the user has access to the thing.
      *
      * @param  Object  $thing
      * @return boolean
      */
-    public function canAccess($thing);
+    public function reaches($thing);
 
     /**
      * Checks if the user has some role and if he can access the thing.
@@ -156,7 +173,7 @@ interface UserInterface
      * @param  array  $options
      * @return boolean
      */
-    public function hasRoleAndCanAccess($role, $thing, $options = []);
+    public function hasRoleAndReaches($role, $thing, $options = []);
 
     /**
      * Checks if the user can do something and if he can access the thing.

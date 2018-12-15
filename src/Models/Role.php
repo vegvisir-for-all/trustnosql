@@ -12,11 +12,12 @@ use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Contracts\RoleInterface;
 use Vegvisir\TrustNoSql\Traits\RoleTrait;
+use Vegvisir\TrustNoSql\Traits\Aliases\RoleAliasesTrait;
 
 class Role extends Model implements RoleInterface
 {
 
-    use RoleTrait;
+    use RoleTrait, RoleAliasesTrait;
 
     /**
      * Collection used by model
