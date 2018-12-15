@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -9,8 +15,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 
 class BaseMiddleware {
-
-    // if (!$this->authorization('roles', $roles, $team, $options))
 
     /**
      * Check if the request has authorization to continue.

@@ -92,6 +92,25 @@ return [
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | TrustNoSql Permissions
+    |--------------------------------------------------------------------------
+    |
+    | This configuration helps to customize the TrustNoSql permissions behavior.
+    |
+    */
+    'permissions' => [
+
+        /**
+         * Wildcards list
+         */
+        'wildcards' => [
+            '*',
+            'all'
+        ]
+    ],
+
     'teams' => [
 
         /**

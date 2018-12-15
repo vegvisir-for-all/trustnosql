@@ -3,8 +3,8 @@
 namespace Vegvisir\TrustNoSql\Models;
 
 /**
- * This file is part of TrustNoSql
- * a MongoDB role/permission management for Laravel.
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
  *
  * @license GPL-3.0-or-later
  */
