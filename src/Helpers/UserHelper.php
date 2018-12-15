@@ -9,25 +9,19 @@ namespace Vegvisir\TrustNoSql\Helpers;
  * @license GPL-3.0-or-later
  */
 use Illuminate\Support\Facades\Config;
-use Jenssegers\Mongodb\Eloquent\Model;
 
 class UserHelper
 {
 
     /**
-     * Gets a user model used by application or false if given model
-     * is not an instance of Jenssegers\Mongodb\Eloquent\Model
+     * Gets a user model used by application
      *
-     * @return Jenssegers\Mongodb\Eloquent\Model|false
+     * @return Jenssegers\Mongodb\Eloquent\Model
      */
-    protected static function getModel()
+    public static function getModel()
     {
-        $userModel = Config::get('laratrust.user_models.user');
-        if(is_a($userModel, Model::class(), true)) {
-            return new $userModel;
-        } else {
-            return false;
-        }
+        $userModel = Config::get('laratrust.user_models.users');
+        return new $userModel;
     }
 
 }

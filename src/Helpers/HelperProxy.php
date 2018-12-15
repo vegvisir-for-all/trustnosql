@@ -80,10 +80,9 @@ class HelperProxy
     }
 
     /**
-     * Gets a user model used by application or false if given model
-     * is not an instance of Jenssegers\Mongodb\Eloquent\Model
+     * Gets a user model used by application
      *
-     * @return Jenssegers\Mongodb\Eloquent\Model|false
+     * @return Jenssegers\Mongodb\Eloquent\Model
      */
     public static function getUserModel()
     {
