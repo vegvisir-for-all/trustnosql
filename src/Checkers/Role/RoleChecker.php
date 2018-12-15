@@ -8,8 +8,6 @@ use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
 
-    protected $wildcards = ['*', 'all'];
-
     public function currentRoleHasPermissions($permissions, $requireAll)
     {
 
