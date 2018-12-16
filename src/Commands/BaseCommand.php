@@ -156,6 +156,60 @@ class BaseCommand extends Command
     }
 
     /**
+     * Displays permissions list and returns array of choices.
+     *
+     * @param string|null $question A question that should be asked
+     * @param array|null $permissions Optional array of permissions to be displayed
+     * @return array
+     */
+    protected function getPermissionsList($question = null, $permissions = null)
+    {
+
+        if($question == null) {
+            $question = 'Permissions list';
+        }
+
+        if($permissions == null) {
+            $permissions = collect(Permission::all())->map(function ($item, $key) {
+                return $item->name;
+            })->toArray();
+        }
+
+        sort($permissions);
+
+        $permissionNames = $this->choice($question, $permissions, null, count($permissions), true);
+
+        return $permissionNames;
+    }
+
+    /**
+     * Displays roles list and returns array of choices.
+     *
+     * @param string|null $question A question that should be asked
+     * @param array|null $roles Optional array of roles to be displayed
+     * @return array
+     */
+    protected function getRolesList($question = null, $roles = null)
+    {
+
+        if($question == null) {
+            $question = 'Roles list';
+        }
+
+        if($roles == null) {
+            $roles = collect(Role::all())->map(function ($item, $key) {
+                return $item->name;
+            })->toArray();
+        }
+
+        sort($roles);
+
+        $roleNames = $this->choice($question, $roles, null, count($roles), true);
+
+        return $roleNames;
+    }
+
+    /**
      * Displays users list and returns array of choices.
      *
      * @param string|null $question A question that should be asked
@@ -185,30 +239,4 @@ class BaseCommand extends Command
         return $userEmails;
     }
 
-    /**
-     * Displays roles list and returns array of choices.
-     *
-     * @param string|null $question A question that should be asked
-     * @param array|null $roles Optional array of roles to be displayed
-     * @return array
-     */
-    protected function getRolesList($question = null, $roles = null)
-    {
-
-        if($question == null) {
-            $question = 'Roles list';
-        }
-
-        if($roles == null) {
-            $roles = collect(Role::all())->map(function ($item, $key) {
-                return $item->name;
-            })->toArray();
-        }
-
-        sort($roles);
-
-        $roleNames = $this->choice($question, $roles, null, count($roles), true);
-
-        return $roleNames;
-    }
 }

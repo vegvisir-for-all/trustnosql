@@ -10,7 +10,7 @@ namespace Vegvisir\TrustNoSql\Traits;
  */
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Checkers\CheckManager;
+use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 use Vegvisir\TrustNoSql\Exceptions\Permission\AttachPermissionsException;
 use Vegvisir\TrustNoSql\Exceptions\Permission\DetachPermissionsException;
 
@@ -19,11 +19,11 @@ trait RoleTrait {
     /**
      * Returns the right checker for the Role model.
      *
-     * @return \Vegvisir\TrustNoSql\Checkers\BaseChecker;
+     * @return \Vegvisir\TrustNoSql\Checkers\RoleChecker;
      */
     protected function roleChecker()
     {
-        return (new CheckManager($this))->getChecker();
+        return (new CheckProxy($this))->getChecker();
     }
 
     /**

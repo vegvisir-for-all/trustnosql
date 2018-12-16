@@ -118,7 +118,7 @@ class HelperProxy
             return $rolesOrPermissions;
         }
 
-        return explode(static::DELIMITER, $rolesOrPermissions);
+        return explode(static::ENTITIES_DELIMITER, $rolesOrPermissions);
     }
 
 }

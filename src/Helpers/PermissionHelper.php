@@ -11,7 +11,7 @@ namespace Vegvisir\TrustNoSql\Helpers;
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Models\Permission;
 
-class PermissionHelper
+class PermissionHelper extends HelperProxy
 {
 
     /**
@@ -46,9 +46,9 @@ class PermissionHelper
      * @param string|array $permissions
      * @return array
      */
-    protected static function getArray($permissions)
+    public static function getArray($permissions)
     {
-        parent::getArray($permissions);
+        return parent::getArray($permissions);
     }
 
     /**
@@ -77,14 +77,14 @@ class PermissionHelper
             }
         }
 
-        $permissionKeys = collect(Permissions::whereIn('name', $noWildCardPermissions)->get())->map(function ($item, $key) {
+        $permissionKeys = collect(Permission::whereIn('name', $noWildCardPermissions)->get())->map(function ($item, $key) {
             return $item->id;
-        });
+        })->toArray();
 
         foreach($wildCardPermissions as $wildcardPermission) {
-            $thisPermissionKeys = collect(Permissions::where('name', 'like', static::getNamespace($wildcardPermission) . static::NAMESPACE_DELIMITER)->get())->map(function ($item, $key) {
+            $thisPermissionKeys = collect(Permission::where('name', 'like', static::getNamespace($wildcardPermission) . static::NAMESPACE_DELIMITER)->get())->map(function ($item, $key) {
                 return $item->id;
-            });
+            })->toArray();
             $permissionKeys = array_merge($permissionKeys, $thisPermissionKeys);
         }
 

@@ -18,6 +18,10 @@ trait CommandsProviderTrait
     private function registerPermissionCommands()
     {
 
+        $this->app->singleton('command.trustnosql.permission.attach', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Permission\Attach();
+        });
+
         $this->app->singleton('command.trustnosql.permission.create', function () {
             return new \Vegvisir\TrustNoSql\Commands\Permission\Create();
         });
@@ -27,6 +31,7 @@ trait CommandsProviderTrait
         });
 
         $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
+            'command.trustnosql.permission.attach',
             'command.trustnosql.permission.create',
             'command.trustnosql.permission.delete'
         ]);
