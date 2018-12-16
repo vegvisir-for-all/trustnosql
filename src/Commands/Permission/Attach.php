@@ -67,7 +67,7 @@ class Attach extends BaseCommand
     {
         $roleNames = $this->getRolesLIst('Choose role(s) you want permission(s) to attach to');
 
-        try {
+        // try {
 
             foreach($roleNames as $roleName) {
                 $this->line('Trying to attach permissions to role ' . $roleName);
@@ -83,20 +83,20 @@ class Attach extends BaseCommand
                     } else {
                         $this->line('Didn\'t have a permission. Attaching...');
 
-                        try {
+                        // try {
                             $role->attachPermission($permissionName);
                             $this->info('    Permission attached');
-                        } catch (\Exception $e) {
-                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
-                        }
+                        // } catch (\Exception $e) {
+                        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                        // }
 
                     }
 
                 }
             }
 
-        } catch (\Exception $e) {
-
-        }
+        // } catch (\Exception $e) {
+        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
+        // }
     }
 }

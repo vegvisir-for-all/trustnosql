@@ -15,6 +15,8 @@ use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
 
+    const NAMESPACE_DELIMITER = '/';
+
     /**
      * Checks whether current role has given permissions.
      *
@@ -73,7 +75,7 @@ class RoleChecker extends BaseChecker {
             /**
              * Checking for no-wildcard permission name, like 'city:create'
              */
-            if(str_is($permission, $currentPermission['name'])) {
+            if(str_is($permission, $currentPermission)) {
                 return true;
             }
 
@@ -82,8 +84,8 @@ class RoleChecker extends BaseChecker {
              * If the permission to be checked is 'city:create' and role has permission of 'city:*' or 'city:all',
              * we need to explode permission name using the ':' delimiter
              */
-            $permissionExploded = explode(':', $permission);
-            $currentPermissionExploded = explode(':', $permissionExploded);
+            $permissionExploded = explode(static::NAMESPACE_DELIMITER, $permission);
+            $currentPermissionExploded = explode(static::NAMESPACE_DELIMITER, $currentPermission);
 
              /**
               * Now, if a role has a permission 'city:*' or 'city:all', we return true
