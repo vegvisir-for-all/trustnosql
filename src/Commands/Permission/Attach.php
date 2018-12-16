@@ -61,6 +61,10 @@ class Attach extends BaseCommand
             $this->attachToRoles($permissionNames);
         }
 
+        if($attachToUsers) {
+            $this->attachToUsers($permissionNames);
+        }
+
     }
 
     protected function attachToRoles($permissionNames)
@@ -85,6 +89,43 @@ class Attach extends BaseCommand
 
                         try {
                             $role->attachPermission($permissionName);
+                            $this->info('    Permission attached');
+                        } catch (\Exception $e) {
+                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                        }
+
+                    }
+
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+        }
+    }
+
+    protected function attachToUsers($permissionNames)
+    {
+        $userEmails = $this->getUsersLIst('Choose user(s) you want permission(s) to attach to');
+
+        try {
+
+            foreach($userEmails as $email) {
+                $this->line('Trying to attach permissions to user ' . $email);
+
+                foreach($permissionNames as $permissionName) {
+
+                    $this->line("Attaching permission '$permissionName'...");
+
+                    $user = $this->getUser($email, true);
+
+                    if($user->hasPermission($permissionName)) {
+                        $this->line('Already had. Skipping...');
+                    } else {
+                        $this->line('Didn\'t have a permission. Attaching...');
+
+                        try {
+                            $user->attachPermission($permissionName);
                             $this->info('    Permission attached');
                         } catch (\Exception $e) {
                             $this->error('    Permission not attached (' . $e->getMessage() . ')');
