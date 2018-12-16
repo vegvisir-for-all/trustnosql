@@ -80,6 +80,17 @@ class HelperProxy
     }
 
     /**
+     * Gets an array of role keys (_ids)
+     *
+     * @param string|array $roles Comma-separated role names or array of them
+     * @return array
+     */
+    public static function getRolesKeys($roles)
+    {
+        return RoleHelper::getKeys($roles);
+    }
+
+    /**
      * Gets a user model used by application
      *
      * @return Jenssegers\Mongodb\Eloquent\Model

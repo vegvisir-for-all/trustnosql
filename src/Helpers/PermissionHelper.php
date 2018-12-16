@@ -108,7 +108,7 @@ class PermissionHelper
      *
      * @return array
      */
-    protected static function getWildcards()
+    public static function getWildcards()
     {
         return Config::get('trustnosql.permissions.wildcards', ['*', 'all']);
     }

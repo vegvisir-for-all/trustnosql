@@ -45,7 +45,7 @@ class CheckProxy
      */
     public function __construct(Model $model)
     {
-        $this->model($model);
+        $this->model = $model;
     }
 
     /**
@@ -64,7 +64,7 @@ class CheckProxy
             return $this->getRoleChecker();
         }
 
-        if(is_a($this->model, Config::get('laratrust.user_models.user'), true)) {
+        if(is_a($this->model, Config::get('laratrust.user_models.users'), true)) {
             return $this->getUserChecker();
         }
 
@@ -77,7 +77,7 @@ class CheckProxy
      */
     protected function getPermissionChecker()
     {
-        return (new PermissionChecker($model));
+        return (new PermissionChecker($this->model));
     }
 
     /**
@@ -87,7 +87,7 @@ class CheckProxy
      */
     protected function getRoleChecker()
     {
-        return (new RoleChecker($model));
+        return (new RoleChecker($this->model));
     }
 
     /**
@@ -97,7 +97,7 @@ class CheckProxy
      */
     protected function getUserChecker()
     {
-        return (new UserChecker($model));
+        return (new UserChecker($this->model));
     }
 
 }

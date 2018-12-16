@@ -51,19 +51,11 @@ class Attach extends BaseCommand
             return $item->name;
         })->toArray();
 
-        while($keepAsking) {
+        /**
+         * Displaying menu with roles
+         */
 
-            $roleName = $this->anticipate('Name of the role', $availableRoles);
-
-            /**
-             * $keepAsking should change only when role doesn't exist
-             * It should NOT change when role exist (also, an error should be displayed)
-             */
-
-             if(($role = $this->getRole($roleName, true)) !== false)  {
-                 $keepAsking = false;
-             }
-        }
+        $roleNames = $this->choice('Choose role(s) you want to attach', $availableRoles, null, count($availableRoles), true);
 
         try {
             $userModel = Helper::getUserModel();
@@ -76,19 +68,34 @@ class Attach extends BaseCommand
             // todo
         }
 
-        $keepAsking = true;
-
-        while($keepAsking) {
-            $userEmails = $this->choice('E-mail address of the user to attach to', $availableUsers, null, count($availableUsers), true);
-            $keepAsking = false;
-        }
-
-
+        $userEmails = $this->choice('E-mail address of the user to attach to', $availableUsers, null, count($availableUsers), true);
 
         try {
 
-            foreach($userEmails as $key => $email) {
-                $this->line(($key+1) . '/' . count($userEmails) . ". Attaching role '$roleName' to user '$email'...");
+            foreach($userEmails as $userKey => $email) {
+                $this->line(($userKey+1) . '/' . count($userEmails) . ". Attaching roles to user '$email'...");
+
+                // Try to attach roles to user
+
+                $user = $this->getUser($email, true);
+
+                foreach($roleNames as $roleKey => $roleName) {
+                    $this->line('  ' . ($roleKey+1) . '/' . count($roleNames) . ". Attaching role '$roleName'...");
+
+                    if($user->hasRole($roleName)) {
+                        $this->error('    Already has. Skipping');
+                        continue;
+                    } else {
+                        $this->line('    User didn\'t have a role. Attaching');
+
+                        try {
+                            $user->attachRole($roleName);
+                            $this->info('    Role attached');
+                        } catch (\Exception $e) {
+                            $this->error('    Role not attached (' . $e->getMessage() . ')');
+                        }
+                    }
+                }
             }
 
             $this->successDeleting('role', $roleName);

@@ -85,7 +85,6 @@ trait RoleTrait {
      */
     public function syncPermissions($permissions)
     {
-
         $permissionsKeys = Helper::getPermissionKeys($permissions);
         $changes = $this->permissions()->sync($permissionsKeys);
 
@@ -93,7 +92,6 @@ trait RoleTrait {
         $this->fireEvent('permissions.synced', [$this, $changes]);
 
         return $this;
-
     }
 
     /**
