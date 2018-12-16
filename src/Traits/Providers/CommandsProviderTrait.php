@@ -27,6 +27,7 @@ trait CommandsProviderTrait
         });
 
         $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
+            'command.trustnosql.permission.create',
             'command.trustnosql.permission.delete'
         ]);
     }
