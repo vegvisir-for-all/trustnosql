@@ -62,7 +62,7 @@ trait RoleTrait {
 
         return collect($permissionsCollection->get())->map(function ($item, $key) {
             return $item->name;
-        });
+        })->toArray();
     }
 
     /**

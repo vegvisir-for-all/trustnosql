@@ -51,12 +51,7 @@ class Attach extends BaseCommand
             return $item->name;
         })->toArray();
 
-        /**
-         * Displaying menu with roles
-         */
-
-        $roleNames = $this->choice('Choose role(s) you want to attach', $availableRoles, null, count($availableRoles), true);
-
+        $roleNames = $this->getRolesList('Choose role(s) you want to attach');
         $userEmails = $this->getUsersList('E-mail address of the user to attach to');
 
         try {
@@ -94,7 +89,7 @@ class Attach extends BaseCommand
             }
 
         } catch (\Exception $e) {
-            $this->errorAttaching('role', $roleName, 'user', $email, null, $e->getMessage());
+            $this->errorAttaching('role', 'multiple', 'user', $email, null, $e->getMessage());
         }
     }
 }

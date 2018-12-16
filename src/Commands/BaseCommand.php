@@ -155,6 +155,12 @@ class BaseCommand extends Command
         }
     }
 
+    /**
+     * Displays users list and returns array of choices.
+     *
+     * @param string|null $question A question that should be asked
+     * @return array
+     */
     protected function getUsersList($question = null)
     {
         try {
@@ -172,8 +178,37 @@ class BaseCommand extends Command
             $question = 'Users list';
         }
 
+        sort($availableUsers);
+
         $userEmails = $this->choice($question, $availableUsers, null, count($availableUsers), true);
 
         return $userEmails;
+    }
+
+    /**
+     * Displays roles list and returns array of choices.
+     *
+     * @param string|null $question A question that should be asked
+     * @param array|null $roles Optional array of roles to be displayed
+     * @return array
+     */
+    protected function getRolesList($question = null, $roles = null)
+    {
+
+        if($question == null) {
+            $question = 'Roles list';
+        }
+
+        if($roles == null) {
+            $roles = collect(Role::all())->map(function ($item, $key) {
+                return $item->name;
+            })->toArray();
+        }
+
+        sort($roles);
+
+        $roleNames = $this->choice($question, $roles, null, count($roles), true);
+
+        return $roleNames;
     }
 }

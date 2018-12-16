@@ -42,23 +42,20 @@ trait UserTrait
     }
 
     /**
-     * Retrieves an array of Role's permission names
+     * Retrieves an array of User's role names
      *
      * @return array
      */
     public function getUserCurrentRoles() {
 
         /**
-         * If TrustNoSql uses cache, this should be retrieved by getUserCachedRoles, provided
-         * by UserCacheableTrait
+         * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
+         * by RoleCacheableTrait
          */
         if(Config::get('trustnosql.cache.use_cache')) {
             return $this->getUserCachedRoles();
         }
 
-        /**
-         * Otherwise, retrieve a list of current roles from the DB
-         */
         $rolesCollection = $this->roles();
 
         return collect($rolesCollection->get())->map(function ($item, $key) {
@@ -111,14 +108,37 @@ trait UserTrait
 
         $rolesKeys = Helper::getRolesKeys($roles);
 
-        // try {
+        try {
             $this->roles()->attach($rolesKeys);
-        // } catch (\Exception $e) {
-        //     throw new AttachRolesException;
-        // }
+        } catch (\Exception $e) {
+            throw new AttachRolesException;
+        }
 
         $this->flushCache();
         $this->fireEvent('roles.attached', [$this, $rolesKeys]);
+
+        return $this;
+    }
+
+    /**
+     * Detach role(s) to User
+     *
+     * @param string|array $roles Array of roles or comma-separated list.
+     * @return void
+     */
+    public function detachRoles($roles)
+    {
+
+        $rolesKeys = Helper::getRolesKeys($roles);
+
+        try {
+            $this->roles()->detach($rolesKeys);
+        } catch (\Exception $e) {
+            throw new DetachRolesException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent('roles.detached', [$this, $rolesKeys]);
 
         return $this;
     }

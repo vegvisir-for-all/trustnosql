@@ -47,5 +47,59 @@ class Detach extends BaseCommand
 
         $userEmails = $this->getUsersList('E-mail address of the user to detach roles from');
 
+        /**
+         * We need to generate a list of roles assigned to chosen users
+         */
+
+        $rolesList = [];
+
+        foreach($userEmails as $email) {
+            $user = $this->getUser($email, true);
+
+            $rolesList = array_merge($rolesList, $user->getUserCurrentRoles());
+        }
+
+        $rolesList = array_unique($rolesList);
+
+        $roleNames = $this->getRolesList('Roles that should be detached', $rolesList);
+
+        try {
+
+            foreach($userEmails as $userKey => $email) {
+
+                $this->line(($userKey+1) . '/' . count($userEmails) . ". Detaching roles from user '$email'...");
+
+                $user = $this->getUser($email, true);
+
+                foreach($roleNames as $roleKey => $roleName) {
+
+                    $this->line('  ' . ($roleKey+1) . '/' . count($roleNames) . ". Detaching role '$roleName'...");
+
+                    if(!$user->hasRole($roleName)) {
+
+                        $this->error('    Didn\'t have a role. Skipping');
+                        continue;
+
+                    } else {
+
+                        $this->line('    User had a role. Detaching...');
+
+                        try {
+                            $user->detachRole($roleName);
+                            $this->info('    Role detached');
+                        } catch (\Exception $e) {
+                            $this->error('    Role not detached (' . $e->getMessage() . ')');
+                        }
+
+                    }
+
+                    $this->successDetaching('role', $roleName, 'user', $email);
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->errorAttaching('role', 'multiple', 'user', $email, null, $e->getMessage());
+        }
+
     }
 }

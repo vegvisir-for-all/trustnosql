@@ -33,4 +33,15 @@ trait UserAliasesTrait {
         return $this->attachRoles($role);
     }
 
+    /**
+     * Alias for detachRoles
+     *
+     * @param string|array $roles Array of roles or comma-separated list.
+     * @return void
+     */
+    public function detachRole($roles)
+    {
+        return $this->detachRoles($roles);
+    }
+
 }
