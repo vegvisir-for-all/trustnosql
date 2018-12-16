@@ -38,7 +38,106 @@ trait UserTrait
 
     public function permissions()
     {
+        $permissions = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
 
+        return $permissions;
+    }
+
+    /**
+     * Retrieves an array of User's permission names
+     *
+     * @return array
+     */
+    public function getUserCurrentPermissions($namespace = null) {
+
+        /**
+         * If TrustNoSql uses cache, this should be retrieved by userCachedPermissions, provided
+         * by UserCacheableTrait
+         */
+        if(Config::get('trustnosql.cache.use_cache')) {
+            return $this->getUserCachedPermissions($namespace);
+        }
+
+        /**
+         * Otherwise, retrieve a list of current permissions from the DB
+         */
+        $permissionsCollection = $this->permissions();
+
+        if($namespace !== null) {
+            $permissionsCollection = $permissionsCollection->where('name', 'like', $namespace . ':%');
+        }
+
+        return collect($permissionsCollection->get())->map(function ($item, $key) {
+            return $item->name;
+        })->toArray();
+    }
+
+    public function hasPermissions($permission, $team = null, $requireAll = false)
+    {
+        return $this->roleChecker()->currentUserHasPermissions($permissions, $requireAll);
+    }
+
+    /**
+     * Syncs permission(s) to a Role.
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return \Vegvisir\TrustNoSql\Models\Role
+     */
+    public function syncPermissions($permissions)
+    {
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+        $changes = $this->permissions()->sync($permissionsKeys);
+
+        $this->flushCache();
+        $this->fireEvent('permissions.synced', [$this, $changes]);
+
+        return $this;
+    }
+
+    /**
+     * Attaches permission(s) to a User
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return void
+     */
+    public function attachPermissions($permissions)
+    {
+
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+
+        try {
+            $this->permissions()->attach($permissionsKeys);
+        } catch (\Exception $e) {
+            throw new AttachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent('permissions.attached', [$this, $permissionsKeys]);
+
+        return $this;
+    }
+
+    /**
+     * Detaches permission(s) from a User
+     *
+     * @param string|array $permissions Array of permissions or comma-separated list.
+     * @return void
+     */
+    public function detachPermissions($permissions)
+    {
+
+        $permissionsKeys = Helper::getPermissionKeys($permissions);
+
+        try {
+            $this->permissions()->detach($permissionsKeys);
+        } catch (\Exception $e) {
+            throw new DetachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent('permissions.attached', [$this, $permissionsKeys]);
+
+        return $this;
     }
 
     /**
@@ -73,11 +172,6 @@ trait UserTrait
     public function hasRoles($roles, $team = null, $requireAll = false)
     {
         return $this->roleChecker()->currentUserHasRole($roles, $team, $requireAll);
-    }
-
-    public function hasPermissions($permission, $team = null, $requireAll = false)
-    {
-        $userChecker = CheckProxy::getChecker();
     }
 
     /**

@@ -108,7 +108,7 @@ class Attach extends BaseCommand
     {
         $userEmails = $this->getUsersLIst('Choose user(s) you want permission(s) to attach to');
 
-        try {
+        // try {
 
             foreach($userEmails as $email) {
                 $this->line('Trying to attach permissions to user ' . $email);
@@ -124,20 +124,20 @@ class Attach extends BaseCommand
                     } else {
                         $this->line('Didn\'t have a permission. Attaching...');
 
-                        try {
+                        // try {
                             $user->attachPermission($permissionName);
                             $this->info('    Permission attached');
-                        } catch (\Exception $e) {
-                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
-                        }
+                        // } catch (\Exception $e) {
+                        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                        // }
 
                     }
 
                 }
             }
 
-        } catch (\Exception $e) {
-            $this->error('    Permission not attached (' . $e->getMessage() . ')');
-        }
+        // } catch (\Exception $e) {
+        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
+        // }
     }
 }
