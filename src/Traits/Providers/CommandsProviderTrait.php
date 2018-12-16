@@ -5,9 +5,26 @@ namespace Vegvisir\TrustNoSql\Traits\Providers;
 trait CommandsProviderTrait
 {
 
+    protected $trustNoSqlCommands = [];
+
     protected function registerCommands()
     {
+        $this->registerPermissionCommands();
         $this->registerRoleCommands();
+
+        $this->commands($this->trustNoSqlCommands);
+    }
+
+    private function registerPermissionCommands()
+    {
+
+        $this->app->singleton('command.trustnosql.permission.create', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Permission\Create();
+        });
+
+        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
+            'command.trustnosql.permission.create'
+        ]);
     }
 
     private function registerRoleCommands()
@@ -36,7 +53,7 @@ trait CommandsProviderTrait
             return new \Vegvisir\TrustNoSql\Commands\Role\ListAll();
         });
 
-        $this->commands([
+        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
             'command.trustnosql.role.attach',
             'command.trustnosql.role.create',
             'command.trustnosql.role.delete',

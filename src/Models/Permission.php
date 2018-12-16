@@ -26,6 +26,17 @@ class Permission extends Model implements PermissionInterface
     protected $collection = 'permissions';
 
     /**
+     * Fillable fields of the model.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'display_name',
+        'description'
+    ];
+
+    /**
      * Creates new instance of the model
      *
      * @param array $attributes

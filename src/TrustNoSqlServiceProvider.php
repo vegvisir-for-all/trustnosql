@@ -23,7 +23,7 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->registerRoleCommands();
+        $this->registerCommands();
     }
 
 }

@@ -58,6 +58,11 @@ class HelperProxy
         return PermissionHelper::getWildcards();
     }
 
+    public static function isPermissionWildcard($permissionName)
+    {
+        return PermissionHelper::isWildcard($permissionName);
+    }
+
     /**
      * Gets _id for a single role
      *

@@ -26,7 +26,7 @@ class PermissionHelper
      *
      * @var string
      */
-    const NAMESPACE_DELIMITER = ':';
+    const NAMESPACE_DELIMITER = '/';
 
     /**
      * Returns key (_id) of a permission
@@ -119,7 +119,7 @@ class PermissionHelper
      * @param string $permissionName Name of the permission.
      * @return array
      */
-    protected static function isWildcard($permissionName)
+    public static function isWildcard($permissionName)
     {
         $permissionNameExploded = explode(static::NAMESPACE_DELIMITER, $permissionName);
 
