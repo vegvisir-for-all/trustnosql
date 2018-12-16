@@ -28,11 +28,16 @@ trait CommandsProviderTrait
             return new \Vegvisir\TrustNoSql\Commands\Role\Detach();
         });
 
+        $this->app->singleton('command.trustnosql.roles', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Role\ListAll();
+        });
+
         $this->commands([
             'command.trustnosql.role.attach',
             'command.trustnosql.role.create',
             'command.trustnosql.role.delete',
-            'command.trustnosql.role.detach'
+            'command.trustnosql.role.detach',
+            'command.trustnosql.roles'
         ]);
     }
 

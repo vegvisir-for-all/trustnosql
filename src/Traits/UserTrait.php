@@ -121,7 +121,7 @@ trait UserTrait
     }
 
     /**
-     * Detach role(s) to User
+     * Detach role(s) from User
      *
      * @param string|array $roles Array of roles or comma-separated list.
      * @return void
