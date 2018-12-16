@@ -36,6 +36,11 @@ trait RoleTrait {
         return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(get_class(Helper::getUserModel()));
+    }
+
     /**
      * Retrieves an array of Role's permission names
      *

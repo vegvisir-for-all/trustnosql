@@ -17,6 +17,8 @@ interface RoleInterface {
      */
     public function permissions();
 
+    public function users();
+
     /**
      * Retrieves (from DB) an array of Role's permission names
      *
