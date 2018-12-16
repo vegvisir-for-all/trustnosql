@@ -154,4 +154,26 @@ class BaseCommand extends Command
 
         }
     }
+
+    protected function getUsersList($question = null)
+    {
+        try {
+            $userModel = Helper::getUserModel();
+
+            $availableUsers = collect($userModel->all())->map(function ($item, $key) {
+                return $item->email;
+            })->toArray();
+
+        } catch (\Exception $e) {
+            // todo
+        }
+
+        if($question == null) {
+            $question = 'Users list';
+        }
+
+        $userEmails = $this->choice($question, $availableUsers, null, count($availableUsers), true);
+
+        return $userEmails;
+    }
 }

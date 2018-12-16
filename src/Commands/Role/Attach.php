@@ -57,18 +57,7 @@ class Attach extends BaseCommand
 
         $roleNames = $this->choice('Choose role(s) you want to attach', $availableRoles, null, count($availableRoles), true);
 
-        try {
-            $userModel = Helper::getUserModel();
-
-            $availableUsers = collect($userModel->all())->map(function ($item, $key) {
-                return $item->email;
-            })->toArray();
-
-        } catch (\Exception $e) {
-            // todo
-        }
-
-        $userEmails = $this->choice('E-mail address of the user to attach to', $availableUsers, null, count($availableUsers), true);
+        $userEmails = $this->getUsersList('E-mail address of the user to attach to');
 
         try {
 
