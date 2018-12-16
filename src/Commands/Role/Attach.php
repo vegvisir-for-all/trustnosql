@@ -73,20 +73,23 @@ class Attach extends BaseCommand
         try {
 
             foreach($userEmails as $userKey => $email) {
-                $this->line(($userKey+1) . '/' . count($userEmails) . ". Attaching roles to user '$email'...");
 
-                // Try to attach roles to user
+                $this->line(($userKey+1) . '/' . count($userEmails) . ". Attaching roles to user '$email'...");
 
                 $user = $this->getUser($email, true);
 
                 foreach($roleNames as $roleKey => $roleName) {
+
                     $this->line('  ' . ($roleKey+1) . '/' . count($roleNames) . ". Attaching role '$roleName'...");
 
                     if($user->hasRole($roleName)) {
-                        $this->error('    Already has. Skipping');
+
+                        $this->error('    Already had a role attached to. Skipping');
                         continue;
+
                     } else {
-                        $this->line('    User didn\'t have a role. Attaching');
+
+                        $this->line('    User didn\'t have a role. Attaching...');
 
                         try {
                             $user->attachRole($roleName);
@@ -94,13 +97,15 @@ class Attach extends BaseCommand
                         } catch (\Exception $e) {
                             $this->error('    Role not attached (' . $e->getMessage() . ')');
                         }
+
                     }
+
+                    $this->successAttaching('role', $roleName, 'user', $email);
                 }
             }
 
-            $this->successDeleting('role', $roleName);
         } catch (\Exception $e) {
-            $this->errorDeleting('role', $roleName, $e->getMessage());
+            $this->errorAttaching('role', $roleName, 'user', $email, null, $e->getMessage());
         }
     }
 }

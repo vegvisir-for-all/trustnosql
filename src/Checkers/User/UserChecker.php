@@ -58,7 +58,7 @@ class UserChecker extends BaseChecker {
 
         foreach($this->model->getUserCurrentRoles() as $currentRole) {
 
-            if(str_is($roleName, $currentRole['name'])) {
+            if(str_is($roleName, $currentRole)) {
                 return true;
             }
 

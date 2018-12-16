@@ -26,7 +26,7 @@ trait UserTrait
 
     public function roles()
     {
-        $roles = $this->belongsTo(\Vegvisir\TrustNoSql\Models\Role::class);
+        $roles = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Role::class);
 
         return $roles;
     }
@@ -63,7 +63,7 @@ trait UserTrait
 
         return collect($rolesCollection->get())->map(function ($item, $key) {
             return $item->name;
-        });
+        })->toArray();
     }
 
     /**
@@ -111,11 +111,11 @@ trait UserTrait
 
         $rolesKeys = Helper::getRolesKeys($roles);
 
-        try {
+        // try {
             $this->roles()->attach($rolesKeys);
-        } catch (\Exception $e) {
-            throw new AttachRolesException;
-        }
+        // } catch (\Exception $e) {
+        //     throw new AttachRolesException;
+        // }
 
         $this->flushCache();
         $this->fireEvent('roles.attached', [$this, $rolesKeys]);
