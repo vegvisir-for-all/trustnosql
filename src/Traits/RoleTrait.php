@@ -38,7 +38,7 @@ trait RoleTrait {
 
     public function users()
     {
-        return $this->hasMany(get_class(Helper::getUserModel()));
+        return $this->belongsToMany(get_class(Helper::getUserModel()));
     }
 
     /**

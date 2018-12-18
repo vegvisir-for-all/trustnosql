@@ -7,7 +7,7 @@ use Vegvisir\TrustNoSql\Models\Role;
 class RoleHelper extends HelperProxy
 {
 
-    const DELIMITER = ',';
+    const ENTITIES_DELIMITER = ',';
 
     protected static function getId($roleName)
     {

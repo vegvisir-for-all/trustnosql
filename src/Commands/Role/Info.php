@@ -65,13 +65,15 @@ class Info extends BaseCommand
 
             $permissionsNames = $role->getRoleCurrentPermissions();
 
-            $permissions = Permission::whereIn('name', $permissionsNames)->get()->toArray();
+            $permissions = Permission::whereIn('name', $permissionsNames)->get(['name', 'display_name', 'description'])->toArray();
 
-            $this->table(['Permission', 'Display name', 'Description'], $permissions);
+            $this->line('PERMISSIONS');
+            $this->table(['Id', 'Permission', 'Display name', 'Description'], $permissions);
 
-            $users = $role->users()->get()->toArray();
+            $users = $role->users()->get(['name', 'email'])->toArray();
 
-            dd($users);
+            $this->line('USERS');
+            $this->table(['Id', 'Name', 'E-mail'], $users);
         }
     }
 }
