@@ -41,58 +41,42 @@ trait CommandsProviderTrait
 
     private function registerPermissionCommands()
     {
-        $signatureNamespace = 'permission';
-
-        $availableCommands = [
+        $this->registerModelCommands('permission', [
             '.attach' => 'Attach',
             '.create' => 'Create',
             '.delete' => 'Delete',
             '.detach' => 'Detach',
             '.info' => 'Info',
             's' => 'ListAll'
-        ];
-
-        $this->registerModelCommands($signatureNamespace, $availableCommands);
+        ]);
     }
 
     private function registerRoleCommands()
     {
-        $signatureNamespace = 'role';
-
-        $availableCommands = [
+        $this->registerModelCommands('role', [
             '.attach' => 'Attach',
             '.create' => 'Create',
             '.delete' => 'Delete',
             '.detach' => 'Detach',
             '.info' => 'Info',
             's' => 'ListAll'
-        ];
-
-        $this->registerModelCommands($signatureNamespace, $availableCommands);
+        ]);
     }
 
     private function registerTeamCommands()
     {
-        $signatureNamespace = 'team';
-
-        $availableCommands = [
+        $this->registerModelCommands('team', [
             '.create' => 'Create',
             '.delete' => 'Delete',
             's' => 'ListAll'
-        ];
-
-        $this->registerModelCommands($signatureNamespace, $availableCommands);
+        ]);
     }
 
     private function registerUserCommands()
     {
-        $signatureNamespace = 'user';
-
-        $availableCommands = [
+        $this->registerModelCommands('user', [
             '.info' => 'Info'
-        ];
-
-        $this->registerModelCommands($signatureNamespace, $availableCommands);
+        ]);
     }
 
 }
