@@ -59,48 +59,55 @@ class Detach extends BaseCommand
         }
 
         if($detachFromRoles) {
-            $this->detachFromRoles($permissionNames);
+            $this->detachFromModel(new Role, $permissionNames);
         }
 
         if($detachFromUsers) {
-            $this->detachFromUsers($permissionNames);
+            $this->detachFromModel(Helper::getUserModel(), $permissionNames);
         }
 
     }
 
-    protected function detachFromRoles($permissionNames)
+    protected function detachFromModel($model, $permissionNames)
     {
+        $entityIds = [];
 
-        $roleIds = [];
+        $modelName = strtolower(class_basename($model));
 
         foreach($permissionNames as $permissionName) {
-            $roleIds = array_merge($roleIds, Permission::where('name', $permissionName)->first()->role_ids);
+            $entityIds = array_merge($entityIds, (array) Permission::where('name', $permissionName)->first()->{$modelName.'_ids'});
         }
 
-        $availableRoles = collect(Role::whereIn('_id', $roleIds)->get(['name'])->toArray())->map(function ($item, $key) {
-            return $item['name'];
-        })->toArray();
+        $fieldName = function ($modelName) {
+            return (string) ($modelName == 'role' ? 'name' : 'email');
+        };
 
-        $roleNames = $this->getRolesList('Choose role(s) you want permission(s) to detach from', $availableRoles);
+        $availableEntities = collect($model->whereIn('_id', $entityIds)->get([$fieldName($modelName)])->toArray());
+
+        $entitiesNames = $this->{'get' . ucfirst($modelName) . 'sList'}("Choose $modelName(s) you want permission(s) to detach from", $availableEntities);
 
         try {
 
-            foreach($roleNames as $roleName) {
-                $this->line('Trying to detach permissions from role ' . $roleName);
+            foreach($entitiesNames as $entityName) {
+                $this->line("Trying to detach permissions from $modelName " . $entityName);
 
                 foreach($permissionNames as $permissionName) {
 
                     $this->line("Detaching permission '$permissionName'...");
 
-                    $role = $this->getRole($roleName, true);
+                    $entity = $this->{'get' . ucfirst($modelName)}($entityName, true);
 
-                    if(!$role->hasPermission($permissionName)) {
+                    if(is_bool($entity)) {
+                        dd($entity, $modelName, $entityName);
+                    }
+
+                    if(!$entity->hasPermission($permissionName)) {
                         $this->line('Didn\'t have a permission. Skipping...');
                     } else {
                         $this->line('Had a permission. Detaching...');
 
                         try {
-                            $role->detachPermission($permissionName);
+                            $entity->detachPermission($permissionName);
                             $this->info('    Permission detached');
                         } catch (\Exception $e) {
                             $this->error('    Permission not detached (' . $e->getMessage() . ')');
@@ -114,42 +121,5 @@ class Detach extends BaseCommand
         } catch (\Exception $e) {
             $this->error('    Permission not attached (' . $e->getMessage() . ')');
         }
-    }
-
-    protected function detachFromUsers($permissionNames)
-    {
-        $userEmails = $this->getUsersLIst('Choose user(s) you want permission(s) to attach to');
-
-        // try {
-
-            foreach($userEmails as $email) {
-                $this->line('Trying to attach permissions to user ' . $email);
-
-                foreach($permissionNames as $permissionName) {
-
-                    $this->line("Attaching permission '$permissionName'...");
-
-                    $user = $this->getUser($email, true);
-
-                    if($user->hasPermission($permissionName)) {
-                        $this->line('Already had. Skipping...');
-                    } else {
-                        $this->line('Didn\'t have a permission. Attaching...');
-
-                        // try {
-                            $user->attachPermission($permissionName);
-                            $this->info('    Permission attached');
-                        // } catch (\Exception $e) {
-                        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
-                        // }
-
-                    }
-
-                }
-            }
-
-        // } catch (\Exception $e) {
-        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
-        // }
     }
 }

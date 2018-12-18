@@ -11,6 +11,7 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Models\Permission;
+use Vegvisir\TrustNoSql\Models\Role;
 
 class Attach extends BaseCommand
 {
@@ -58,37 +59,40 @@ class Attach extends BaseCommand
         }
 
         if($attachToRoles) {
-            $this->attachToRoles($permissionNames);
+            $this->attachToModel(new Role, $permissionNames);
         }
 
         if($attachToUsers) {
-            $this->attachToUsers($permissionNames);
+            $this->attachToModel(Helper::getUserModel(), $permissionNames);
         }
 
     }
 
-    protected function attachToRoles($permissionNames)
+    protected function attachToModel($model, $permissionNames)
     {
-        $roleNames = $this->getRolesList('Choose role(s) you want permission(s) to attach to');
+
+        $modelName = strtolower(class_basename($model));
+
+        $entitiesNames = $this->{'get' . ucfirst($modelName) . 'sList'}("Choose $modelName(s) you want permission(s) to attach to");
 
         try {
 
-            foreach($roleNames as $roleName) {
-                $this->line('Trying to attach permissions to role ' . $roleName);
+            foreach($entitiesNames as $entityName) {
+                $this->line("Trying to attach permissions to $modelName " . $entityName);
 
                 foreach($permissionNames as $permissionName) {
 
                     $this->line("Attaching permission '$permissionName'...");
 
-                    $role = $this->getRole($roleName, true);
+                    $entity = $this->{'get' . ucfirst($modelName)}($entityName, true);
 
-                    if($role->hasPermission($permissionName)) {
+                    if($entity->hasPermission($permissionName)) {
                         $this->line('Already had. Skipping...');
                     } else {
                         $this->line('Didn\'t have a permission. Attaching...');
 
                         try {
-                            $role->attachPermission($permissionName);
+                            $entity->attachPermission($permissionName);
                             $this->info('    Permission attached');
                         } catch (\Exception $e) {
                             $this->error('    Permission not attached (' . $e->getMessage() . ')');
@@ -104,40 +108,4 @@ class Attach extends BaseCommand
         }
     }
 
-    protected function attachToUsers($permissionNames)
-    {
-        $userEmails = $this->getUsersList('Choose user(s) you want permission(s) to attach to');
-
-        // try {
-
-            foreach($userEmails as $email) {
-                $this->line('Trying to attach permissions to user ' . $email);
-
-                foreach($permissionNames as $permissionName) {
-
-                    $this->line("Attaching permission '$permissionName'...");
-
-                    $user = $this->getUser($email, true);
-
-                    if($user->hasPermission($permissionName)) {
-                        $this->line('Already had. Skipping...');
-                    } else {
-                        $this->line('Didn\'t have a permission. Attaching...');
-
-                        // try {
-                            $user->attachPermission($permissionName);
-                            $this->info('    Permission attached');
-                        // } catch (\Exception $e) {
-                        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
-                        // }
-
-                    }
-
-                }
-            }
-
-        // } catch (\Exception $e) {
-        //     $this->error('    Permission not attached (' . $e->getMessage() . ')');
-        // }
-    }
 }
