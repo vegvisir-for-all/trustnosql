@@ -8,10 +8,10 @@ namespace Vegvisir\TrustNoSql\Commands\Team;
  *
  * @license GPL-3.0-or-later
  */
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseCreate;
 use Vegvisir\TrustNoSql\Models\Team;
 
-class Create extends BaseCommand
+class Create extends BaseCreate
 {
 
     /**
@@ -43,35 +43,6 @@ class Create extends BaseCommand
      */
     public function handle()
     {
-
-        $keepAsking = true;
-
-        while($keepAsking) {
-            $teamName = $this->ask('Name of the team');
-
-            /**
-             * $keepAsking should change only when team doesn't exist
-             * It should NOT change when team exist (also, an error should be displayed)
-             */
-
-             if($this->getTeam($teamName, false) == true) {
-                 $keepAsking = false;
-             }
-        }
-
-        $displayName = $this->ask('Display name', false);
-        $description = $this->ask('Description', false);
-
-        try {
-            Team::create([
-                'name' => $teamName,
-                'display_name' => $displayName,
-                'description' => $description
-            ]);
-
-            $this->successCreating('team', $teamName);
-        } catch (\Exception $e) {
-            $this->errorCreating('team', $teamName, $e->getMessage());
-        }
+        $this->entityCreate(new Team);
     }
 }

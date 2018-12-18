@@ -11,7 +11,7 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
 use Vegvisir\TrustNoSql\Commands\BaseDelete;
 use Vegvisir\TrustNoSql\Models\Permission;
 
-class Delete extends BaseCommand
+class Delete extends BaseDelete
 {
 
     /**

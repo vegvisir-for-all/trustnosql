@@ -9,10 +9,10 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseCreate;
 use Vegvisir\TrustNoSql\Models\Permission;
 
-class Create extends BaseCommand
+class Create extends BaseCreate
 {
 
     /**
@@ -44,41 +44,6 @@ class Create extends BaseCommand
      */
     public function handle()
     {
-
-        $keepAsking = true;
-
-        while($keepAsking) {
-            $permissionName = $this->ask('Name of the permission');
-
-            /**
-             * $keepAsking should change only when permission doesn't exist
-             * It should NOT change when permission exists (also, an error should be displayed)
-             */
-
-             if($this->getPermission($permissionName, false) == true) {
-                 $keepAsking = false;
-             }
-
-             if(Helper::isPermissionWildcard($permissionName)) {
-                 $this->error('Wildcard permissions are not allowed here');
-
-                 $keepAsking = true;
-             }
-        }
-
-        $displayName = $this->ask('Display name', false);
-        $description = $this->ask('Description', false);
-
-        try {
-            Permission::create([
-                'name' => $permissionName,
-                'display_name' => $displayName,
-                'description' => $description
-            ]);
-
-            $this->successCreating('permission', $permissionName);
-        } catch (\Exception $e) {
-            $this->errorCreating('permission', $permissionName, $e->getMessage());
-        }
+        $this->entityCreate(new Permission);
     }
 }

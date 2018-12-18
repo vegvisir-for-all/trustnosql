@@ -8,10 +8,10 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  *
  * @license GPL-3.0-or-later
  */
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseCreate;
 use Vegvisir\TrustNoSql\Models\Role;
 
-class Create extends BaseCommand
+class Create extends BaseCreate
 {
 
     /**
@@ -43,35 +43,6 @@ class Create extends BaseCommand
      */
     public function handle()
     {
-
-        $keepAsking = true;
-
-        while($keepAsking) {
-            $roleName = $this->ask('Name of the role');
-
-            /**
-             * $keepAsking should change only when role doesn't exist
-             * It should NOT change when role exist (also, an error should be displayed)
-             */
-
-             if($this->getRole($roleName, false) == true) {
-                 $keepAsking = false;
-             }
-        }
-
-        $displayName = $this->ask('Display name', false);
-        $description = $this->ask('Description', false);
-
-        try {
-            Role::create([
-                'name' => $roleName,
-                'display_name' => $displayName,
-                'description' => $description
-            ]);
-
-            $this->successCreating('role', $roleName);
-        } catch (\Exception $e) {
-            $this->errorCreating('role', $roleName, $e->getMessage());
-        }
+        $this->entityCreate(new Role);
     }
 }
