@@ -11,6 +11,7 @@ trait CommandsProviderTrait
     {
         $this->registerPermissionCommands();
         $this->registerRoleCommands();
+        $this->registerTeamCommands();
         $this->registerUserCommands();
 
         $this->commands($this->trustNoSqlCommands);
@@ -86,6 +87,22 @@ trait CommandsProviderTrait
             'command.trustnosql.role.detach',
             'command.trustnosql.role.info',
             'command.trustnosql.roles'
+        ]);
+    }
+
+    private function registerTeamCommands()
+    {
+        $this->app->singleton('command.trustnosql.team.create', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Team\Create();
+        });
+
+        $this->app->singleton('command.trustnosql.team.delete', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Team\Delete();
+        });
+
+        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
+            'command.trustnosql.team.create',
+            'command.trustnosql.team.delete'
         ]);
     }
 

@@ -156,87 +156,37 @@ class BaseCommand extends Command
     }
 
     /**
-     * Displays permissions list and returns array of choices.
-     *
-     * @param string|null $question A question that should be asked
-     * @param array|null $permissions Optional array of permissions to be displayed
-     * @return array
-     */
-    protected function getPermissionsList($question = null, $permissions = null)
-    {
-
-        if($question == null) {
-            $question = 'Permissions list';
-        }
-
-        if($permissions == null) {
-            $permissions = collect(Permission::all())->map(function ($item, $key) {
-                return $item->name;
-            })->toArray();
-        }
-
-        sort($permissions);
-
-        $permissionNames = $this->choice($question, $permissions, null, count($permissions), true);
-
-        return $permissionNames;
-    }
-
-    /**
      * Displays roles list and returns array of choices.
      *
      * @param string|null $question A question that should be asked
      * @param array|null $roles Optional array of roles to be displayed
      * @return array
      */
-    protected function getRolesList($question = null, $roles = null)
+    protected function getEntitiesList($model, $question = null, $options = null)
     {
 
+        $modelName = strtolower(class_basename($model));
+
         if($question == null) {
-            $question = 'Roles list';
+            $question = ucfirst($modelName) . ' list';
         }
 
-        if($roles == null) {
-            $roles = collect(Role::all())->map(function ($item, $key) {
-                return $item->name;
+        if($options == null) {
+            $options = collect($model->all())->map(function ($item, $key) use($modelName) {
+                return $modelName == 'user' ? 'email' : 'name';
             })->toArray();
         }
 
-        sort($roles);
-
-        $roleNames = $this->choice($question, $roles, null, count($roles), true);
-
-        return $roleNames;
-    }
-
-    /**
-     * Displays users list and returns array of choices.
-     *
-     * @param string|null $question A question that should be asked
-     * @return array
-     */
-    protected function getUsersList($question = null)
-    {
-        try {
-            $userModel = Helper::getUserModel();
-
-            $availableUsers = collect($userModel->all())->map(function ($item, $key) {
-                return $item->email;
-            })->toArray();
-
-        } catch (\Exception $e) {
-            // todo
+        if(empty($options)) {
+            $this->error('No ' . $modelName . 's to choose. Sorry :(');
+            die();
         }
 
-        if($question == null) {
-            $question = 'Users list';
-        }
+        sort($options);
 
-        sort($availableUsers);
+        $optionNames = $this->choice($question, $options, null, count($options), true);
 
-        $userEmails = $this->choice($question, $availableUsers, null, count($availableUsers), true);
-
-        return $userEmails;
+        return $optionNames;
     }
 
 }

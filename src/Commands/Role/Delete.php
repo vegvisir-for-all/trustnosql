@@ -8,10 +8,10 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  *
  * @license GPL-3.0-or-later
  */
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseDelete;
 use Vegvisir\TrustNoSql\Models\Role;
 
-class Delete extends BaseCommand
+class Delete extends BaseDelete
 {
 
     /**
@@ -43,34 +43,6 @@ class Delete extends BaseCommand
      */
     public function handle()
     {
-
-        $keepAsking = true;
-
-        $availableRoles = collect(Role::all())->map(function ($item, $key) {
-            return $item->name;
-        })->toArray();
-
-        while($keepAsking) {
-
-            $roleName = $this->anticipate('Name of the role', $availableRoles);
-
-            /**
-             * $keepAsking should change only when role doesn't exist
-             * It should NOT change when role exist (also, an error should be displayed)
-             */
-
-             if(($role = $this->getRole($roleName, true)) !== false)  {
-                 $keepAsking = false;
-             }
-        }
-
-        try {
-
-            $role->delete();
-
-            $this->successDeleting('role', $roleName);
-        } catch (\Exception $e) {
-            $this->errorDeleting('role', $roleName, $e->getMessage());
-        }
+        $this->entityDelete(new Role);
     }
 }

@@ -26,6 +26,17 @@ class Team extends Model implements TeamInterface
     protected $collection = 'teams';
 
     /**
+     * Fillable fields of the model.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'display_name',
+        'description'
+    ];
+
+    /**
      * Creates new instance of the model
      *
      * @param array $attributes
