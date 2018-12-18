@@ -70,6 +70,10 @@ class Info extends BaseCommand
             $this->line('PERMISSIONS');
             $this->table(['Id', 'Permission', 'Display name', 'Description'], $permissions);
 
+            /**
+             * 1. Users
+             */
+
             $users = $role->users()->get(['name', 'email'])->toArray();
 
             $this->line('USERS');

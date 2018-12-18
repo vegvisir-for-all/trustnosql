@@ -30,10 +30,15 @@ trait CommandsProviderTrait
             return new \Vegvisir\TrustNoSql\Commands\Permission\Delete();
         });
 
+        $this->app->singleton('command.trustnosql.permissions', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Permission\ListAll();
+        });
+
         $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
             'command.trustnosql.permission.attach',
             'command.trustnosql.permission.create',
-            'command.trustnosql.permission.delete'
+            'command.trustnosql.permission.delete',
+            'command.trustnosql.permissions'
         ]);
     }
 
