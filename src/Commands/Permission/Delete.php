@@ -8,7 +8,7 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
  *
  * @license GPL-3.0-or-later
  */
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseDelete;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class Delete extends BaseCommand
