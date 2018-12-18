@@ -173,7 +173,7 @@ class BaseCommand extends Command
 
         if($options == null) {
             $options = collect($model->all())->map(function ($item, $key) use($modelName) {
-                return $modelName == 'user' ? 'email' : 'name';
+                return $modelName == 'user' ? $item['email'] : $item['name'];
             })->toArray();
         }
 

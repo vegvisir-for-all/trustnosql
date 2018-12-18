@@ -68,6 +68,7 @@ trait CommandsProviderTrait
         $this->registerModelCommands('team', [
             '.create' => 'Create',
             '.delete' => 'Delete',
+            '.info' => 'Info',
             's' => 'ListAll'
         ]);
     }
