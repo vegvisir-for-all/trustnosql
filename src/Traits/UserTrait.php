@@ -190,7 +190,7 @@ trait UserTrait
      */
     public function hasRoles($roles, $team = null, $requireAll = false)
     {
-        return $this->roleChecker()->currentUserHasRole($roles, $team, $requireAll);
+        return $this->roleChecker()->currentUserHasRoles($roles, $team, $requireAll);
     }
 
     /**

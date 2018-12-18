@@ -9,10 +9,10 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseAttach;
 use Vegvisir\TrustNoSql\Models\Role;
 
-class Attach extends BaseCommand
+class Attach extends BaseAttach
 {
 
     /**
@@ -45,51 +45,17 @@ class Attach extends BaseCommand
     public function handle()
     {
 
-        $keepAsking = true;
+        $askAbout = [];
 
-        $availableRoles = collect(Role::all())->map(function ($item, $key) {
-            return $item->name;
-        })->toArray();
-
-        $roleNames = $this->getRolesList('Choose role(s) you want to attach');
-        $userEmails = $this->getUsersList('E-mail address of the user to attach to');
-
-        try {
-
-            foreach($userEmails as $userKey => $email) {
-
-                $this->line(($userKey+1) . '/' . count($userEmails) . ". Attaching roles to user '$email'...");
-
-                $user = $this->getUser($email, true);
-
-                foreach($roleNames as $roleKey => $roleName) {
-
-                    $this->line('  ' . ($roleKey+1) . '/' . count($roleNames) . ". Attaching role '$roleName'...");
-
-                    if($user->hasRole($roleName)) {
-
-                        $this->error('    Already had a role attached to. Skipping');
-                        continue;
-
-                    } else {
-
-                        $this->line('    User didn\'t have a role. Attaching...');
-
-                        try {
-                            $user->attachRole($roleName);
-                            $this->info('    Role attached');
-                        } catch (\Exception $e) {
-                            $this->error('    Role not attached (' . $e->getMessage() . ')');
-                        }
-
-                    }
-
-                    $this->successAttaching('role', $roleName, 'user', $email);
-                }
-            }
-
-        } catch (\Exception $e) {
-            $this->errorAttaching('role', 'multiple', 'user', $email, null, $e->getMessage());
+        if($this->confirm('Do you want to attach roles to user?', true)) {
+            $askAbout[] = 'users';
         }
+
+        if(empty($askAbout)) {
+            $this->error('Sorry, can\'t help');
+            return;
+        }
+
+        $this->entityAttach(new Role, $askAbout);
     }
 }

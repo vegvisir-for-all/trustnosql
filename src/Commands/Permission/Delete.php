@@ -43,6 +43,6 @@ class Delete extends BaseDelete
      */
     public function handle()
     {
-        $this->entityDelete(new Team);
+        $this->entityDelete(new Permission);
     }
 }
