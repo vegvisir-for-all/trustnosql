@@ -34,6 +34,10 @@ trait CommandsProviderTrait
             return new \Vegvisir\TrustNoSql\Commands\Permission\Detach();
         });
 
+        $this->app->singleton('command.trustnosql.permission.info', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Permission\Info();
+        });
+
         $this->app->singleton('command.trustnosql.permissions', function () {
             return new \Vegvisir\TrustNoSql\Commands\Permission\ListAll();
         });
@@ -43,6 +47,7 @@ trait CommandsProviderTrait
             'command.trustnosql.permission.create',
             'command.trustnosql.permission.delete',
             'command.trustnosql.permission.detach',
+            'command.trustnosql.permission.info',
             'command.trustnosql.permissions'
         ]);
     }
