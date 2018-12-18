@@ -9,12 +9,44 @@
 
 return [
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | TrustNoSql Cache
+    |--------------------------------------------------------------------------
+    |
+    | This configuration helps to customize the TrustNoSql cache behavior.
+    |
+    */
     'cache' => [
 
         /**
          * Should TrustNoSql use cache functionality
          */
         'use_cache' => true
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | TrustNoSql CLI
+    |--------------------------------------------------------------------------
+    |
+    | This configuration helps to customize the TrustNoSql command line interface behavior.
+    |
+    */
+    'cli' => [
+
+
+        /**
+         * Should TrustNoSql use CLI
+         */
+        'use_cli' => true,
+
+        /**
+         * CLI default signature
+         */
+        'signature' => 'trustnosql.'
+
     ],
 
     /*
@@ -111,6 +143,14 @@ return [
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | TrustNoSql Teams
+    |--------------------------------------------------------------------------
+    |
+    | This configuration helps to customize the TrustNoSql teams behavior.
+    |
+    */
     'teams' => [
 
         /**
