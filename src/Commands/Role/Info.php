@@ -45,7 +45,7 @@ class Info extends BaseCommand
      */
     public function handle()
     {
-        $rolesNames = $this->getRolesList();
+        $rolesNames = $this->getEntitiesList(new Role);
 
         foreach($rolesNames as $roleName) {
             $this->line("Showing information for role '$roleName'");

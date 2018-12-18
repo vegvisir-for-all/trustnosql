@@ -171,9 +171,13 @@ class BaseCommand extends Command
             $question = ucfirst($modelName) . ' list';
         }
 
+        $fieldName = function ($modelName) {
+            return $modelName == 'user' ? 'email' : 'name';
+        };
+
         if($options == null) {
-            $options = collect($model->all())->map(function ($item, $key) use($modelName) {
-                return $modelName == 'user' ? $item['email'] : $item['name'];
+            $options = collect($model->all()->sortBy($fieldName($modelName)))->map(function ($item, $key) use($modelName, $fieldName) {
+                return $item[$fieldName($modelName)];
             })->toArray();
         }
 

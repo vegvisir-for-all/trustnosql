@@ -45,7 +45,7 @@ class Info extends BaseCommand
      */
     public function handle()
     {
-        $userEmails = $this->getUsersList();
+        $userEmails = $this->getEntitiesList(Helper::getUserModel());
 
         foreach($userEmails as $email) {
             $this->line("Showing information for user '$email'");

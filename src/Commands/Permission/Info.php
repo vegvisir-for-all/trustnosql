@@ -44,7 +44,7 @@ class Info extends BaseCommand
      */
     public function handle()
     {
-        $permissionNames = $this->getPermissionsList();
+        $permissionNames = $this->getEntitiesList(new Permission);
 
         foreach($permissionNames as $permissionName) {
             $this->line("Showing information for permission '$permissionName'");
