@@ -116,7 +116,17 @@ return [
         /**
          * Should TrustNoSql use team functionality
          */
-        'use_teams' => true
+        'use_teams' => true,
+
+        /**
+         * Handling of the team functionality. Two options are possible:
+         *
+         * 1. explicit - team name(s) must be excplicitely enlisted in the middleware function,
+         *               team isn't attached to role in any way
+         * 2. auto - both roles and users have teams attached to, and while checking for a role,
+         *           also a checking if user has a role attached to is performed
+         */
+        'handling' => 'explicit'
     ],
 
     /*
