@@ -1,6 +1,6 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Commands\Permission;
+namespace Vegvisir\TrustNoSql\Commands\Team;
 
 /**
  * This file is part of TrustNoSql,
@@ -9,7 +9,7 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Commands\BaseListAll;
-use Vegvisir\TrustNoSql\Models\Permission;
+use Vegvisir\TrustNoSql\Models\Team;
 
 class ListAll extends BaseListAll
 {
@@ -19,14 +19,14 @@ class ListAll extends BaseListAll
      *
      * @var string
      */
-    protected $signature = 'trustnosql:permissions';
+    protected $signature = 'trustnosql:teams';
 
     /**
      * Console command description.
      *
      * @var string
      */
-    protected $description = 'Shows a list of all permissions';
+    protected $description = 'Shows a list of all teams';
 
     /**
      * Create a new command instance.
@@ -43,6 +43,6 @@ class ListAll extends BaseListAll
      */
     public function handle()
     {
-        $this->entitiesListAll(new Permission);
+        $this->entitiesListAll(new Team);
     }
 }

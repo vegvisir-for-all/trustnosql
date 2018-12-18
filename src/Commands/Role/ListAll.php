@@ -8,10 +8,10 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  *
  * @license GPL-3.0-or-later
  */
-use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Commands\BaseListAll;
 use Vegvisir\TrustNoSql\Models\Role;
 
-class ListAll extends BaseCommand
+class ListAll extends BaseListAll
 {
 
     /**
@@ -43,14 +43,6 @@ class ListAll extends BaseCommand
      */
     public function handle()
     {
-        $roles = collect(Role::all([
-            'id', 'name', 'display_name', 'description'
-        ]))->toArray();
-
-        $headers = [
-            '_id', 'Name', 'Display name', 'Description'
-        ];
-
-        $this->table($headers, $roles);
+        $this->entitiesListAll(new Role);
     }
 }

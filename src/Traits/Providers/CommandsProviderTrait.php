@@ -100,9 +100,14 @@ trait CommandsProviderTrait
             return new \Vegvisir\TrustNoSql\Commands\Team\Delete();
         });
 
+        $this->app->singleton('command.trustnosql.teams', function () {
+            return new \Vegvisir\TrustNoSql\Commands\Team\ListAll();
+        });
+
         $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
             'command.trustnosql.team.create',
-            'command.trustnosql.team.delete'
+            'command.trustnosql.team.delete',
+            'command.trustnosql.teams'
         ]);
     }
 
