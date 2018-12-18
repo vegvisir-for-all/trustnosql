@@ -11,8 +11,9 @@ namespace Vegvisir\TrustNoSql\Commands\Permission;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Models\Permission;
+use Vegvisir\TrustNoSql\Models\Role;
 
-class Attach extends BaseCommand
+class Detach extends BaseCommand
 {
 
     /**
@@ -20,14 +21,14 @@ class Attach extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'trustnosql:permission:attach';
+    protected $signature = 'trustnosql:permission:detach';
 
     /**
      * Console command description.
      *
      * @var string
      */
-    protected $description = 'Attach a TrustNoSql role to role(s)';
+    protected $description = 'Detach a TrustNoSql permission from role(s) or user(s)';
 
     /**
      * Create a new command instance.
@@ -47,51 +48,62 @@ class Attach extends BaseCommand
 
         $keepAsking = true;
 
-        $permissionNames = $this->getPermissionsList('Choose permission(s) you want to attach');
+        $permissionNames = $this->getPermissionsList('Choose permission(s) you want to detach');
 
-        $attachToRoles = $this->confirm('Do you want to attach permissions to roles?', true);
-        $attachToUsers = $this->confirm('Do you want to attach permissions explicitely to users?', false);
+        $detachFromRoles = $this->confirm('Do you want to detach permissions from roles?', true);
+        $detachFromUsers = $this->confirm('Do you want to detach permissions explicitely from users?', false);
 
-        if(!$attachToRoles && !$attachToUsers) {
+        if(!$detachFromRoles && !$detachFromUsers) {
             $this->error('Sorry, can\'t help');
             return;
         }
 
-        if($attachToRoles) {
-            $this->attachToRoles($permissionNames);
+        if($detachFromRoles) {
+            $this->detachFromRoles($permissionNames);
         }
 
-        if($attachToUsers) {
-            $this->attachToUsers($permissionNames);
+        if($detachFromUsers) {
+            $this->detachFromUsers($permissionNames);
         }
 
     }
 
-    protected function attachToRoles($permissionNames)
+    protected function detachFromRoles($permissionNames)
     {
-        $roleNames = $this->getRolesList('Choose role(s) you want permission(s) to attach to');
+
+        $roleIds = [];
+
+        foreach($permissionNames as $permissionName) {
+            $roleIds = array_merge($roleIds, Permission::where('name', $permissionName)->first()->role_ids);
+        }
+
+        $availableRoles = collect(Role::whereIn('_id', $roleIds)->get(['name'])->toArray())->map(function ($item, $key) {
+            return $item['name'];
+        })->toArray();
+
+        $roleNames = $this->getRolesList('Choose role(s) you want permission(s) to detach from', $availableRoles);
 
         try {
 
             foreach($roleNames as $roleName) {
-                $this->line('Trying to attach permissions to role ' . $roleName);
+                $this->line('Trying to detach permissions from role ' . $roleName);
 
                 foreach($permissionNames as $permissionName) {
 
-                    $this->line("Attaching permission '$permissionName'...");
+                    $this->line("Detaching permission '$permissionName'...");
 
                     $role = $this->getRole($roleName, true);
 
-                    if($role->hasPermission($permissionName)) {
-                        $this->line('Already had. Skipping...');
+                    if(!$role->hasPermission($permissionName)) {
+                        $this->line('Didn\'t have a permission. Skipping...');
                     } else {
-                        $this->line('Didn\'t have a permission. Attaching...');
+                        $this->line('Had a permission. Detaching...');
 
                         try {
-                            $role->attachPermission($permissionName);
-                            $this->info('    Permission attached');
+                            $role->detachPermission($permissionName);
+                            $this->info('    Permission detached');
                         } catch (\Exception $e) {
-                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                            $this->error('    Permission not detached (' . $e->getMessage() . ')');
                         }
 
                     }
@@ -104,9 +116,9 @@ class Attach extends BaseCommand
         }
     }
 
-    protected function attachToUsers($permissionNames)
+    protected function detachFromUsers($permissionNames)
     {
-        $userEmails = $this->getUsersList('Choose user(s) you want permission(s) to attach to');
+        $userEmails = $this->getUsersLIst('Choose user(s) you want permission(s) to attach to');
 
         // try {
 

@@ -42,7 +42,7 @@ trait RoleAliasesTrait {
      */
     public function detachPermission($permission)
     {
-        return $this->detachPermission($permission);
+        return $this->detachPermissions($permission);
     }
 
 }
