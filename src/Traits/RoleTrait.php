@@ -71,6 +71,31 @@ trait RoleTrait {
     }
 
     /**
+     * Retrieves an array of Role's user emails
+     *
+     * @return array
+     */
+    public function getRoleCurrentUsers() {
+
+        /**
+         * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
+         * by RoleCacheableTrait
+         */
+        if(Config::get('trustnosql.cache.use_cache')) {
+            return $this->getRoleCachedUsers($namespace);
+        }
+
+        /**
+         * Otherwise, retrieve a list of current permissions from the DB
+         */
+        $usersCollection = $this->users();
+
+        return collect($usersCollection->get())->map(function ($item, $key) {
+            return $item->email;
+        })->toArray();
+    }
+
+    /**
      * Checkes whether Role has a given permission(s).
      *
      * @param string|array $permissions Array of permissions or comma-separated list.

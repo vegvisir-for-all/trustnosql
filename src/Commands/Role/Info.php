@@ -9,6 +9,7 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
 
@@ -74,7 +75,10 @@ class Info extends BaseCommand
              * 1. Users
              */
 
-            $users = $role->users()->get(['name', 'email'])->toArray();
+            $usersEmails = $role->getRoleCurrentUsers();
+            $userModel = Helper::getUserModel();
+
+            $users = $userModel->whereIn('email', $usersEmails)->get(['name', 'email'])->toArray();
 
             $this->line('USERS');
             $this->table(['Id', 'Name', 'E-mail'], $users);

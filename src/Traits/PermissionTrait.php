@@ -13,8 +13,6 @@ use Vegvisir\TrustNoSql\Helper;
 
 trait PermissionTrait {
 
-
-
     /**
      * Moloquent belongs-to-many relationship with the permission model.
      *
