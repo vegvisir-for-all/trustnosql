@@ -81,6 +81,7 @@ trait CommandsProviderTrait
     private function registerTeamCommands()
     {
         $this->registerModelCommands('team', [
+            '.attach' => 'Attach',
             '.create' => 'Create',
             '.delete' => 'Delete',
             '.info' => 'Info',
