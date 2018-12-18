@@ -156,14 +156,19 @@ class BaseCommand extends Command
     }
 
     /**
-     * Displays roles list and returns array of choices.
+     * Displays entities list and returns array of choices.
      *
+     * @param string|object $model Model name or model itself
      * @param string|null $question A question that should be asked
      * @param array|null $roles Optional array of roles to be displayed
      * @return array
      */
     protected function getEntitiesList($model, $question = null, $options = null)
     {
+
+        if(!\is_object($model)) {
+            $model = new $model;
+        }
 
         $modelName = strtolower(class_basename($model));
 

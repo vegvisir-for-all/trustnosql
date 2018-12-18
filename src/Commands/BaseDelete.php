@@ -2,13 +2,29 @@
 
 namespace Vegvisir\TrustNoSql\Commands;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
 
 class BaseDelete extends BaseCommand
 {
 
+    /**
+     * Deletes entity.
+     *
+     * @param string|object $model Model name or model itself
+     * @return mixed
+     */
     public function entityDelete($model)
     {
+
+        if(!\is_object($model)) {
+            $model = new $model;
+        }
 
         $modelName = strtolower(class_basename($model));
 

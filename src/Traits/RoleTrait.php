@@ -36,6 +36,11 @@ trait RoleTrait {
         return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
     }
 
+    /**
+     * Moloquent belongs-to-many relationship with the user model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(get_class(Helper::getUserModel()));

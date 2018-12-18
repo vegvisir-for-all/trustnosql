@@ -58,6 +58,12 @@ class HelperProxy
         return PermissionHelper::getWildcards();
     }
 
+    /**
+     * Checks whether permission is a wildcard permission ('namespace/*')
+     *
+     * @param string $permissionName Name of the permission.
+     * @return bool
+     */
     public static function isPermissionWildcard($permissionName)
     {
         return PermissionHelper::isWildcard($permissionName);

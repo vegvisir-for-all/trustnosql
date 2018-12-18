@@ -8,7 +8,6 @@ namespace Vegvisir\TrustNoSql\Traits\Cacheable;
  *
  * @license GPL-3.0-or-later
  */
-
 trait RoleCacheableTrait {
 
     /**

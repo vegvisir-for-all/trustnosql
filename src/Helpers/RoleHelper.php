@@ -2,18 +2,31 @@
 
 namespace Vegvisir\TrustNoSql\Helpers;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Vegvisir\TrustNoSql\Models\Role;
 
 class RoleHelper extends HelperProxy
 {
 
+    /**
+     * Entities delimiter.
+     *
+     * @var string
+     */
     const ENTITIES_DELIMITER = ',';
 
-    protected static function getId($roleName)
-    {
-
-    }
-
+    /**
+     * Gets an array from comma-separated values.
+     * If $roles is an array, function returns $roles itself
+     *
+     * @param string|array $roles Array of role names or comma-separated string
+     * @return array
+     */
     public static function getArray($roles)
     {
         return parent::getArray($roles);

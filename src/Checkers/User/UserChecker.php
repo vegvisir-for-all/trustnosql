@@ -15,59 +15,15 @@ use Vegvisir\TrustNoSql\Models\Permission;
 
 class UserChecker extends BaseChecker {
 
-    public function currentUserHasRole($roles, $team = null, $requireAll = null)
-    {
-
-        /**
-         * Return true if $roles is empty
-         */
-        if((is_string($roles) && $roles == '') || (is_array($roles) && empty($roles))) {
-            return true;
-        }
-
-        /**
-         * Get array of roles
-         */
-        $roles = Helper::getRolesArray($roles);
-
-        foreach($roles as $roleName)
-        {
-            $hasRole = $this->currentUserCheckSingleRole($roleName);
-
-            if($hasRole && !$requireAll) {
-                return true;
-            } elseif(!$hasRole && $requireAll) {
-                return false;
-            }
-
-            /**
-             * If we've made it this far, and $requireAll is FALSE, then none of the permissions were found
-             * If we've made it this far, and $requireAll is TRUE, then all of the permissions were found
-             * Thus, we need to return value of $requireAll
-             */
-            return $requireAll;
-        }
-
-        return false;
-    }
-
-    protected function currentUserCheckSingleRole($roleName)
-    {
-
-        $hasRole = false;
-
-        foreach($this->model->getUserCurrentRoles() as $currentRole) {
-
-            if(str_is($roleName, $currentRole)) {
-                return true;
-            }
-
-        }
-
-        return $hasRole;
-    }
-
-    public function currentUserHasPermissions($permissions, $requireAll)
+    /**
+     * Checks whether User has given Roles.
+     *
+     * @param string|array $roles Array of role names or comma-separated string
+     * @param string|null $team Team name
+     * @param bool $requireAll Set to true if role must have all given permissions
+     * @return bool
+     */
+    public function currentUserHasRoles($roles, $team = null, $requireAll = null)
     {
         return $this->currentModelHasPermissions($this->model, $permissions, $requireAll);
     }

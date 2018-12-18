@@ -43,7 +43,7 @@ class PermissionHelper extends HelperProxy
      * Gets an array from comma-separated values.
      * If $permissions is an array, function returns $permissions itself
      *
-     * @param string|array $permissions
+     * @param string|array $permissions Array of permission names or comma-separated string
      * @return array
      */
     public static function getArray($permissions)

@@ -15,6 +15,13 @@ use Vegvisir\TrustNoSql\Models\Permission;
 
 class RoleChecker extends BaseChecker {
 
+    /**
+     * Checks whether Role has given Permissions.
+     *
+     * @param string|array $permissions Array of permission names or comma-separated string
+     * @param bool $requireAll Set to true if role must have all given permissions
+     * @return bool
+     */
     public function currentRoleHasPermissions($permissions, $requireAll)
     {
         return $this->currentModelHasPermissions($this->model, $permissions, $requireAll);

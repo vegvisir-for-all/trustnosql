@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Traits;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
@@ -24,6 +30,11 @@ trait UserTrait
         return (new CheckProxy($this))->getChecker();
     }
 
+    /**
+     * Moloquent belongs-to-many relationship with the Role model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
     public function roles()
     {
         $roles = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Role::class);
@@ -31,11 +42,11 @@ trait UserTrait
         return $roles;
     }
 
-    public function rolesTeams()
-    {
-
-    }
-
+    /**
+     * Moloquent belongs-to-many relationship with the permission model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
     public function permissions()
     {
         $permissions = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
@@ -72,6 +83,14 @@ trait UserTrait
         })->toArray();
     }
 
+    /**
+     * Checks whether current User has Permissions.
+     *
+     * @param string|array $permissions Array of permission names or comma-separated string
+     * @param string|null $team (Optional) team name
+     * @param bool $requireAll Set to true if user must have all given permissions
+     * @return bool
+     */
     public function hasPermissions($permissions, $team = null, $requireAll = false)
     {
         return $this->roleChecker()->currentUserHasPermissions($permissions, $requireAll);
