@@ -7,6 +7,10 @@ trait CommandsProviderTrait
 
     protected $trustNoSqlCommands = [];
 
+    protected $baseSignature = 'command.trustnosql.';
+
+    protected $baseClassNamespace = '\\Vegvisir\\TrustNoSql\\Commands\\';
+
     protected function registerCommands()
     {
         $this->registerPermissionCommands();
@@ -17,109 +21,78 @@ trait CommandsProviderTrait
         $this->commands($this->trustNoSqlCommands);
     }
 
-    private function registerPermissionCommands()
+    private function registerModelCommands($signatureNamespace, $availableCommands)
     {
 
-        $this->app->singleton('command.trustnosql.permission.attach', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\Attach();
-        });
+        foreach($availableCommands as $command => $className) {
 
-        $this->app->singleton('command.trustnosql.permission.create', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\Create();
-        });
+            $className = $this->baseClassNamespace . ucfirst($signatureNamespace) . '\\' . $className;
 
-        $this->app->singleton('command.trustnosql.permission.delete', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\Delete();
-        });
+            $this->app->singleton($this->baseSignature . $signatureNamespace . $command, function () use ($className) {
+                return new $className();
+            });
 
-        $this->app->singleton('command.trustnosql.permission.detach', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\Detach();
-        });
+            $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
+                $this->baseSignature . $signatureNamespace . $command
+            ]);
 
-        $this->app->singleton('command.trustnosql.permission.info', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\Info();
-        });
+        }
+    }
 
-        $this->app->singleton('command.trustnosql.permissions', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Permission\ListAll();
-        });
+    private function registerPermissionCommands()
+    {
+        $signatureNamespace = 'permission';
 
-        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
-            'command.trustnosql.permission.attach',
-            'command.trustnosql.permission.create',
-            'command.trustnosql.permission.delete',
-            'command.trustnosql.permission.detach',
-            'command.trustnosql.permission.info',
-            'command.trustnosql.permissions'
-        ]);
+        $availableCommands = [
+            '.attach' => 'Attach',
+            '.create' => 'Create',
+            '.delete' => 'Delete',
+            '.detach' => 'Detach',
+            '.info' => 'Info',
+            's' => 'ListAll'
+        ];
+
+        $this->registerModelCommands($signatureNamespace, $availableCommands);
     }
 
     private function registerRoleCommands()
     {
-        $this->app->singleton('command.trustnosql.role.attach', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\Attach();
-        });
+        $signatureNamespace = 'role';
 
-        $this->app->singleton('command.trustnosql.role.create', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\Create();
-        });
+        $availableCommands = [
+            '.attach' => 'Attach',
+            '.create' => 'Create',
+            '.delete' => 'Delete',
+            '.detach' => 'Detach',
+            '.info' => 'Info',
+            's' => 'ListAll'
+        ];
 
-        $this->app->singleton('command.trustnosql.role.delete', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\Delete();
-        });
-
-        $this->app->singleton('command.trustnosql.role.detach', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\Detach();
-        });
-
-        $this->app->singleton('command.trustnosql.role.info', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\Info();
-        });
-
-        $this->app->singleton('command.trustnosql.roles', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Role\ListAll();
-        });
-
-        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
-            'command.trustnosql.role.attach',
-            'command.trustnosql.role.create',
-            'command.trustnosql.role.delete',
-            'command.trustnosql.role.detach',
-            'command.trustnosql.role.info',
-            'command.trustnosql.roles'
-        ]);
+        $this->registerModelCommands($signatureNamespace, $availableCommands);
     }
 
     private function registerTeamCommands()
     {
-        $this->app->singleton('command.trustnosql.team.create', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Team\Create();
-        });
+        $signatureNamespace = 'team';
 
-        $this->app->singleton('command.trustnosql.team.delete', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Team\Delete();
-        });
+        $availableCommands = [
+            '.create' => 'Create',
+            '.delete' => 'Delete',
+            's' => 'ListAll'
+        ];
 
-        $this->app->singleton('command.trustnosql.teams', function () {
-            return new \Vegvisir\TrustNoSql\Commands\Team\ListAll();
-        });
-
-        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
-            'command.trustnosql.team.create',
-            'command.trustnosql.team.delete',
-            'command.trustnosql.teams'
-        ]);
+        $this->registerModelCommands($signatureNamespace, $availableCommands);
     }
 
     private function registerUserCommands()
     {
-        $this->app->singleton('command.trustnosql.user.info', function () {
-            return new \Vegvisir\TrustNoSql\Commands\User\Info();
-        });
+        $signatureNamespace = 'user';
 
-        $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
-            'command.trustnosql.user.info'
-        ]);
+        $availableCommands = [
+            '.info' => 'Info'
+        ];
+
+        $this->registerModelCommands($signatureNamespace, $availableCommands);
     }
 
 }
