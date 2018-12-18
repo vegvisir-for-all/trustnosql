@@ -72,7 +72,7 @@ trait UserTrait
         })->toArray();
     }
 
-    public function hasPermissions($permission, $team = null, $requireAll = false)
+    public function hasPermissions($permissions, $team = null, $requireAll = false)
     {
         return $this->roleChecker()->currentUserHasPermissions($permissions, $requireAll);
     }

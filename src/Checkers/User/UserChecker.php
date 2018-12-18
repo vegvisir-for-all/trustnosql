@@ -67,4 +67,9 @@ class UserChecker extends BaseChecker {
         return $hasRole;
     }
 
+    public function currentUserHasPermissions($permissions, $requireAll)
+    {
+        return $this->currentModelHasPermissions($this->model, $permissions, $requireAll);
+    }
+
 }
