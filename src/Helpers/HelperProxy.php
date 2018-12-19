@@ -16,6 +16,17 @@ class HelperProxy
 {
 
     /**
+     * Checks whether $object is a Permission
+     *
+     * @param Object $object Object to be checked against.
+     * @return bool
+     */
+    public static function isPermission($object)
+    {
+        return PermissionHelper::isOne($object);
+    }
+
+    /**
      * Gets _id for a single permission
      *
      * @param string $permissionName Name of the permission
@@ -70,6 +81,17 @@ class HelperProxy
     }
 
     /**
+     * Checks whether $object is a Role
+     *
+     * @param Object $object Object to be checked against.
+     * @return bool
+     */
+    public static function isRole($object)
+    {
+        return RoleHelper::isOne($object);
+    }
+
+    /**
      * Gets _id for a single role
      *
      * @param string $roleName Name of the role
@@ -99,6 +121,28 @@ class HelperProxy
     public static function getRolesKeys($roles)
     {
         return RoleHelper::getKeys($roles);
+    }
+
+    /**
+     * Checks whether $object is a Team
+     *
+     * @param Object $object Object to be checked against.
+     * @return bool
+     */
+    public static function isTeam($object)
+    {
+        return TeamHelper::isOne($object);
+    }
+
+    /**
+     * Checks whether $object is a User
+     *
+     * @param Object $object Object to be checked against.
+     * @return bool
+     */
+    public static function isUser($object)
+    {
+        return UserHelper::isOne($object);
     }
 
     /**
