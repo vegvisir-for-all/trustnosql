@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Contracts\RoleInterface;
 use Vegvisir\TrustNoSql\Traits\RoleTrait;
-use Vegvisir\TrustNoSql\Traits\Cacheable\RoleCacheableTrait;
 
 class Role extends Model implements RoleInterface
 {
 
-    use RoleTrait, RoleCacheableTrait;
+    use RoleTrait;
 
     /**
      * Collection used by model
@@ -35,6 +34,11 @@ class Role extends Model implements RoleInterface
         'name',
         'display_name',
         'description'
+    ];
+
+    protected $dispatchesEvents = [
+        'saved' => UserSaved::class,
+        'deleted' => UserDeleted::class,
     ];
 
     /**
