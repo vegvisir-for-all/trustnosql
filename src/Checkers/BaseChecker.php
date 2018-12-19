@@ -79,11 +79,16 @@ class BaseChecker
         }
 
         $functionName = 'currentModel' . ucfirst($parsed[2]) . 'Entities';
-        return $this->$functionName($this->model, $entityModelName, $arguments[0], $arguments[1]);
+        return $this->$functionName($entityModelName, $arguments[0], $arguments[1]);
     }
 
-    protected function currentModelHasEntities($model, $entitiesModel, $entitiesList, $requireAll)
+    protected function currentModelHasEntities($entitiesModel, $entitiesList, $requireAll)
     {
+
+        if(!is_object($entitiesModel)) {
+            $className = "\\Vegvisir\\TrustNoSql\\Models\\$entitiesModel";
+            $entitiesModel = new $className;
+        }
 
         $entitiesList = Helper::getArray($entitiesList);
 
