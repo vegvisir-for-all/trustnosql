@@ -55,7 +55,7 @@ trait ModelCacheableTrait {
          * Otherwise, retrieve a list of current entities from the DB
          */
 
-        return Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () {
+        return Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () use ($entityModelName, $namespace) {
             return $this->getModelCurrentEntities($entityModelName, $namespace, true);
         });
 

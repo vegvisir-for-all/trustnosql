@@ -45,7 +45,8 @@ class Detach extends BaseCommand
     public function handle()
     {
 
-        $userEmails = $this->getUsersList('E-mail address of the user to detach roles from');
+        $userModel = Helper::getUserModel();
+        $userEmails = $this->getEntitiesList(new $userModel, 'E-mail address of the user to detach roles from');
 
         /**
          * We need to generate a list of roles assigned to chosen users
@@ -61,7 +62,7 @@ class Detach extends BaseCommand
 
         $rolesList = array_unique($rolesList);
 
-        $roleNames = $this->getRolesList('Roles that should be detached', $rolesList);
+        $roleNames = $this->getEntitiesList(new Role, 'Roles that should be detached', $rolesList);
 
         try {
 

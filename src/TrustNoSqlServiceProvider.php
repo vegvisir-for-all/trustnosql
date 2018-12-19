@@ -44,4 +44,9 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
         $this->registerTrustNoSql();
     }
+
+    public function provides()
+    {
+        return array_values(array_merge($this->trustNoSqlCommands));
+    }
 }

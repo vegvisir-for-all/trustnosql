@@ -121,7 +121,7 @@ class HelperProxy
      * @param string|array $roles Comma-separated role names or array of them
      * @return array
      */
-    public static function getRolesKeys($roles)
+    public static function getRoleKeys($roles)
     {
         return RoleHelper::getKeys($roles);
     }

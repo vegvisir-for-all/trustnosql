@@ -36,11 +36,6 @@ class Role extends Model implements RoleInterface
         'description'
     ];
 
-    protected $dispatchesEvents = [
-        'saved' => UserSaved::class,
-        'deleted' => UserDeleted::class,
-    ];
-
     /**
      * Creates new instance of the model
      *

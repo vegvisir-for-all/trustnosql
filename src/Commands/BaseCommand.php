@@ -57,7 +57,12 @@ class BaseCommand extends Command
 
         $field = $entityModelName == 'user' ? 'email' : 'name';
 
-        $entityModel = $entityModelName == 'user' ? Helper::getUserModel() : new $entityModelName;
+        if($entityModelName == 'user') {
+            $entityModel = Helper::getUserModel();
+        } else {
+            $entityModelName = "\\Vegvisir\\TrustNoSql\\Models\\" . ucfirst($entityModelName);
+            $entityModel = new $entityModelName;
+        }
 
         $entity = $entityModel->where($field, $entityName)->first();
 

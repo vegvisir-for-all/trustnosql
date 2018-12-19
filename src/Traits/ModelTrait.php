@@ -41,6 +41,13 @@ trait ModelTrait
         return parent::__call($originalName, $arguments);
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootTrustNoSqlEvents();
+    }
+
     /**
      * Returns the right checker for the User model.
      *
@@ -93,9 +100,9 @@ trait ModelTrait
             $changes = $this->{strtolower(str_plural($entityModelName))}()->sync($entitiesKeys);
 
             $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.synced', [$this, $changes]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.synced', [$this, $changes]);
         } catch (\Exception $e) {
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-synced', [$this, $changes]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.not-synced', [$this, $changes]);
             throw new SyncEntitiesException($entityModelName);
         }
 
@@ -111,9 +118,9 @@ trait ModelTrait
             $this->{strtolower(str_plural($entityModelName))}()->attach($entitiesKeys);
 
             $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
         } catch (\Exception $e) {
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-attached', [$this, $entityList]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.not-attached', [$this, $entityList]);
             throw new AttachEntitiesException($entityModelName);
         }
 
@@ -129,9 +136,9 @@ trait ModelTrait
             $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
 
             $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.detached', [$this, $entityList]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.detached', [$this, $entityList]);
         } catch (\Exception $e) {
-            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-detached', [$this, $entityList]);
+            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)) . '.not-detached', [$this, $entityList]);
             throw new DetachEntitiesException($entityModelName);
         }
 
