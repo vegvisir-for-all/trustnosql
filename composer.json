@@ -5,6 +5,11 @@
             "Vegvisir\\TrustNoSql\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Vegvisir\\TrustNoSql\\Tests": "tests/"
+        }
+    },
     "description": "Laravel role/permission package working with MongoDB database",
     "keywords": [
         "acl", "authorization", "laravel","trustnosql","permissions","php","roles","teams","nosql","mongodb"
@@ -27,7 +32,10 @@
         "laravel":{
             "providers": [
                 "Vegvisir\\TrustNoSql\\TrustNoSqlServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "TrustNoSql": "Vegvisir\\TrustNoSql\\TrustNoSqlFacade"
+            }
         }
 }
 }

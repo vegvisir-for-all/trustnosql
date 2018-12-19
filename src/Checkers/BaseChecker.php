@@ -53,6 +53,11 @@ class BaseChecker
         $this->wildcards = Helper::getPermissionWildcards();
     }
 
+    public function __call($name, $arguments)
+    {
+        dd($name);
+    }
+
     /**
      * Checks whether current model has attached permissions.
      *
