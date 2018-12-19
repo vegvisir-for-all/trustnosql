@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Exceptions\Entity\AttachEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\DetachEntitiesException;
+use Vegvisir\TrustNoSql\Exceptions\Entity\SyncEntitiesException;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 
 trait ModelTrait
