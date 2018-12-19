@@ -10,6 +10,7 @@ namespace Vegvisir\TrustNoSql\Checkers;
  */
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Exceptions\Model\ModelTypeMismatchException;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
 
@@ -50,32 +51,13 @@ class BaseChecker
 
     public function __call($name, $arguments)
     {
-
-        /**
-         * 1. First, we need to parse called function name (like 'currentRoleHasPermissions')
-         *    - splitting into 'Role', 'Has', 'Permissions'
-         * 2. Then, we check whether $this->model is of type specified in 'Role'
-         * 3. If 'Has', we call internal function, if 'Cached' - still to be disclosed
-         * 4. 'Permissions' indicate entity model type
-         * 5. $arguments[0] is an entities' list
-         * 6. $arguments[1] is a $requireAll
-         */
-
-        /**
-         * 1. Parsing
-         * We'll be using Laravel helpers for convenience
-         */
-
         $parsed = explode('_', snake_case($name));
 
         $modelName = ucfirst($parsed[1]);
         $entityModelName = ucfirst(str_singular($parsed[3]));
 
-        /**
-         * 2. Checking if models are compatible
-         */
         if(!Helper::{"is$modelName"}($this->model)) {
-            throw new \Exception; // todo
+            throw new ModelTypeMismatchException;
         }
 
         $functionName = 'currentModel' . ucfirst($parsed[2]) . 'Entities';

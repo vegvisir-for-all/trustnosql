@@ -4,6 +4,8 @@ namespace Vegvisir\TrustNoSql\Traits;
 
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Exceptions\Entity\AttachEntitiesException;
+use Vegvisir\TrustNoSql\Exceptions\Entity\DetachEntitiesException;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 
 trait ModelTrait
@@ -101,7 +103,7 @@ trait ModelTrait
         try {
             $this->{strtolower(str_plural($entityModelName))}()->attach($entitiesKeys);
         } catch (\Exception $e) {
-            throw new AttachPermissionsException;
+            throw new AttachEntitiesException($entityModelName);
         }
 
         $this->flushCache();
@@ -118,7 +120,7 @@ trait ModelTrait
         try {
             $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
         } catch (\Exception $e) {
-            throw new DetachPermissionsException;
+            throw new DetachEntitiesException($entityModelName);
         }
 
         $this->flushCache();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Exceptions\Permission;
+namespace Vegvisir\TrustNoSql\Exceptions\Model;
 
 /**
  * This file is part of TrustNoSql,
@@ -10,7 +10,7 @@ namespace Vegvisir\TrustNoSql\Exceptions\Permission;
  */
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AttachPermissionsException extends HttpException
+class ModelTypesMismatchException extends HttpException
 {
 
     /**
@@ -22,6 +22,6 @@ class AttachPermissionsException extends HttpException
      */
     public function __construct(\Exception $previous = null, $code = 0)
     {
-        parent::__construct(500, "Error attaching permissions", $previous, [], $code);
+        parent::__construct(500, __('Model types mismatch'), $previous, [], $code);
     }
 }
