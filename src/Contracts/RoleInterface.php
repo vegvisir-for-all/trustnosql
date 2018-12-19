@@ -17,37 +17,8 @@ interface RoleInterface {
      */
     public function permissions();
 
+    public function teams();
+
     public function users();
-
-    /**
-     * Syncs permission(s) to a Role.
-     *
-     * @param string|array $permissions Array of permissions or comma-separated list.
-     * @return void
-     */
-    public function syncPermissions($permissions);
-
-    /**
-     * Attaches permission(s) to a Role
-     *
-     * @param string|array $permissions Array of permissions or comma-separated list.
-     * @return void
-     */
-    public function attachPermissions($permissions);
-
-    /**
-     * Detaches permission(s) from a Role
-     *
-     * @param string|array $permissions Array of permissions or comma-separated list.
-     * @return void
-     */
-    public function detachPermissions($permissions);
-
-    /**
-     * Flush the role's cache.
-     *
-     * @return void
-     */
-    public function flushCache();
 
 }

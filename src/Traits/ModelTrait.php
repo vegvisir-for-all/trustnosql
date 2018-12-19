@@ -82,6 +82,17 @@ trait ModelTrait
         return $this->modelChecker()->$functionName($entityList, $requireAll);
     }
 
+    public function syncEntities($entityModelName, $permissions)
+    {
+        $entitiesKeys = Helper::{'get' . ucfirst($entityModelName) . 'Keys'}($entityList);
+        $changes = $this->{strtolower(str_plural($entityModelName))}()->sync($entitiesKeys);
+
+        $this->flushCache();
+        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.synced', [$this, $changes]);
+
+        return $this;
+    }
+
     protected function attachEntities($entityModelName, $entityList)
     {
 
@@ -95,6 +106,23 @@ trait ModelTrait
 
         $this->flushCache();
         $this->fireEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
+
+        return $this;
+    }
+
+    public function detachEntities($entityModelName, $entityList)
+    {
+
+        $entitiesKeys = Helper::{'get' . ucfirst($entityModelName) . 'Keys'}($entityList);
+
+        try {
+            $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
+        } catch (\Exception $e) {
+            throw new DetachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.detached', [$this, $entityList]);
 
         return $this;
     }
