@@ -81,6 +81,48 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | TrustNoSql events
+    |--------------------------------------------------------------------------
+    |
+    | These are the configuration settings used by TrustNoSql to enhance events behaviour.
+    |
+    */
+    'events' => [
+
+        /**
+         * Whether to use events
+         */
+        'use_events' => true,
+
+        /**
+         * Observers list
+         */
+        'observers' => [
+
+            /**
+             * Observer for Permission model
+             */
+            'Permission' => \Vegvisir\TrustNoSql\Observers\PermissionObserver::class,
+
+            /**
+             * Observer for Role model
+             */
+            'Role' => \Vegvisir\TrustNoSql\Observers\RoleObserver::class,
+
+            /**
+             * Observer for Team model
+             */
+            'Team' => \Vegvisir\TrustNoSql\Observers\TeamObserver::class,
+
+            /**
+             * Observer for application user model
+             */
+            'User' => \Vegvisir\TrustNoSql\Observers\UserObserver::class,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | TrustNoSql Middleware
     |--------------------------------------------------------------------------
     |
