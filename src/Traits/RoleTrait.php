@@ -30,6 +30,16 @@ trait RoleTrait {
     }
 
     /**
+     * Moloquent belongs-to-many relationship with the team model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Team::class);
+    }
+
+    /**
      * Moloquent belongs-to-many relationship with the user model.
      *
      * @return \Jenssegers\Mongodb\Relations\BelongsToMany
@@ -37,60 +47,6 @@ trait RoleTrait {
     public function users()
     {
         return $this->belongsToMany(get_class(Helper::getUserModel()));
-    }
-
-    /**
-     * Retrieves an array of Role's permission names
-     *
-     * @return array
-     */
-    public function getRoleCurrentPermissions($namespace = null) {
-
-        /**
-         * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
-         * by RoleCacheableTrait
-         */
-        if(Config::get('trustnosql.cache.use_cache')) {
-            return $this->getRoleCachedPermissions($namespace);
-        }
-
-        /**
-         * Otherwise, retrieve a list of current permissions from the DB
-         */
-        $permissionsCollection = $this->permissions();
-
-        if($namespace !== null) {
-            $permissionsCollection = $permissionsCollection->where('name', 'like', $namespace . ':%');
-        }
-
-        return collect($permissionsCollection->get())->map(function ($item, $key) {
-            return $item->name;
-        })->toArray();
-    }
-
-    /**
-     * Retrieves an array of Role's user emails
-     *
-     * @return array
-     */
-    public function getRoleCurrentUsers() {
-
-        /**
-         * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
-         * by RoleCacheableTrait
-         */
-        if(Config::get('trustnosql.cache.use_cache')) {
-            return $this->getRoleCachedUsers($namespace);
-        }
-
-        /**
-         * Otherwise, retrieve a list of current permissions from the DB
-         */
-        $usersCollection = $this->users();
-
-        return collect($usersCollection->get())->map(function ($item, $key) {
-            return $item->email;
-        })->toArray();
     }
 
     /**

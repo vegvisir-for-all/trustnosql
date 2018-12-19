@@ -20,21 +20,6 @@ interface RoleInterface {
     public function users();
 
     /**
-     * Retrieves (from DB) an array of Role's permission names
-     *
-     * @param string|null $namespace Namespace of permissions to be retrieved
-     * @return array
-     */
-    public function getRoleCurrentPermissions($namespace = null);
-
-    /**
-     * Retrieves (from cache) an array of Role's permission names
-     *
-     * @param string|null $namespace Namespace of permissions to be retrieved
-     */
-    public function getRoleCachedPermissions($namespace = null);
-
-    /**
      * Syncs permission(s) to a Role.
      *
      * @param string|array $permissions Array of permissions or comma-separated list.
