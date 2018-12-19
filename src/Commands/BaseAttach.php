@@ -4,6 +4,8 @@ namespace Vegvisir\TrustNoSql\Commands;
 
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
+use Vegvisir\TrustNoSql\Models\Role;
+use Vegvisir\TrustNoSql\Models\Team;
 
 class BaseAttach extends BaseCommand
 {
@@ -23,12 +25,6 @@ class BaseAttach extends BaseCommand
         }
 
         $modelName = strtolower(class_basename($model));
-
-        $keepAsking = true;
-
-        $availableEntities = collect($model->all())->map(function ($item, $key) {
-            return $item->name;
-        })->toArray();
 
         $entityNames = $this->getEntitiesList($model, "Choose $modelName(s) you want to attach");
 
@@ -84,7 +80,7 @@ class BaseAttach extends BaseCommand
                         $this->line("Didn't have a $entityModelName. Attaching...");
 
                         try {
-                            $entity->attachPermission($permissionName);
+                            $entity->{'attach' . ucfirst($entityModelName)}($entityAttachedName);
                             $this->info('    Permission attached');
                         } catch (\Exception $e) {
                             $this->error('    Permission not attached (' . $e->getMessage() . ')');

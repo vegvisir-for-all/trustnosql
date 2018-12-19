@@ -24,7 +24,7 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function register()
     {
-        if(Config::get('trustnosql.cli.use_cli')) {
+        if(Config::get('trustnosql.cli.use_cli', true)) {
             $this->registerCommands();
         }
     }

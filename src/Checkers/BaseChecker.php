@@ -55,7 +55,71 @@ class BaseChecker
 
     public function __call($name, $arguments)
     {
-        dd($name);
+        dd("fname $name");
+    }
+
+    protected function currentModelHasEntities($model, $entitiesModel, $entitiesList, $requireAll)
+    {
+
+    }
+
+    protected function currentModelCheckSingleEntity($entityModel, $entity)
+    {
+
+        $hasEntity = false;
+
+        /**
+         * Check whether $this->model is instance of Role or User
+         */
+
+        if(is_a($this->model, Role::class, true)) {
+            $this->functionNames['getModelPermissions'] = 'getRoleCurrentPermissions';
+        } elseif(is_a($this->model, get_class(Helper::getUserModel()), true)) {
+            $this->functionNames['getModelPermissions'] = 'getUserCurrentPermissions';
+        }
+
+        foreach($this->model->{$this->functionNames['getModelPermissions']}() as $currentPermission) {
+
+            /**
+             * Checking for no-wildcard permission name, like 'city:create'
+             */
+            if(str_is($permission, $currentPermission)) {
+                return true;
+            }
+
+            /**
+             * Checking for wildcard permissions.
+             * If the permission to be checked is 'city:create' and role has permission of 'city:*' or 'city:all',
+             * we need to explode permission name using the ':' delimiter
+             */
+            $permissionExploded = explode(static::NAMESPACE_DELIMITER, $permission);
+            $currentPermissionExploded = explode(static::NAMESPACE_DELIMITER, $currentPermission);
+
+             /**
+              * Now, if a role has a permission 'city:*' or 'city:all', we return true
+              */
+            if($currentPermissionExploded[0] == $permissionExploded[0]) {
+                // Both namespaces are 'city'
+
+                if(in_array($currentPermissionExploded[1], $this->wildcards)) {
+                    return true;
+                }
+            }
+
+            /**
+             * Another case is when we want to check 'city:*' or 'city:all', and the role has assigned array of no-wildcard
+             * permissions. In that case, we need to load all 'city' namespace permissions (excluding those with wildcards)
+             * and check, whether a role has all permissions assigned to
+             */
+            if(in_array($permissionExploded[1], $this->wildcards)) {
+                if($this->currentModelCheckSingleWildcardPermission($permission)) {
+                    return true;
+                }
+            }
+
+        }
+
+        return $hasPermission;
     }
 
     /**

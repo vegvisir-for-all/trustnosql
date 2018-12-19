@@ -25,7 +25,7 @@ class UserChecker extends BaseChecker {
      */
     public function currentUserHasRoles($roles, $team = null, $requireAll = null)
     {
-        return $this->currentModelHasRoles($this->model, $permissions, $requireAll);
+        return $this->currentModelHasRoles($this->model, $roles, $requireAll);
     }
 
 }
