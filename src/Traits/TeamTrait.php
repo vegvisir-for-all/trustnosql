@@ -10,7 +10,8 @@ namespace Vegvisir\TrustNoSql\Traits;
  */
 use Vegvisir\TrustNoSql\Helper;
 
-trait TeamTrait {
+trait TeamTrait
+{
 
     use ModelTrait;
 

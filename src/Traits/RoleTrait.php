@@ -8,14 +8,11 @@ namespace Vegvisir\TrustNoSql\Traits;
  *
  * @license GPL-3.0-or-later
  */
-use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 use Vegvisir\TrustNoSql\Traits\ModelTrait;
-use Vegvisir\TrustNoSql\Exceptions\Permission\AttachPermissionsException;
-use Vegvisir\TrustNoSql\Exceptions\Permission\DetachPermissionsException;
 
-trait RoleTrait {
+trait RoleTrait
+{
 
     use ModelTrait;
 
