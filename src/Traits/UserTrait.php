@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 use Vegvisir\TrustNoSql\Traits\ModelTrait;
-use Vegvisir\TrustNoSql\Traits\Aliases\UserAliasesTrait;
 use Vegvisir\TrustNoSql\Exceptions\Role\AttachRolesException;
 use Vegvisir\TrustNoSql\Exceptions\Role\DetachRolesException;
 
