@@ -12,13 +12,12 @@ use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Contracts\RoleInterface;
 use Vegvisir\TrustNoSql\Traits\RoleTrait;
-use Vegvisir\TrustNoSql\Traits\Aliases\RoleAliasesTrait;
 use Vegvisir\TrustNoSql\Traits\Cacheable\RoleCacheableTrait;
 
 class Role extends Model implements RoleInterface
 {
 
-    use RoleTrait, RoleAliasesTrait, RoleCacheableTrait;
+    use RoleTrait, RoleCacheableTrait;
 
     /**
      * Collection used by model

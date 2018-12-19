@@ -23,108 +23,57 @@ class BaseCommand extends Command
     use ErrorCommandTrait, SuccessCommandTrait;
 
     /**
-     * Function retrieves permission by its name. It can output an error message
-     * if existence or non-existence of the permission is undesirable.
-     *
-     * @param string $permissionName Name of the permission.
-     * @param bool $shouldExist Set to true if a permission should exist.
+     * Workaround for objects using old getUser, getTeam, etc. method names
      */
-    protected function getPermission($permissionName, $shouldExist)
+    public function __call($name, $arguments)
     {
-        $permission = Permission::where('name', $permissionName)->first();
+        $functionNames = [
+            'getPermission',
+            'getRole',
+            'getUser',
+            'getTeam'
+        ];
 
-        if($permission == null) {
+        if(!in_array($name, $functionNames)) {
+            return parent::__call($name, $arguments);
+        }
+
+        $entityModelName = strtolower(substr($name, 3));
+
+        return $this->getEntity($entityModelName, $arguments[0], $arguments[1]);
+    }
+
+    /**
+     * Get entity. Replaced old getUser, getTeam, etc.
+     * Returns entity or bool. Outputs console message.
+     *
+     * @param string $entityModelName Name of the model to retrieve
+     * @param string $entityName Name of the entity to be retrieved
+     * @param bool $shouldExist Set to true, if entity should exist
+     * @return Object|false
+     */
+    protected function getEntity($entityModelName, $entityName, $shouldExist)
+    {
+
+        $field = $entityModelName == 'user' ? 'email' : 'name';
+
+        $entityModel = $entityModelName == 'user' ? Helper::getUserModel() : new $entityModelName;
+
+        $entity = $entityModel->where($field, $entityName)->first();
+
+        if($entity == null) {
             if($shouldExist) {
-                $this->doesNotExist('permission', $permissionName);
+                $this->doesNotExist($entityModelName, $entityName);
                 return false;
             } else {
                 return true;
             }
         } elseif(!$shouldExist) {
-            $this->alreadyExists('permission', $permissionName);
+            $this->alreadyExists($entityModelName, $entityName);
             return false;
         }
 
-        return $permission;
-    }
-
-    /**
-     * Function retrieves role by its name. It can output an error message
-     * if existence or non-existence of the role is undesirable.
-     *
-     * @param string $roleName Name of the role.
-     * @param bool $shouldExist Set to true if a permission should exist.
-     */
-    protected function getRole($roleName, $shouldExist)
-    {
-        $role = Role::where('name', $roleName)->first();
-
-        if($role == null) {
-            if($shouldExist) {
-                $this->doesNotExist('role', $roleName);
-                return false;
-            } else {
-                return true;
-            }
-        } elseif(!$shouldExist) {
-            $this->alreadyExists('role', $roleName);
-            return false;
-        }
-
-        return $role;
-    }
-
-    /**
-     * Function retrieves team by its name. It can output an error message
-     * if existence or non-existence of the team is undesirable.
-     *
-     * @param string $teamName Name of the team.
-     * @param bool $shouldExist Set to true if a permission should exist.
-     */
-    protected function getTeam($teamName, $shouldExist)
-    {
-        $team = Team::where('name', $teamName)->first();
-
-        if($team == null) {
-            if($shouldExist) {
-                $this->doesNotExist('team', $teamName);
-                return false;
-            } else {
-                return true;
-            }
-        } elseif(!$shouldExist) {
-            $this->alreadyExists('team', $teamName);
-            return false;
-        }
-
-        return $team;
-    }
-
-    /**
-     * Function retrieves user by its email. It can output an error message
-     * if existence or non-existence of the user is undesirable.
-     *
-     * @param string $email E-mail address of the user.
-     * @param bool $shouldExist Set to true if a permission should exist.
-     */
-    protected function getUser($email, $shouldExist)
-    {
-        $userModel = Helper::getUserModel();
-        $user = $userModel->where('email', $email)->first();
-
-        if ($user == null) {
-            if ($shouldExist) {
-                $this->doesNotExist('user', $email);
-                return false;
-            } else {
-                return true;
-            }
-        } elseif (!$shouldExist) {
-            $this->alreadyExists('user', $email);
-            return false;
-        }
-
-        return $user;
+        return $entity;
     }
 
     /**
