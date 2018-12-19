@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 trait ModelCacheableTrait {
 
 
-    protected function currentModelFlushCache($entityModelNames = null)
+    public function currentModelFlushCache($entityModelNames = null)
     {
 
         if(null == $entityModelNames) {
@@ -34,6 +34,7 @@ trait ModelCacheableTrait {
                     . $this->id;
 
                 Cache::forget($cacheKey);
+
             } catch (\Exception $e) {}
         }
     }

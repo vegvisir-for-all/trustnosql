@@ -10,7 +10,10 @@ trait PermissionEventsTrait
     use ModelEventsTrait;
 
     protected static $trustNoSqlObservables = [
-        'rolesAttached'
+        'rolesAttached',
+        'rolesDetached',
+        'usersAttached',
+        'usersDetached'
     ];
 
 }

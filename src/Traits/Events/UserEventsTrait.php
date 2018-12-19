@@ -10,7 +10,12 @@ trait UserEventsTrait
     use ModelEventsTrait;
 
     protected static $trustNoSqlObservables = [
-        'rolesAttached'
+        'rolesAttached',
+        'rolesDetached',
+        'permissionsAttached',
+        'permissionsDetached',
+        'teamsAttached',
+        'teamsDetached'
     ];
 
 }

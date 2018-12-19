@@ -12,7 +12,7 @@ trait ModelEventsTrait
         static::trustNoSqlObserve(ObserverProxy::getModelObserver(__CLASS__));
     }
 
-    public static function trustNoSqlObserve($observer = null)
+    protected static function trustNoSqlObserve($observer = null)
     {
         $observerName = is_string($observer) ? $observer : get_class($observer);
 
@@ -40,10 +40,4 @@ trait ModelEventsTrait
             static::$dispatcher->listen("trustnosql.{$eventName}: {$name}", $callback);
         }
     }
-
-    public static function someEvent($callback)
-    {
-        static::registerTrustNoSqlEvent('role.attached', $callback);
-    }
-
 }
