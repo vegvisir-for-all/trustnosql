@@ -3,6 +3,7 @@
 namespace Vegvisir\TrustNoSql\Traits\Cacheable;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 trait ModelCacheableTrait {
 
