@@ -8,14 +8,10 @@ namespace Vegvisir\TrustNoSql\Traits\Cacheable;
  *
  * @license GPL-3.0-or-later
  */
-trait UserCacheableTrait
-{
+use Vegvisir\TrustNoSql\Traits\Cacheable\ModelCacheableTrait;
 
-    /**
-     * Flush the role's cache.
-     *
-     * @return void
-     */
-    public function flushCache() {}
+trait UserCacheableTrait {
+
+    use ModelCacheableTrait;
 
 }

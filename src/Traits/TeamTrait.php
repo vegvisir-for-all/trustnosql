@@ -9,11 +9,13 @@ namespace Vegvisir\TrustNoSql\Traits;
  * @license GPL-3.0-or-later
  */
 use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Traits\ModelTrait;
+use Vegvisir\TrustNoSql\Traits\Cacheable\TeamCacheableTrait;
 
 trait TeamTrait
 {
 
-    use ModelTrait;
+    use ModelTrait, TeamCacheableTrait;
 
     /**
      * Moloquent belongs-to-many relationship with the permission model.

@@ -10,11 +10,12 @@ namespace Vegvisir\TrustNoSql\Traits;
  */
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Traits\ModelTrait;
+use Vegvisir\TrustNoSql\Traits\Cacheable\RoleCacheableTrait;
 
 trait RoleTrait
 {
 
-    use ModelTrait;
+    use ModelTrait, RoleCacheableTrait;
 
     /**
      * Moloquent belongs-to-many relationship with the permission model.
