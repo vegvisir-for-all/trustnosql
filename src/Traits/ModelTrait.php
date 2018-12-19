@@ -3,9 +3,11 @@
 namespace Vegvisir\TrustNoSql\Traits;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Exceptions\Entity\AttachEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\DetachEntitiesException;
+use Vegvisir\TrustNoSql\Exceptions\Entity\DeleteEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\SyncEntitiesException;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 
@@ -45,7 +47,50 @@ trait ModelTrait
     {
         parent::boot();
 
+        static::bootModelTrait();
         static::bootTrustNoSqlEvents();
+    }
+
+    protected static function bootModelTrait()
+    {
+        $flushCache = function ($model) {
+            $model->currentModelFlushCache();
+        };
+
+        static::deleted($flushCache);
+        static::saved($flushCache);
+
+        if(method_exists(static::class, 'restored')) {
+            static::restored($flushCache);
+        }
+
+        static::deleting(function ($model) {
+
+            /**
+             * The objective is to remove all deleted model keys from collections.
+             * It'd be quicker to execute it with a MongoDB query, not Moloquent builder
+             */
+            $modelName = strtolower(class_basename($model));
+            $modelKeysArrayFieldName = $modelName . '_ids';
+
+            $entityModels = ['permission', 'role', 'user', 'trait'];
+
+            foreach($entityModels as $entityModel) {
+
+                if(!method_exists(get_class($model), str_plural($entityModel))) {
+                    // no relation
+                    continue;
+                }
+
+                try {
+                    DB::collection(Config::get('trustnosql.collections.' . str_plural($entityModel, str_plural($entityModel))))
+                        ->where($modelKeysArrayFieldName, $model->id)->pull($modelKeysArrayFieldName, $model->id);
+                } catch (\Exception $e) {
+                    throw new DeleteEntitiesException($modelName, $model->name);
+                }
+            }
+
+        });
     }
 
     /**

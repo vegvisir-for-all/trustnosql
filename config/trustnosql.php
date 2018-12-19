@@ -72,6 +72,11 @@ return [
          * Teams collection.
          */
         'teams' => 'teams',
+
+        /**
+         * Users collection.
+         */
+        'users' => 'users',
     ],
 
     /*
