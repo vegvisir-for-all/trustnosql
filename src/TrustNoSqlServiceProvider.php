@@ -10,7 +10,6 @@ namespace Vegvisir\TrustNoSql;
  */
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Vegvisir\TrustNoSql\Observers\UserObserver;
 use Vegvisir\TrustNoSql\Traits\Providers\CommandsProviderTrait;
 use Vegvisir\TrustNoSql\Traits\Providers\TrustNoSqlProviderTrait;
 
@@ -28,7 +27,6 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function boot()
     {
-
         $this->mergeConfigFrom(__DIR__.'/../config/trustnosql.php', 'trustnosql');
 
         $this->publishes([

@@ -9,12 +9,12 @@ namespace Vegvisir\TrustNoSql\Models;
  * @license GPL-3.0-or-later
  */
 use Jenssegers\Mongodb\Eloquent\Model;
-use Vegvisir\TrustNoSql\Contracts\ReachableInterface;
-use Vegvisir\TrustNoSql\Traits\ReachableTrait;
+use Vegvisir\TrustNoSql\Contracts\GrabbableInterface;
+use Vegvisir\TrustNoSql\Traits\GrabbableTrait;
 
-class Reachable extends Model implements ReachableInterface
+class Grabbable extends Model implements GrabbableInterface
 {
 
-    use ReachableTrait;
+    use GrabbableTrait;
 
 }
