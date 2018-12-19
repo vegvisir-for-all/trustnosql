@@ -19,7 +19,9 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function boot()
     {
-
+        $this->publishes([
+            __DIR__ . '/../config/trustnosql.php' => config_path('trustnosql.php')
+        ]);
     }
 
     public function register()
