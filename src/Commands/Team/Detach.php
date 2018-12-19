@@ -1,6 +1,6 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Commands\Role;
+namespace Vegvisir\TrustNoSql\Commands\Team;
 
 /**
  * This file is part of TrustNoSql,
@@ -10,7 +10,7 @@ namespace Vegvisir\TrustNoSql\Commands\Role;
  */
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Commands\BaseDetach;
-use Vegvisir\TrustNoSql\Models\Role;
+use Vegvisir\TrustNoSql\Models\Team;
 
 class Detach extends BaseDetach
 {
@@ -20,14 +20,14 @@ class Detach extends BaseDetach
      *
      * @var string
      */
-    protected $signature = 'trustnosql:role:detach';
+    protected $signature = 'trustnosql:team:detach';
 
     /**
      * Console command description.
      *
      * @var string
      */
-    protected $description = 'Detach a TrustNoSql role from user(s)';
+    protected $description = 'Detach a TrustNoSql team from role(s) or user(s)';
 
     /**
      * Create a new command instance.
@@ -47,7 +47,11 @@ class Detach extends BaseDetach
 
         $askAbout = [];
 
-        if($this->confirm('Do you want to detach roles from user(s)?', true)) {
+        if($this->confirm('Do you want to detach team(s) from role(s)?', true)) {
+            $askAbout[] = 'roles';
+        }
+
+        if($this->confirm('Do you want to detach team(s) from user(s)?', true)) {
             $askAbout[] = 'users';
         }
 
@@ -56,6 +60,6 @@ class Detach extends BaseDetach
             return;
         }
 
-        $this->entityDetach(new Role, $askAbout);
+        $this->entityDetach(new Team, $askAbout);
     }
 }

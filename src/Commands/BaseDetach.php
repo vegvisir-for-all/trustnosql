@@ -26,18 +26,18 @@ class BaseDetach extends BaseCommand
 
         $modelName = strtolower(class_basename($model));
 
-        $entityNames = $this->getEntitiesList($model, "Choose $modelName(s) you want to attach");
+        $entityNames = $this->getEntitiesList($model, "Choose $modelName(s) you want to detach");
 
         if(in_array('roles', $askAbout)) {
-            $this->attachToModel(new Role, $model, $entityNames);
+            $this->detachFromModel($model, $entityNames, new Role);
         }
 
         if(in_array('teams', $askAbout)) {
-            $this->attachToModel(new Team, $model, $entityNames);
+            $this->detachFromModel($model, $entityNames, new Team);
         }
 
         if(in_array('users', $askAbout)) {
-            $this->attachToModel(Helper::getUserModel(), $model, $entityNames);
+            $this->detachFromModel($model, $entityNames, Helper::getUserModel());
         }
     }
 
@@ -50,7 +50,7 @@ class BaseDetach extends BaseCommand
      * @param array $entityNames Names of entities being attached to $model
      * @return mixed
      */
-    protected function attachToModel($model, $entityModel, $entityNames)
+    protected function detachFromModel($entityModel, $entityNames, $model)
     {
 
         if(!\is_object($model)) {
@@ -61,29 +61,41 @@ class BaseDetach extends BaseCommand
 
         $entityModelName = strtolower(class_basename($entityModel));
 
-        $entityToAttachToNames = $this->getEntitiesList($model, ucfirst(str_plural($modelName)) . ' to attach to');
+        $availableEntities = [];
+
+        foreach($entityNames as $entityName) {
+            $entity = $this->{'get' . ucfirst($entityModelName)}($entityName, true);
+            $currentModelEntities = $entity->{'getModelCurrent' . ucfirst(str_plural($modelName))}();
+
+            $availableEntities = array_merge($availableEntities, $currentModelEntities);
+        }
+
+        $availableEntities = array_unique($availableEntities);
+        sort($availableEntities);
+
+        $entityToDetachFromNames = $this->getEntitiesList($model, ucfirst(str_plural($modelName)) . ' to detach from', $availableEntities);
 
         try {
 
-            foreach($entityToAttachToNames as $entityToAttachToName) {
-                $this->line("Trying to attach permissions to $modelName " . $entityToAttachToName);
+            foreach($entityToDetachFromNames as $entityToDetachFromName) {
+                $this->line("Trying to detach " . str_plural($entityModelName) .  " from $modelName " . $entityToDetachFromName);
 
-                foreach($entityNames as $entityAttachedName) {
+                foreach($entityNames as $entityDetachedName) {
 
-                    $this->line("Attaching $entityModelName '$entityAttachedName'...");
+                    $this->line("Detaching '$entityDetachedName'...");
 
-                    $entity = $this->{'get' . ucfirst($modelName)}($entityToAttachToName, true);
+                    $entity = $this->{'get' . ucfirst($modelName)}($entityToDetachFromName, true);
 
-                    if($entity->{'has' . ucfirst($entityModelName)}($entityAttachedName)) {
-                        $this->line('Already had. Skipping...');
+                    if(!$entity->{'has' . ucfirst($entityModelName)}($entityDetachedName)) {
+                        $this->line('Didn\'t have. Skipping...');
                     } else {
-                        $this->line("Didn't have a $entityModelName. Attaching...");
+                        $this->line("Had a $entityModelName $entityDetachedName. Detaching...");
 
                         try {
-                            $entity->{'attach' . ucfirst($entityModelName)}($entityAttachedName);
-                            $this->info('    Permission attached');
+                            $entity->{'detach' . ucfirst($entityModelName)}($entityDetachedName);
+                            $this->info('    ' . ucfirst($entityModelName) . ' detached');
                         } catch (\Exception $e) {
-                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                            $this->error('    ' . ucfirst($entityModelName) . ' not detached (' . $e->getMessage() . ')');
                         }
 
                     }
@@ -92,7 +104,7 @@ class BaseDetach extends BaseCommand
             }
 
         } catch (\Exception $e) {
-            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+            $this->error('    ' . ucfirst(str_plural($entityModelName)) . ' not attached (' . $e->getMessage() . ')');
         }
     }
 

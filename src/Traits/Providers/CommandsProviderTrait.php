@@ -89,6 +89,7 @@ trait CommandsProviderTrait
             '.attach' => 'Attach',
             '.create' => 'Create',
             '.delete' => 'Delete',
+            '.detach' => 'Detach',
             '.info' => 'Info',
             's' => 'ListAll'
         ]);

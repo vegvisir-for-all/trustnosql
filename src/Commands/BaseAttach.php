@@ -66,7 +66,7 @@ class BaseAttach extends BaseCommand
         try {
 
             foreach($entityToAttachToNames as $entityToAttachToName) {
-                $this->line("Trying to attach permissions to $modelName " . $entityToAttachToName);
+                $this->line("Trying to attach " . str_plural($entityModelName) . " to $modelName " . $entityToAttachToName);
 
                 foreach($entityNames as $entityAttachedName) {
 
@@ -77,13 +77,13 @@ class BaseAttach extends BaseCommand
                     if($entity->{'has' . ucfirst($entityModelName)}($entityAttachedName)) {
                         $this->line('Already had. Skipping...');
                     } else {
-                        $this->line("Didn't have a $entityModelName. Attaching...");
+                        $this->line("Didn't have a $entityModelName $entityAttachedName. Attaching...");
 
                         try {
                             $entity->{'attach' . ucfirst($entityModelName)}($entityAttachedName);
-                            $this->info('    Permission attached');
+                            $this->info('    ' . ucfirst(str_plural($entityModelName)) . ' attached');
                         } catch (\Exception $e) {
-                            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+                            $this->error('    ' . ucfirst(str_plural($entityModelName)) . ' not attached (' . $e->getMessage() . ')');
                         }
 
                     }
@@ -92,7 +92,7 @@ class BaseAttach extends BaseCommand
             }
 
         } catch (\Exception $e) {
-            $this->error('    Permission not attached (' . $e->getMessage() . ')');
+            $this->error('    ' . ucfirst(str_plural($entityModelName)) . ' not attached (' . $e->getMessage() . ')');
         }
     }
 
