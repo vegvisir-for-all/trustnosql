@@ -87,10 +87,16 @@ trait ModelTrait
     public function syncEntities($entityModelName, $permissions)
     {
         $entitiesKeys = Helper::{'get' . ucfirst($entityModelName) . 'Keys'}($entityList);
-        $changes = $this->{strtolower(str_plural($entityModelName))}()->sync($entitiesKeys);
 
-        $this->flushCache();
-        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.synced', [$this, $changes]);
+        try {
+            $changes = $this->{strtolower(str_plural($entityModelName))}()->sync($entitiesKeys);
+
+            $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.synced', [$this, $changes]);
+        } catch (\Exception $e) {
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-synced', [$this, $changes]);
+            throw new SyncEntitiesException($entityModelName);
+        }
 
         return $this;
     }
@@ -102,12 +108,13 @@ trait ModelTrait
 
         try {
             $this->{strtolower(str_plural($entityModelName))}()->attach($entitiesKeys);
+
+            $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
         } catch (\Exception $e) {
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-attached', [$this, $entityList]);
             throw new AttachEntitiesException($entityModelName);
         }
-
-        $this->flushCache();
-        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
 
         return $this;
     }
@@ -119,12 +126,13 @@ trait ModelTrait
 
         try {
             $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
+
+            $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.detached', [$this, $entityList]);
         } catch (\Exception $e) {
+            // $this->fireEvent(strtolower(str_plural($entityModelName)) . '.not-detached', [$this, $entityList]);
             throw new DetachEntitiesException($entityModelName);
         }
-
-        $this->flushCache();
-        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.detached', [$this, $entityList]);
 
         return $this;
     }
