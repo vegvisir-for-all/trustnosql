@@ -12,6 +12,7 @@ use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
+use Vegvisir\TrustNoSql\Models\Team;
 
 class Info extends BaseCommand
 {
@@ -80,6 +81,17 @@ class Info extends BaseCommand
 
             $this->line('PERMISSIONS');
             $this->table(['Id', 'Permission', 'Display name', 'Description'], $permissions);
+
+            /**
+             * 3. Teams
+             */
+
+            $teamsNames = $user->getUserCurrentTeams();
+
+            $teams = Team::whereIn('name', $teamsNames)->get(['name', 'display_name', 'description'])->toArray();
+
+            $this->line('TEAMS');
+            $this->table(['Id', 'Team', 'Display name', 'Description'], $teams);
         }
     }
 }

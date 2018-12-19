@@ -30,10 +30,8 @@ trait ModelTrait
         $name = explode('_', snake_case($name));
 
         if(in_array($name[0], $this->namespaces) && in_array(str_plural($name[1]), $this->entities)) {
-            return $this->hasEntities($name[1], $arguments[0], isset($arguments[1]) ? $arguments[1] : false);
-        }
-
-        if($name[0] == 'get' && in_array($name[2], ['current', 'cached'])) {
+            return $this->{$name[0] . 'Entities'}($name[1], $arguments[0], isset($arguments[1]) ? $arguments[1] : false);
+        } elseif ($name[0] == 'get' && in_array($name[2], ['current', 'cached'])) {
             return $this->getModelCurrentEntities(strtolower(str_plural($name[3])));
         }
 
@@ -70,7 +68,7 @@ trait ModelTrait
             $entityCollection = $entityCollection->where('name', 'like', $namespace . '/%');
         }
 
-        $field = Helper::isUser($this) ? 'email' : 'name';
+        $field = $entityModelName == 'users' ? 'email' : 'name';
 
         return collect($entityCollection->get())->map(function ($item, $key) use ($field) {
             return $item->$field;
@@ -80,9 +78,25 @@ trait ModelTrait
 
     protected function hasEntities($entityModelName, $entityList, $requireAll)
     {
-
         $functionName = 'current' . ucfirst(class_basename($this)) . 'Has' . ucfirst(str_plural(($entityModelName)));
         return $this->modelChecker()->$functionName($entityList, $requireAll);
+    }
+
+    protected function attachEntities($entityModelName, $entityList)
+    {
+
+        $entitiesKeys = Helper::{'get' . ucfirst($entityModelName) . 'Keys'}($entityList);
+
+        try {
+            $this->{strtolower(str_plural($entityModelName))}()->attach($entitiesKeys);
+        } catch (\Exception $e) {
+            throw new AttachPermissionsException;
+        }
+
+        $this->flushCache();
+        $this->fireEvent(strtolower(str_plural($entityModelName)) . '.attached', [$this, $entitiesKeys]);
+
+        return $this;
     }
 
 }

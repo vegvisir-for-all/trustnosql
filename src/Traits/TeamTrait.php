@@ -8,4 +8,38 @@ namespace Vegvisir\TrustNoSql\Traits;
  *
  * @license GPL-3.0-or-later
  */
-trait TeamTrait {}
+trait TeamTrait {
+
+    use ModelTrait;
+
+    /**
+     * Moloquent belongs-to-many relationship with the permission model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
+    }
+
+    /**
+     * Moloquent belongs-to-many relationship with the role model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Role::class);
+    }
+
+    /**
+     * Moloquent belongs-to-many relationship with the user model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(get_class(Helper::getUserModel()));
+    }
+
+}

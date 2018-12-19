@@ -74,19 +74,6 @@ trait RoleTrait {
      */
     public function attachPermissions($permissions)
     {
-
-        $permissionsKeys = Helper::getPermissionKeys($permissions);
-
-        try {
-            $this->permissions()->attach($permissionsKeys);
-        } catch (\Exception $e) {
-            throw new AttachPermissionsException;
-        }
-
-        $this->flushCache();
-        $this->fireEvent('permissions.attached', [$this, $permissionsKeys]);
-
-        return $this;
     }
 
     /**

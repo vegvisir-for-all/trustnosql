@@ -10,6 +10,7 @@ namespace Vegvisir\TrustNoSql\Helpers;
  */
 use Vegvisir\TrustNoSql\Helpers\PermissionHelper;
 use Vegvisir\TrustNoSql\Helpers\RoleHelper;
+use Vegvisir\TrustNoSql\Helpers\TeamHelper;
 use Vegvisir\TrustNoSql\Helpers\UserHelper;
 
 class HelperProxy
@@ -134,6 +135,17 @@ class HelperProxy
     public static function isTeam($object)
     {
         return TeamHelper::isOne($object);
+    }
+
+    /**
+     * Gets an array of team keys (_ids)
+     *
+     * @param string|array $teams Comma-separated team names or array of them
+     * @return array
+     */
+    public static function getTeamKeys($teams)
+    {
+        return TeamHelper::getKeys($teams);
     }
 
     /**
