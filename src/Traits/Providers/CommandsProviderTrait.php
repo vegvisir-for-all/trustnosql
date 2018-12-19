@@ -8,6 +8,8 @@ namespace Vegvisir\TrustNoSql\Traits\Providers;
  *
  * @license GPL-3.0-or-later
  */
+use Illuminate\Support\Facades\Config;
+
 trait CommandsProviderTrait
 {
 
@@ -37,6 +39,9 @@ trait CommandsProviderTrait
      */
     protected function registerCommands()
     {
+
+        $this->baseSignature = Config::get('trustnosql.cli.signature', $this->baseSignature);
+
         $this->registerPermissionCommands();
         $this->registerRoleCommands();
         $this->registerTeamCommands();

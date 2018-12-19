@@ -8,6 +8,7 @@ namespace Vegvisir\TrustNoSql;
  *
  * @license GPL-3.0-or-later
  */
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Vegvisir\TrustNoSql\Traits\Providers\CommandsProviderTrait;
 
@@ -23,7 +24,9 @@ class TrustNoSqlServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->registerCommands();
+        if(Config::get('trustnosql.cli.use_cli')) {
+            $this->registerCommands();
+        }
     }
 
 }
