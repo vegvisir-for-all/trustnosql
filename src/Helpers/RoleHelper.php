@@ -50,4 +50,9 @@ class RoleHelper extends HelperProxy
 
     }
 
+    protected static function isOne($object)
+    {
+        return is_a(get_class($object), get_class(new Role), true);
+    }
+
 }

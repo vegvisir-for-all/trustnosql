@@ -91,6 +91,16 @@ class CheckProxy
     }
 
     /**
+     * Gets the team checker.
+     *
+     * @return \Vegvisir\TrustNoSql\Checkers\Team\TeamChecker
+     */
+    protected function getTeamChecker()
+    {
+        return (new TeamChecker($this->model));
+    }
+
+    /**
      * Gets the user checker.
      *
      * @return \Vegvisir\TrustNoSql\Checkers\User\UserChecker

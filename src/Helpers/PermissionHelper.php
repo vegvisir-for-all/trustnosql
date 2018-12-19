@@ -126,4 +126,9 @@ class PermissionHelper extends HelperProxy
         return in_array($permissionNameExploded[1], static::getWildcards());
     }
 
+    protected static function isOne($object)
+    {
+        return is_a(get_class($object), get_class(new Permission), true);
+    }
+
 }

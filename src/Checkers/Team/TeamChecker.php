@@ -1,6 +1,6 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Checkers\Role;
+namespace Vegvisir\TrustNoSql\Checkers\Team;
 
 /**
  * This file is part of TrustNoSql,
@@ -10,4 +10,4 @@ namespace Vegvisir\TrustNoSql\Checkers\Role;
  */
 use Vegvisir\TrustNoSql\Checkers\BaseChecker;
 
-class RoleChecker extends BaseChecker {}
+class TeamChecker extends BaseChecker {}

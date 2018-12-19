@@ -15,6 +15,8 @@ use Vegvisir\TrustNoSql\Helpers\UserHelper;
 class HelperProxy
 {
 
+    const ENTITIES_DELIMITER = ',';
+
     /**
      * Checks whether $object is a Permission
      *
@@ -162,7 +164,7 @@ class HelperProxy
      * @param string|array $rolesOrPermissions Comma-separated values or array
      * @return array
      */
-    protected static function getArray($rolesOrPermissions)
+    public static function getArray($rolesOrPermissions)
     {
         if(is_array($rolesOrPermissions)) {
             return $rolesOrPermissions;

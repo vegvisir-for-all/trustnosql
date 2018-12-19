@@ -37,11 +37,6 @@ class BaseChecker
     protected $wildcards = [];
 
     /**
-     * Protected function names
-     */
-    protected $functionNames = [];
-
-    /**
      * Creates new instance.
      *
      * @param \Jenssegers\Mongodb\Eloquent\Model $model Role model used for checking
@@ -55,15 +50,68 @@ class BaseChecker
 
     public function __call($name, $arguments)
     {
-        dd("fname $name");
+
+        /**
+         * 1. First, we need to parse called function name (like 'currentRoleHasPermissions')
+         *    - splitting into 'Role', 'Has', 'Permissions'
+         * 2. Then, we check whether $this->model is of type specified in 'Role'
+         * 3. If 'Has', we call internal function, if 'Cached' - still to be disclosed
+         * 4. 'Permissions' indicate entity model type
+         * 5. $arguments[0] is an entities' list
+         * 6. $arguments[1] is a $requireAll
+         */
+
+        /**
+         * 1. Parsing
+         * We'll be using Laravel helpers for convenience
+         */
+
+        $parsed = explode('_', snake_case($name));
+
+        $modelName = ucfirst($parsed[1]);
+        $entityModelName = ucfirst(str_singular($parsed[3]));
+
+        /**
+         * 2. Checking if models are compatible
+         */
+        if(!Helper::{"is$modelName"}($this->model)) {
+            throw new \Exception; // todo
+        }
+
+        $functionName = 'currentModel' . ucfirst($parsed[2]) . 'Entities';
+        return $this->$functionName($this->model, $entityModelName, $arguments[0], $arguments[1]);
     }
 
     protected function currentModelHasEntities($model, $entitiesModel, $entitiesList, $requireAll)
     {
 
+        $entitiesList = Helper::getArray($entitiesList);
+
+        if(empty($entitiesList)) {
+            return true;
+        }
+
+        $hasEntity = false;
+
+        foreach($entitiesList as $entityName) {
+
+            $hasEntity = $this->currentModelCheckSingleEntity($entitiesModel, $entityName);
+
+            if($hasEntity && !$requireAll) {
+                return true;
+            } elseif(!$hasEntity && $requireAll) {
+                return false;
+            }
+
+            return $requireAll;
+
+        }
+
+        return false;
+
     }
 
-    protected function currentModelCheckSingleEntity($entityModel, $entity)
+    protected function currentModelCheckSingleEntity($entityModel, $entityName)
     {
 
         $hasEntity = false;
@@ -72,38 +120,33 @@ class BaseChecker
          * Check whether $this->model is instance of Role or User
          */
 
-        if(is_a($this->model, Role::class, true)) {
-            $this->functionNames['getModelPermissions'] = 'getRoleCurrentPermissions';
-        } elseif(is_a($this->model, get_class(Helper::getUserModel()), true)) {
-            $this->functionNames['getModelPermissions'] = 'getUserCurrentPermissions';
+        if(Helper::isRole($this->model)) {
+            // role
+        } elseif(Helper::isUser($this->model)) {
+            // user
         }
 
-        foreach($this->model->{$this->functionNames['getModelPermissions']}() as $currentPermission) {
+        $modelFunctionName = 'get'
+            . ucfirst(class_basename($this->model))
+            . 'Current'
+            . ucfirst(str_plural(class_basename($entityModel)));
+
+        foreach($this->model->$modelFunctionName() as $currentEntity) {
 
             /**
              * Checking for no-wildcard permission name, like 'city:create'
              */
-            if(str_is($permission, $currentPermission)) {
+            if(str_is($entityName, $currentEntity)) {
                 return true;
             }
 
             /**
-             * Checking for wildcard permissions.
-             * If the permission to be checked is 'city:create' and role has permission of 'city:*' or 'city:all',
-             * we need to explode permission name using the ':' delimiter
+             * If entity is not a permission, we should continue, omitting wildcard permissions.
+             * We also continue is entity is not a wildcard permission
              */
-            $permissionExploded = explode(static::NAMESPACE_DELIMITER, $permission);
-            $currentPermissionExploded = explode(static::NAMESPACE_DELIMITER, $currentPermission);
-
-             /**
-              * Now, if a role has a permission 'city:*' or 'city:all', we return true
-              */
-            if($currentPermissionExploded[0] == $permissionExploded[0]) {
-                // Both namespaces are 'city'
-
-                if(in_array($currentPermissionExploded[1], $this->wildcards)) {
-                    return true;
-                }
+            if(!Helper::isPermission($entityModel)
+                || (Helper::isPermission($entityModel) && !Helper::isPermissionWildcard($entityName))) {
+                continue;
             }
 
             /**
@@ -111,122 +154,13 @@ class BaseChecker
              * permissions. In that case, we need to load all 'city' namespace permissions (excluding those with wildcards)
              * and check, whether a role has all permissions assigned to
              */
-            if(in_array($permissionExploded[1], $this->wildcards)) {
-                if($this->currentModelCheckSingleWildcardPermission($permission)) {
-                    return true;
-                }
-            }
-
-        }
-
-        return $hasPermission;
-    }
-
-    /**
-     * Checks whether current model has attached permissions.
-     *
-     * @param string|array $permissions Array of permission names or comma-separated string
-     * @param bool $requireAll If set to true, role must have all of the given permissions
-     */
-    public function currentModelHasPermissions($model, $permissions, $requireAll)
-    {
-
-        /**
-         * Return true if $permissions is empty
-         */
-        if((is_string($permissions) && $permissions == '') || (is_array($permissions) && empty($permissions))) {
-            return true;
-        }
-
-        /**
-         * Get array of permissions
-         */
-        $permissions = Helper::getPermissionsArray($permissions);
-
-        foreach($permissions as $permissionName)
-        {
-            $hasPermission = $this->currentModelCheckSinglePermission($permissionName);
-
-            if($hasPermission && !$requireAll) {
-                return true;
-            } elseif(!$hasPermission && $requireAll) {
-                return false;
-            }
-
-            /**
-             * If we've made it this far, and $requireAll is FALSE, then none of the permissions were found
-             * If we've made it this far, and $requireAll is TRUE, then all of the permissions were found
-             * Thus, we need to return value of $requireAll
-             */
-            return $requireAll;
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks whether model has a single permission, by its name.
-     *
-     * @param string $permission Permission name.
-     * @return bool
-     */
-    protected function currentModelCheckSinglePermission($permission)
-    {
-
-        $hasPermission = false;
-
-        /**
-         * Check whether $this->model is instance of Role or User
-         */
-
-        if(is_a($this->model, Role::class, true)) {
-            $this->functionNames['getModelPermissions'] = 'getRoleCurrentPermissions';
-        } elseif(is_a($this->model, get_class(Helper::getUserModel()), true)) {
-            $this->functionNames['getModelPermissions'] = 'getUserCurrentPermissions';
-        }
-
-        foreach($this->model->{$this->functionNames['getModelPermissions']}() as $currentPermission) {
-
-            /**
-             * Checking for no-wildcard permission name, like 'city:create'
-             */
-            if(str_is($permission, $currentPermission)) {
+            if($this->currentModelCheckSingleWildcardPermission($entityName)) {
                 return true;
             }
 
-            /**
-             * Checking for wildcard permissions.
-             * If the permission to be checked is 'city:create' and role has permission of 'city:*' or 'city:all',
-             * we need to explode permission name using the ':' delimiter
-             */
-            $permissionExploded = explode(static::NAMESPACE_DELIMITER, $permission);
-            $currentPermissionExploded = explode(static::NAMESPACE_DELIMITER, $currentPermission);
-
-             /**
-              * Now, if a role has a permission 'city:*' or 'city:all', we return true
-              */
-            if($currentPermissionExploded[0] == $permissionExploded[0]) {
-                // Both namespaces are 'city'
-
-                if(in_array($currentPermissionExploded[1], $this->wildcards)) {
-                    return true;
-                }
-            }
-
-            /**
-             * Another case is when we want to check 'city:*' or 'city:all', and the role has assigned array of no-wildcard
-             * permissions. In that case, we need to load all 'city' namespace permissions (excluding those with wildcards)
-             * and check, whether a role has all permissions assigned to
-             */
-            if(in_array($permissionExploded[1], $this->wildcards)) {
-                if($this->currentModelCheckSingleWildcardPermission($permission)) {
-                    return true;
-                }
-            }
-
         }
 
-        return $hasPermission;
+        return $hasEntity;
     }
 
     /**

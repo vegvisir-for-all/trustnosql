@@ -10,7 +10,7 @@ namespace Vegvisir\TrustNoSql\Helpers;
  */
 use Illuminate\Support\Facades\Config;
 
-class UserHelper
+class UserHelper extends HelperProxy
 {
 
     /**
@@ -22,6 +22,12 @@ class UserHelper
     {
         $userModel = Config::get('laratrust.user_models.users');
         return new $userModel;
+    }
+
+    protected static function isOne($object)
+    {
+        $userModel = static::getModel();
+        return is_a(get_class($object), get_class(new $userModel()), true);
     }
 
 }

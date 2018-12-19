@@ -87,11 +87,10 @@ trait UserTrait
      * Checks whether current User has Permissions.
      *
      * @param string|array $permissions Array of permission names or comma-separated string
-     * @param string|null $team (Optional) team name
      * @param bool $requireAll Set to true if user must have all given permissions
      * @return bool
      */
-    public function hasPermissions($permissions, $team = null, $requireAll = false)
+    public function hasPermissions($permissions, $requireAll = false)
     {
         return $this->roleChecker()->currentUserHasPermissions($permissions, $requireAll);
     }
@@ -188,9 +187,9 @@ trait UserTrait
      * @param bool $requireAll If set to true, role needs to have all of the given roles.
      * @return bool
      */
-    public function hasRoles($roles, $team = null, $requireAll = false)
+    public function hasRoles($roles, $requireAll = false)
     {
-        return $this->roleChecker()->currentUserHasRoles($roles, $team, $requireAll);
+        return $this->roleChecker()->currentUserHasRoles($roles, $requireAll);
     }
 
     /**
