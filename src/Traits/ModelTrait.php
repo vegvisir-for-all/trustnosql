@@ -50,14 +50,14 @@ trait ModelTrait
         return (new CheckProxy($this))->getChecker();
     }
 
-    protected function getModelCurrentEntities($entityModelName, $namespace = null)
+    protected function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
     {
 
         /**
          * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
          * by RoleCacheableTrait
          */
-        if(Config::get('trustnosql.cache.use_cache')) {
+        if(!$forceNoCache && Config::get('trustnosql.cache.use_cache')) {
             return $this->{str_replace('Current', 'Cached', __FUNCTION__)}($entityModelName, $namespace);
         }
 
