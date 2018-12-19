@@ -35,15 +35,6 @@ interface RoleInterface {
     public function getRoleCachedPermissions($namespace = null);
 
     /**
-     * Checkes whether Role has a given permission(s).
-     *
-     * @param string|array $permissions Array of permissions or comma-separated list.
-     * @param bool $requireAll If set to true, role needs to have all of the given permissions.
-     * @return bool
-     */
-    public function hasPermissions($permissions, $requireAll = true);
-
-    /**
      * Syncs permission(s) to a Role.
      *
      * @param string|array $permissions Array of permissions or comma-separated list.

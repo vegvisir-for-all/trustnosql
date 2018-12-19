@@ -11,6 +11,7 @@ namespace Vegvisir\TrustNoSql\Traits;
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Checkers\CheckProxy;
+use Vegvisir\TrustNoSql\Traits\ModelTrait;
 use Vegvisir\TrustNoSql\Traits\Aliases\UserAliasesTrait;
 use Vegvisir\TrustNoSql\Exceptions\Role\AttachRolesException;
 use Vegvisir\TrustNoSql\Exceptions\Role\DetachRolesException;
@@ -18,17 +19,7 @@ use Vegvisir\TrustNoSql\Exceptions\Role\DetachRolesException;
 trait UserTrait
 {
 
-    use UserAliasesTrait;
-
-    /**
-     * Returns the right checker for the User model.
-     *
-     * @return \Vegvisir\TrustNoSql\Checkers\User\UserChecker;
-     */
-    protected function roleChecker()
-    {
-        return (new CheckProxy($this))->getChecker();
-    }
+    use ModelTrait;
 
     /**
      * Moloquent belongs-to-many relationship with the Role model.
@@ -81,18 +72,6 @@ trait UserTrait
         return collect($permissionsCollection->get())->map(function ($item, $key) {
             return $item->name;
         })->toArray();
-    }
-
-    /**
-     * Checks whether current User has Permissions.
-     *
-     * @param string|array $permissions Array of permission names or comma-separated string
-     * @param bool $requireAll Set to true if user must have all given permissions
-     * @return bool
-     */
-    public function hasPermissions($permissions, $requireAll = false)
-    {
-        return $this->roleChecker()->currentUserHasPermissions($permissions, $requireAll);
     }
 
     /**
