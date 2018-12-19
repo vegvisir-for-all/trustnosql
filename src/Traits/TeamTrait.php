@@ -8,6 +8,8 @@ namespace Vegvisir\TrustNoSql\Traits;
  *
  * @license GPL-3.0-or-later
  */
+use Vegvisir\TrustNoSql\Helper;
+
 trait TeamTrait {
 
     use ModelTrait;

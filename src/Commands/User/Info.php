@@ -69,7 +69,7 @@ class Info extends BaseCommand
             $roles = Role::whereIn('name', $rolesNames)->get(['name', 'display_name', 'description'])->toArray();
 
             $this->line('ROLES');
-            $this->table(['Id', 'Permission', 'Display name', 'Description'], $roles);
+            $this->table(['Id', 'Role', 'Display name', 'Description'], $roles);
 
             /**
              * 2. Permissions

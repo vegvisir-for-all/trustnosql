@@ -11,6 +11,7 @@ namespace Vegvisir\TrustNoSql\Commands\Team;
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
+use Vegvisir\TrustNoSql\Models\Role;
 use Vegvisir\TrustNoSql\Models\Team;
 
 class Info extends BaseCommand
@@ -59,6 +60,29 @@ class Info extends BaseCommand
             $this->line("Name: $teamName");
             $this->line("Display name: $team->display_name");
             $this->line("Description: $team->description");
+
+            /**
+             * 1. Roles
+             */
+
+            $rolesNames = $team->getTeamCurrentRoles();
+
+            $roles = Role::whereIn('name', $rolesNames)->get(['name', 'display_name', 'description'])->toArray();
+
+            $this->line('ROLES');
+            $this->table(['Id', 'Role', 'Display name', 'Description'], $roles);
+
+            /**
+             * 2. Users
+             */
+
+            $usersEmails = $team->getTeamCurrentUsers();
+            $userModel = Helper::getUserModel();
+
+            $users = $userModel->whereIn('email', $usersEmails)->get(['name', 'email'])->toArray();
+
+            $this->line('USERS');
+            $this->table(['Id', 'Name', 'E-mail'], $users);
 
         }
     }

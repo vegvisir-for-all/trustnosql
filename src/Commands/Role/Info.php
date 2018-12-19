@@ -12,6 +12,7 @@ use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
 use Vegvisir\TrustNoSql\Models\Role;
+use Vegvisir\TrustNoSql\Models\Team;
 
 class Info extends BaseCommand
 {
@@ -72,7 +73,18 @@ class Info extends BaseCommand
             $this->table(['Id', 'Permission', 'Display name', 'Description'], $permissions);
 
             /**
-             * 1. Users
+             * 2. Teams
+             */
+
+            $teamsNames = $role->getRoleCurrentTeams();
+
+            $teams = Team::whereIn('name', $teamsNames)->get(['name', 'display_name', 'description'])->toArray();
+
+            $this->line('TEAMS');
+            $this->table(['Id', 'Team', 'Display name', 'Description'], $teams);
+
+            /**
+             * 3. Users
              */
 
             $usersEmails = $role->getRoleCurrentUsers();
