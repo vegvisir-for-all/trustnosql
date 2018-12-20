@@ -212,7 +212,7 @@ return [
          * 2. auto - both roles and users have teams attached to, and while checking for a role,
          *           also a checking if user has a role attached to is performed
          */
-        'handling' => 'explicit'
+        // 'handling' => 'explicit'
     ],
 
     /*
