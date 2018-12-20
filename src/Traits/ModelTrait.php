@@ -159,6 +159,8 @@ trait ModelTrait
 
         $field = $entityModelName == 'users' ? 'email' : 'name';
 
+        $entityCollection->sortBy($field);
+
         return collect($entityCollection->get())->map(function ($item, $key) use ($field) {
             return $item->$field;
         })->toArray();
