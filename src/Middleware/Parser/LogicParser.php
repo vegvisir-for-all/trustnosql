@@ -18,9 +18,10 @@ class LogicParser
      * Parse logic string into boolean value.
      *
      * @param string $logicString
+     * @param Closure $closure Method to be called when translation of instruction to bools is performed
      * @return bool
      */
-    public static function parseLogicString($logicString = '')
+    public static function parseLogicString($logicString, Closure $closure)
     {
         static::checkBrackets($logicString);
 
@@ -32,7 +33,7 @@ class LogicParser
              * Step 0
              * Reduce basic brackets with middleware instructions
              */
-             $logicString = static::instructionToBool($logicString);
+             $logicString = static::instructionToBool($logicString, $closure);
 
              /**
              * Step 1
