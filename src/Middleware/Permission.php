@@ -11,7 +11,7 @@ namespace Vegvisir\TrustNoSql\Middleware;
 use Closure;
 use Vegvisir\TrustNoSql\Middleware\BaseMiddleware;
 
-class Team extends BaseMiddleware
+class Permission extends BaseMiddleware
 {
 
     /**
