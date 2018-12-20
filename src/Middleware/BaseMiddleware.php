@@ -25,15 +25,15 @@ class BaseMiddleware {
      * @param  string|null $options
      * @return boolean
      */
-    protected function authorization($type, $rolesPermissions, $team, $options)
-    {
-        list($team, $requireAll, $guard) = $this->assignRealValuesTo($team, $options);
+    // protected function authorization($type, $rolesPermissions, $team, $options)
+    // {
+    //     list($team, $requireAll, $guard) = $this->assignRealValuesTo($team, $options);
 
-        $method = $type == 'roles' ? 'hasRole' : 'hasPermission';
+    //     $method = $type == 'roles' ? 'hasRole' : 'hasPermission';
 
-        return !Auth::guard($guard)->guest()
-            && Auth::guard($guard)->user()->$method($rolesPermissions, $team, $requireAll);
-    }
+    //     return !Auth::guard($guard)->guest()
+    //         && Auth::guard($guard)->user()->$method($rolesPermissions, $team, $requireAll);
+    // }
 
     /**
      * The request is unauthorized, so it handles the aborting/redirecting.
@@ -94,6 +94,58 @@ class BaseMiddleware {
             return explode(':', $option)[1];
         })->first();
 
+    }
+
+    protected function authorization($instruction)
+    {
+        return !Auth::guest() &&
+            $this->parseInstruction($instruction, Auth::user());
+    }
+
+    protected function parseInstruction($instruction, $user)
+    {
+
+        $instruction = preg_replace('/([A-Za-z*]{1,}:[A-Za-z*\/]{1,})/im', '(\1)', preg_replace('/\s+/', '', $instruction));
+
+        foreach([
+            '|' => ' || ',
+            '&' => ' && '
+        ] as $from => $to) {
+            $instruction = str_replace($from, $to, $instruction);
+        }
+
+        $hasRole = function ($roleName) use ($user) {
+            return $user->hasRole($roleName);
+        };
+        $hasRoleAndOwns = function ($roleName) use ($user) {
+            return $user->hasRole($roleName);
+        };
+        $hasPermission = function ($permissionName) use ($user) {
+            return $user->hasRole($permissionName);
+        };
+        $hasPermissionAndOwns = function ($permissionName) use ($user) {
+            return $user->hasRole($permissionName);
+        };
+        $hasTeam = function ($teamName) use ($user) {
+            return $user->hasTeam($teamName);
+        };
+
+        /**
+         * Step 4
+         * Parsing to true/falses
+         */
+        $matches = [];
+
+        while(0 !== preg_match('/(\({1}[A-Za-z0-9*:\/]*\){1})/im', $instruction, $matches) && !empty($matches)) {
+            $partialExploded = explode(':', substr($matches[0], 1, strlen($matches[0]) - 2 ));
+            $instruction = str_replace($matches[0], (string) $${str_replace('*', 'AndOwns', 'has' . ucfirst($partialExploded[0]))}($partialExploded[1]) ? 'true' : 'false', $instruction);
+        }
+
+        eval('$result = (bool)(' . $instruction .');');
+
+        if(is_bool($result)) {
+            return $result;
+        }
     }
 
 }

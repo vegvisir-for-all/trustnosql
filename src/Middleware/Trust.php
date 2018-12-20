@@ -9,16 +9,14 @@ namespace Vegvisir\TrustNoSql\Middleware;
  * @license GPL-3.0-or-later
  */
 use Closure;
+use Vegvisir\TrustNoSql\Middleware\BaseMiddleware;
 
-class Role extends BaseMiddleware {
+class Trust extends BaseMiddleware {
 
-    public function handle($request, Closure $next, $roles, $team = null, $options)
+    public function handle($request, Closure $next, $instruction)
     {
-        if (!$this->authorization('roles', $roles, $team, $options)) {
+        if(!$this->authorization($instruction)) {
             return $this->unauthorized();
         }
-
-        return $next($request);
     }
-
 }

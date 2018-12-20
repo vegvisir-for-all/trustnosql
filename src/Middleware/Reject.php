@@ -8,4 +8,4 @@ namespace Vegvisir\TrustNoSql\Middleware;
  *
  * @license GPL-3.0-or-later
  */
-class Ability extends BaseMiddleware {}
+class Reject extends BaseMiddleware {}
