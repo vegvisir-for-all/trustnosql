@@ -175,6 +175,11 @@ trait ModelTrait
      */
     protected function hasEntities($entityModelName, $entityList, $requireAll)
     {
+
+        if($entityModelName == 'team' && !Config::get('trustnosql.teams.use_teams', true)) {
+            return true;
+        }
+
         $functionName = 'current' . ucfirst(class_basename($this)) . 'Has' . ucfirst(str_plural(($entityModelName)));
         return $this->modelChecker()->$functionName($entityList, $requireAll);
     }
