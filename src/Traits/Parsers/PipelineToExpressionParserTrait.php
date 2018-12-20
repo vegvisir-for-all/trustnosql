@@ -17,8 +17,8 @@ trait PipelineToExpressionParserTrait {
 
     public static function pipelineToExpression($entityName, $entitiesPipeline)
     {
-        if(!is_string($entitiesPipeline)) {
-            throw new \Exception;
+        if(!is_string($entitiesPipeline) || !$entitiesPipeline) {
+            return 'true';
         }
 
         $areAmpersands = false !== strpos('&', $entitiesPipeline) ? true : false;
