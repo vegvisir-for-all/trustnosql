@@ -2,19 +2,23 @@
 
 namespace Vegvisir\TrustNoSql\Traits\Parsers;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 trait PipelineToExpressionParserTrait {
 
 
-        /**
-         * Entities can be given in one of two following methods:
-         *
-         * 1. 'vegvisir,backpet' with additional parameter $requireAll
-         * 2. 'vegvisir&backpet' as AND
-         * 3. 'vegvisir|backpet' as OR pipeline
-         *
-         * Function should throw error when both & and | pipeline operators are present
-         */
-
+    /**
+     * Translate pipeline to expression
+     *
+     * @param $entitnyName
+     * @param $entitiesPipeline
+     * @return string
+     * @throws \Exception
+     */
     public static function pipelineToExpression($entityName, $entitiesPipeline)
     {
         if(!is_string($entitiesPipeline) || !$entitiesPipeline) {

@@ -169,6 +169,12 @@ class HelperProxy
         return UserHelper::getModel();
     }
 
+    /**
+     * Provide a user logic proxy for middleware checking
+     *
+     * @param User $user
+     * @return Closure
+     */
     public static function getUserLogicProxy($user)
     {
         return UserHelper::logicProxy($user);

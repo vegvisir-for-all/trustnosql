@@ -49,6 +49,10 @@ class BaseChecker
         $this->wildcards = Helper::getPermissionWildcards();
     }
 
+    /**
+     * Calls appropriate proxy method when currentModelHasRoles (or similar) method
+     * was called.
+     */
     public function __call($name, $arguments)
     {
         $parsed = explode('_', snake_case($name));
@@ -64,6 +68,14 @@ class BaseChecker
         return $this->$functionName($entityModelName, $arguments[0], $arguments[1]);
     }
 
+    /**
+     * Checks if current model has entities attached to.
+     *
+     * @param string|object $entitiesModel Name of model (or model itself)
+     * @param string|array $entitiesList Array of entity names or comma-separated list
+     * @param bool $requireAll Set to true if model must have all entities
+     * @return bool
+     */
     protected function currentModelHasEntities($entitiesModel, $entitiesList, $requireAll)
     {
 
@@ -98,6 +110,13 @@ class BaseChecker
 
     }
 
+    /**
+     * Checks if current model has a signle entity attached to.
+     *
+     * @param string|object $entitiesModel Name of model (or model itself)
+     * @param string $entitiyName Entity name
+     * @return bool
+     */
     protected function currentModelCheckSingleEntity($entityModel, $entityName)
     {
 
@@ -171,14 +190,14 @@ class BaseChecker
         /**
          * Current permissions for a role, with a given namespace
          */
-        $rolePermissions = $this->model->{$this->functionNames['getModelPermissions']}($namespace);
+        $modelPermissions = $this->model->{$this->functionNames['getModelPermissions']}($namespace);
 
         /**
          * Since $availablePermissions and $rolePermissions must have the very same values, we use
          * the array_diff function to check for differences. If there are none, the return array of
          * array_diff should be empty.
          */
-        return empty(array_diff($availablePermissions, $rolePermissions));
+        return empty(array_diff($availablePermissions, $modelPermissions));
 
     }
 

@@ -11,22 +11,38 @@ namespace Vegvisir\TrustNoSql\Traits;
 trait GrabbableTrait
 {
 
+    /**
+     * If false, then grabbableBy method was overriden
+     *
+     * @var bool
+     */
     protected $grababilityLock = false;
 
+    /**
+     * Grabability mode
+     *
+     * @var int
+     */
     protected $grababilityMode = 3;
 
+    /**
+     * Set grabability mode
+     *
+     * @param int $code
+     * @return void
+     */
     public function setGrababilityMode($code)
     {
         $this->grababilityMode = $code;
     }
 
     /**
-     * Override function to make more complex reachabilty request. Default true
+     * Function called by TrustNoSql on object to establish grabability rules.
      *
      * @param $user
-     * @return bool Default true (thanks to AccessibleTrait)
+     * @return bool Default true
      */
-    public function canBeGrabbedBy($user)
+    public final function canBeGrabbedBy($user)
     {
         switch($this->grababilityMode) {
             case static::MODE_ONLY_EXPLICIT:
@@ -47,6 +63,12 @@ trait GrabbableTrait
         }
     }
 
+    /**
+     * Checks whether $user->id is in the grabber_ids or owner_ids field of $this
+     *
+     * @param User $user
+     * @return bool
+     */
     public function explicitelyGrabbedBy($user)
     {
         if(!isset($this->grabber_ids) && !isset($this->owner_ids)) {
@@ -56,6 +78,12 @@ trait GrabbableTrait
         return (in_array($user->id, $this->grabber_ids) || in_array($user->id, $this->owner_ids));
     }
 
+    /**
+     * Function to be overriden in the model to establish grabability rules.
+     *
+     * @param User $user
+     * @return bool
+     */
     public function grabbableBy($user)
     {
         $this->grababilityLock = true;

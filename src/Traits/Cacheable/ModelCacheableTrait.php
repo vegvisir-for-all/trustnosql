@@ -2,12 +2,25 @@
 
 namespace Vegvisir\TrustNoSql\Traits\Cacheable;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
-trait ModelCacheableTrait {
+trait ModelCacheableTrait
+{
 
-
+    /**
+     * Flush cache for given model (optionally, an array of entities to be flushed,
+     * can be passed).
+     *
+     * @param array|null $entityModelNames
+     * @return void
+     */
     public function currentModelFlushCache($entityModelNames = null)
     {
 
@@ -39,12 +52,17 @@ trait ModelCacheableTrait {
         }
     }
 
+    /**
+     * Gets a list of cached model entities' names or stores it to cache, if it wasn't
+     * present before.
+     *
+     * @param string $entityModelName
+     * @param string|null $namespace
+     * @return array
+     */
     protected function getModelCachedEntities($entityModelName, $namespace = null)
     {
 
-        /**
-         * Cache key generate
-         */
         $cacheKey = 'trustnosql_'
             . strtolower(str_plural($entityModelName))
             . '_for_'
@@ -52,9 +70,9 @@ trait ModelCacheableTrait {
             . '_'
             . $this->id;
 
-        /**
-         * Otherwise, retrieve a list of current entities from the DB
-         */
+        if($namespace !== null) {
+            $cacheKey .= '_' . $namespace;
+        }
 
         return Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () use ($entityModelName, $namespace) {
             return $this->getModelCurrentEntities($entityModelName, $namespace, true);

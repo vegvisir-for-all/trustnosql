@@ -24,15 +24,26 @@ class UserHelper extends HelperProxy
         return new $userModel;
     }
 
+    /**
+     * Checks whether an object is a user model
+     *
+     * @param Object $object Object to be checked
+     * @return bool
+     */
     protected static function isOne($object)
     {
         $userModel = static::getModel();
         return is_a(get_class($object), get_class(new $userModel()), true);
     }
 
+    /**
+     * Provide a user logic proxy for middleware checking
+     *
+     * @param User $user
+     * @return Closure
+     */
     public static function logicProxy($user)
     {
-
         return function ($middlewareNamespace, $entityName) use ($user) {
 
             if($user == null) {

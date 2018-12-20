@@ -55,7 +55,6 @@ class CheckProxy
      */
     public function getChecker()
     {
-
         if(is_a($this->model, static::PERMISSION_MODEL, true)) {
             return $this->getPermissionChecker();
         }
@@ -67,7 +66,6 @@ class CheckProxy
         if(is_a($this->model, Config::get('laratrust.user_models.users'), true)) {
             return $this->getUserChecker();
         }
-
     }
 
     /**

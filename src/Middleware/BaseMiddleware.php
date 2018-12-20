@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +46,7 @@ class BaseMiddleware
      * Return authorized user (or null if unauthorized)
      *
      * @param string $guard Optional guard name.
-     * @return Object
+     * @return User|null
      */
     protected static function authUser($guard = null)
     {
@@ -65,6 +71,7 @@ class BaseMiddleware
      * @param string $expression
      * @param string|null $guard
      * @param bool $negateExpression
+     * @return mixed
      */
     protected function authorize($request, Closure $next, $expression, $guard = null, $negateExpression = false)
     {
@@ -79,19 +86,17 @@ class BaseMiddleware
         return $next($request);
     }
 
-    protected function parseToExpression($entityName, $entitiesList, $requireAll = false)
+    /**
+     * Translate entity pipeline to expression (like in the trust middleware)
+     *
+     * @param string $entityName Name of the entity
+     * @param string $entitiesPipeline Pipeline of entity names
+     * @param bool $requireAll Checks if all entities in pipeline must be attached to model (& operands)
+     * @return string
+     */
+    protected function parseToExpression($entityName, $entitiesPipeline, $requireAll = false)
     {
-        /**
-         * Entities can be given in one of two following methods:
-         *
-         * 1. 'vegvisir,backpet' with additional parameter $requireAll
-         * 2. 'vegvisir&backpet' as AND
-         * 3. 'vegvisir|backpet' as OR pipeline
-         *
-         * Function should throw error when both & and | pipeline operators are present
-         */
-
-        return LogicStringParser::pipelineToExpression($entityName, $entitiesList, $requireAll);
+        return LogicStringParser::pipelineToExpression($entityName, $entitiesPipeline, $requireAll);
     }
 
 }

@@ -2,6 +2,12 @@
 
 namespace Vegvisir\TrustNoSql\Traits;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Vegvisir\TrustNoSql\Helper;
@@ -14,6 +20,11 @@ use Vegvisir\TrustNoSql\Checkers\CheckProxy;
 trait ModelTrait
 {
 
+    /**
+     * Namespaces for checking functions
+     *
+     * @var array
+     */
     protected $namespaces = [
         'has',
         'attach',
@@ -21,6 +32,11 @@ trait ModelTrait
         'sync'
     ];
 
+    /**
+     * Available entities
+     *
+     * @var array
+     */
     protected $entities = [
         'permissions',
         'roles',
@@ -43,6 +59,12 @@ trait ModelTrait
         return parent::__call($originalName, $arguments);
     }
 
+    /**
+     * Boots trait:
+     * 1. flushes cache on deletion and saving
+     * 2. removing of attached ids in case of deletion
+     * 3. Register event listeners
+     */
     public static function boot()
     {
         parent::boot();
@@ -51,6 +73,11 @@ trait ModelTrait
         static::bootTrustNoSqlEvents();
     }
 
+    /**
+     * Boots trait:
+     * 1. flushes cache on deletion and saving
+     * 2. removing of attached ids in case of deletion
+     */
     protected static function bootModelTrait()
     {
         $flushCache = function ($model) {
@@ -103,12 +130,19 @@ trait ModelTrait
         return (new CheckProxy($this))->getChecker();
     }
 
+    /**
+     * Returns cached or db-generated list of current model's entities
+     *
+     * @param string $entityModelName Name of the model
+     * @param string|null $namespace Permission namespace
+     * @param bool $forceNoCache If set to true, method will not use cached data
+     * @return array
+     */
     protected function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
     {
 
         /**
-         * If TrustNoSql uses cache, this should be retrieved by roleCachedPermissions, provided
-         * by RoleCacheableTrait
+         * If TrustNoSql uses cache and $forceNoCache is false, this should be retrieved from cache
          */
         if(!$forceNoCache && Config::get('trustnosql.cache.use_cache')) {
             return $this->{str_replace('Current', 'Cached', __FUNCTION__)}($entityModelName, $namespace);
@@ -131,13 +165,28 @@ trait ModelTrait
 
     }
 
+    /**
+     * Checks whether model has entities.
+     *
+     * @param string $entityModelName Name of the model
+     * @param string|array $entityList Array of entity names or comma-separated string
+     * @param bool $requireAll If set to true, all entities must be attached to model
+     * @return bool
+     */
     protected function hasEntities($entityModelName, $entityList, $requireAll)
     {
         $functionName = 'current' . ucfirst(class_basename($this)) . 'Has' . ucfirst(str_plural(($entityModelName)));
         return $this->modelChecker()->$functionName($entityList, $requireAll);
     }
 
-    public function syncEntities($entityModelName, $permissions)
+    /**
+     * Sync entities with model.
+     *
+     * @param string $entityModelName Name of the model
+     * @param string|array $entityList Array of entity names or comma-separated string
+     * @return object
+     */
+    public function syncEntities($entityModelName, $entityList)
     {
         $entitiesKeys = Helper::{'get' . ucfirst($entityModelName) . 'Keys'}($entityList);
 
@@ -154,6 +203,13 @@ trait ModelTrait
         return $this;
     }
 
+    /**
+     * Attach entities to model.
+     *
+     * @param string $entityModelName Name of the model
+     * @param string|array $entityList Array of entity names or comma-separated string
+     * @return object
+     */
     protected function attachEntities($entityModelName, $entityList)
     {
 
@@ -172,6 +228,13 @@ trait ModelTrait
         return $this;
     }
 
+    /**
+     * Detach entities from model.
+     *
+     * @param string $entityModelName Name of the model
+     * @param string|array $entityList Array of entity names or comma-separated string
+     * @return object
+     */
     public function detachEntities($entityModelName, $entityList)
     {
 

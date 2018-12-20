@@ -50,6 +50,12 @@ class TeamHelper extends HelperProxy
 
     }
 
+    /**
+     * Checks whether an object is a team model
+     *
+     * @param Object $object Object to be checked
+     * @return bool
+     */
     protected static function isOne($object)
     {
         return is_a(get_class($object), get_class(new Team), true);

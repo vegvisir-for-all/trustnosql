@@ -8,7 +8,8 @@ namespace Vegvisir\TrustNoSql\Contracts;
  *
  * @license GPL-3.0-or-later
  */
-interface RoleInterface {
+interface RoleInterface
+{
 
     /**
      * Moloquent belongs-to-many relationship with the permission model.
@@ -17,8 +18,18 @@ interface RoleInterface {
      */
     public function permissions();
 
+    /**
+     * Moloquent belongs-to-many relationship with the team model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
     public function teams();
 
+    /**
+     * Moloquent belongs-to-many relationship with the user model.
+     *
+     * @return \Jenssegers\Mongodb\Relations\BelongsToMany
+     */
     public function users();
 
 }
