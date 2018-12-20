@@ -26,6 +26,7 @@ trait ModelTrait
      * @var array
      */
     protected $namespaces = [
+        'can',
         'has',
         'attach',
         'detach',
@@ -54,6 +55,10 @@ trait ModelTrait
             return $this->{$name[0] . 'Entities'}($name[1], $arguments[0], isset($arguments[1]) ? $arguments[1] : false);
         } elseif ($name[0] == 'get' && in_array($name[2], ['current', 'cached'])) {
             return $this->getModelCurrentEntities(strtolower(str_plural($name[3])));
+        } else if ($name[0] == 'can') {
+            // permission magic method
+            $permissionName = strtolower($name[1]) . '/' . strtolower($name[2]);
+            return $this->hasEntities('permission', $permissionName);
         }
 
         return parent::__call($originalName, $arguments);
