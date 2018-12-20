@@ -1,17 +1,12 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Middleware\Parser;
+namespace Vegvisir\TrustNoSql\Traits\Parsers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use \BracketChecker\BracketChecker;
+use Closure;
 use Vegvisir\TrustNoSql\Exceptions\Parser\BracketsMismatchException;
 
-class LogicParser
+trait ExpressionToBoolParserTrait
 {
 
     /**
@@ -21,7 +16,7 @@ class LogicParser
      * @param Closure $closure Method to be called when translation of instruction to bools is performed
      * @return bool
      */
-    public static function parseLogicString($logicString, Closure $closure)
+    public static function expressionToBool($logicString, Closure $closure)
     {
         static::checkBrackets($logicString);
 
@@ -152,7 +147,11 @@ class LogicParser
         $matches = [];
         while(1 == preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $logicString, $matches)) {
 
-            $strResult = rand(0,1) == 1 ? 'true' : 'false';
+            $exploded = explode(':', substr($matches[0], 1, strlen($matches[0]) - 2));
+
+            $result = $closure($exploded[0], $exploded[1]);
+
+            $strResult = $result ? 'true' : 'false';
 
             // Has to be changed with actual method
             $logicString = str_replace($matches[0], $strResult, $logicString);

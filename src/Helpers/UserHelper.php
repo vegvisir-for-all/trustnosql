@@ -30,4 +30,18 @@ class UserHelper extends HelperProxy
         return is_a(get_class($object), get_class(new $userModel()), true);
     }
 
+    public static function logicProxy($user)
+    {
+
+        return function ($middlewareNamespace, $entityName) use ($user) {
+
+            if($user == null) {
+                return false;
+            }
+
+            $functionName = 'has' . ucfirst($middlewareNamespace);
+            return $user->$functionName($entityName);
+        };
+    }
+
 }

@@ -169,6 +169,11 @@ class HelperProxy
         return UserHelper::getModel();
     }
 
+    public static function getUserLogicProxy($user)
+    {
+        return UserHelper::logicProxy($user);
+    }
+
     /**
      * Gets an array from comma-separated values.
      * If $rolesOrPermissions is an array, function returns $rolesOrPermissions itself

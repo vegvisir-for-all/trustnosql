@@ -2,39 +2,16 @@
 
 namespace Vegvisir\TrustNoSql\Middleware;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
-use Illuminate\Support\Collection;
+use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
-use Vegvisir\TrustNoSql\Middleware\Parser\LogicParser;
+use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Middleware\Parser\LogicStringParser;
 
-class BaseMiddleware {
-
-    /**
-     * Check if the request has authorization to continue.
-     *
-     * @param  string $type
-     * @param  string $rolesPermissions
-     * @param  string|null $team
-     * @param  string|null $options
-     * @return boolean
-     */
-    // protected function authorization($type, $rolesPermissions, $team, $options)
-    // {
-    //     list($team, $requireAll, $guard) = $this->assignRealValuesTo($team, $options);
-
-    //     $method = $type == 'roles' ? 'hasRole' : 'hasPermission';
-
-    //     return !Auth::guard($guard)->guest()
-    //         && Auth::guard($guard)->user()->$method($rolesPermissions, $team, $requireAll);
-    // }
+class BaseMiddleware
+{
 
     /**
      * The request is unauthorized, so it handles the aborting/redirecting.
@@ -60,148 +37,61 @@ class BaseMiddleware {
     }
 
     /**
-     * Generate an array with the real values of the parameters given to the middleware.
+     * Return authorized user (or null if unauthorized)
      *
-     * @param  string $team
-     * @param  string $options
-     * @return array
+     * @param string $guard Optional guard name.
+     * @return Object
      */
-    protected function assignRealValuesTo($team, $options)
+    protected static function authUser($guard = null)
     {
-        return [
-            (Str::contains($team, ['require_all', 'guard:']) ? null : $team),
-            (Str::contains($team, 'require_all') ?: Str::contains($options, 'require_all')),
-            (Str::contains($team, 'guard:') ? $this->extractGuard($team) : (
-                Str::contains($options, 'guard:')
-                ? $this->extractGuard($options)
-                : Config::get('auth.defaults.guard')
-            )),
-        ];
+        if($guard == null) {
+            $guard = Config::get('auth.defaults.guard');
+        }
+
+        if(Auth::guard($guard)->guest()) {
+            return null;
+        }
+
+        return Auth::guard($guard)->user();
     }
 
     /**
-     * Extract the guard type from the given string.
+     * Check whether current user passes conditions given in the middleware call.
+     * It calls $this->unauthorized() if conditions were not met, or returns $next($request)
+     * for the next middleware to run
      *
-     * @param  string $string
-     * @return string
+     * @param \Illuminate\Http\Request $request
+     * @param Closure $next
+     * @param string $expression
+     * @param string|null $guard
+     * @param bool $negateExpression
      */
-    protected function extractGuard($string)
+    protected function authorize($request, Closure $next, $expression, $guard = null, $negateExpression = false)
     {
-        $options = Collection::make(explode('|', $string));
+        $user = static::authUser($guard);
 
-        return $options->reject(function ($option) {
-            return strpos($option, 'guard:') === false;
-        })->map(function ($option) {
-            return explode(':', $option)[1];
-        })->first();
+        $parsingResult = LogicStringParser::expressionToBool($expression, Helper::getUserLogicProxy($user));
 
-    }
-
-    protected function authorization($instruction)
-    {
-        dd(Auth::guest() &&
-            $this->parseInstruction($instruction, Auth::user()));
-    }
-
-    protected function parseInstruction($instruction, $user)
-    {
-
-        $result = LogicParser::parseLogicString($instruction);
-
-        $instruction = preg_replace('/([A-Za-z*]{1,}:[A-Za-z*\/]{1,})/im', '(\1)', preg_replace('/\s+/', '', $instruction));
-
-        foreach([
-            '|' => '||',
-            '&' => '&&'
-        ] as $from => $to) {
-            $instruction = str_replace($from, $to, $instruction);
+        if($parsingResult == $negateExpression) {
+            $this->unauthorized();
         }
 
-        $user = \App\User::first();
+        return $next($request);
+    }
 
-        $hasRole = function ($roleName, $user) {
-            return $user->hasRole($roleName);
-        };
-        $hasRoleAndOwns = function ($roleName, $user) {
-            return $user->hasRole($roleName);
-        };
-        $hasPermission = function ($permissionName, $user) {
-            return $user->hasRole($permissionName);
-        };
-        $hasPermissionAndOwns = function ($permissionName, $user) {
-            return $user->hasRole($permissionName);
-        };
-        $hasTeam = function ($teamName, $user) {
-            return $user->hasTeam($teamName);
-        };
+    protected function parseToExpression($entityName, $entitiesList, $requireAll = false)
+    {
+        /**
+         * Entities can be given in one of two following methods:
+         *
+         * 1. 'vegvisir,backpet' with additional parameter $requireAll
+         * 2. 'vegvisir&backpet' as AND
+         * 3. 'vegvisir|backpet' as OR pipeline
+         *
+         * Function should throw error when both & and | pipeline operators are present
+         */
 
-        while(false !== strpos($instruction, '(') && false !== strpos($instruction, ')')) {
-
-            /**
-             * Step 0
-             * Reduce basic brackets with middleware instructions
-             */
-            while(1 == preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $instruction, $matches)) {
-
-                $strResult = rand(0,1) == 1 ? 'true' : 'false';
-                $instruction = str_replace($matches[0], $strResult, $instruction);
-            }
-
-            /**
-             * Step 1
-             * Reduce basic brackets with single bool
-             */
-            while(false !== strpos($instruction, '(false)') || false !== strpos($instruction, '(true)')) {
-                $instruction = str_replace('(false)', 'false', $instruction);
-                $instruction = str_replace('(true)', 'true', $instruction);
-            }
-
-            /**
-             * Step 2
-             * Reduce bool&&bool and bool||bool
-             */
-            $matches = [];
-            while(1 == preg_match_all('/\((true|false)([\&\|]{2})(true|false)\)/im', $instruction, $matches)) {
-
-                foreach($matches[0] as $key => $fullString) {
-                    $result = $matches[2][$key] == '||'
-                        ? filter_var($matches[1][$key], FILTER_VALIDATE_BOOLEAN) || filter_var($matches[3][$key], FILTER_VALIDATE_BOOLEAN)
-                        : filter_var($matches[1][$key], FILTER_VALIDATE_BOOLEAN) && filter_var($matches[3][$key], FILTER_VALIDATE_BOOLEAN);
-
-                        $strResult = $result ? 'true' : 'false';
-
-                        $instruction = str_replace($fullString, $strResult, $instruction);
-                }
-            }
-
-            /**
-             * Step 3
-             * We must put all loose && operations into brackets
-             */
-            $instructionBefore = $instruction;
-            $instruction = preg_replace('/(true|false)([\&]{2})(true|false)/im', '(\1\2\3)', $instruction);
-
-            if($instructionBefore !== $instruction) {
-                // to first step
-                continue;
-            }
-
-            /**
-             * Step 3
-             * We must put first loose || operation into brackets
-             */
-            $instruction = preg_replace('/(true|false)([\|]{2})(true|false)/im', '(\1\2\3)', $instruction, 1);
-
-            if($instructionBefore !== $instruction) {
-                // to first step
-                continue;
-            }
-
-
-            break;
-        }
-
-        return filter_var($instruction, FILTER_VALIDATE_BOOLEAN);
+        return LogicStringParser::pipelineToExpression($entityName, $entitiesList, $requireAll);
     }
 
 }
