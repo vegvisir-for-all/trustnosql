@@ -3,6 +3,7 @@
 namespace Vegvisir\TrustNoSql\Middleware\Parser;
 
 use \BracketChecker\BracketChecker;
+use Vegvisir\TrustNoSql\Exceptions\Logic\BracketsMismatchException;
 
 class LogicParser
 {
@@ -127,7 +128,7 @@ class LogicParser
         $checker->setString($logicString);
 
         if(!$checker->check()) {
-            throw new \Exception;
+            throw new BracketsMismatchException;
         }
     }
 
