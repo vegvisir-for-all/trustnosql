@@ -1,6 +1,6 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Exceptions\Logic;
+namespace Vegvisir\TrustNoSql\Exceptions\Parser;
 
 /**
  * This file is part of TrustNoSql,

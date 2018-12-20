@@ -3,7 +3,7 @@
 namespace Vegvisir\TrustNoSql\Middleware\Parser;
 
 use \BracketChecker\BracketChecker;
-use Vegvisir\TrustNoSql\Exceptions\Logic\BracketsMismatchException;
+use Vegvisir\TrustNoSql\Exceptions\Parser\BracketsMismatchException;
 
 class LogicParser
 {
