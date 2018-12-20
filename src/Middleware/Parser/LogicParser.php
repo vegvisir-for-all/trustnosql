@@ -2,12 +2,24 @@
 
 namespace Vegvisir\TrustNoSql\Middleware\Parser;
 
+/**
+ * This file is part of TrustNoSql,
+ * a role/permission/team MongoDB management solution for Laravel.
+ *
+ * @license GPL-3.0-or-later
+ */
 use \BracketChecker\BracketChecker;
 use Vegvisir\TrustNoSql\Exceptions\Parser\BracketsMismatchException;
 
 class LogicParser
 {
 
+    /**
+     * Parse logic string into boolean value.
+     *
+     * @param string $logicString
+     * @return bool
+     */
     public static function parseLogicString($logicString = '')
     {
         static::checkBrackets($logicString);
@@ -58,16 +70,37 @@ class LogicParser
         return filter_var($logicString, FILTER_VALIDATE_BOOLEAN);
     }
 
+    /**
+     * Put FIRST disjunction (like ' false || true ') into brackets, so the parser can
+     * solve operation on next iteration.
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function putDisjunctionIntoBrackets($logicString)
     {
         return preg_replace('/(true|false)([\|]{2})(true|false)/im', '(\1\2\3)', $logicString, 1);
     }
 
+    /**
+     * Put all conjunctions (like ' false && true ') into brackets, so the parser can
+     * solve operation on next iteration.
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function putConjunctionIntoBrackets($logicString)
     {
         return preg_replace('/(true|false)([\&]{2})(true|false)/im', '(\1\2\3)', $logicString);
     }
 
+    /**
+     * Reduces loose operations with two vars and replaces them with string reflection
+     * of bool result.
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function reduceSingleComparisons($logicString)
     {
         $matches = [];
@@ -88,6 +121,12 @@ class LogicParser
         return $logicString;
     }
 
+    /**
+     * Reduces single bools in brackets.
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function reduceSingleBools($logicString)
     {
         while(false !== strpos($logicString, '(false)') || false !== strpos($logicString, '(true)')) {
@@ -98,7 +137,15 @@ class LogicParser
         return $logicString;
     }
 
-    protected static function instructionToBool($logicString)
+    /**
+     * Performs an actual operation on logic instruction and replaces instruction
+     * with string reflection of bool result
+     *
+     * @param string $logic String Logic string.
+     * @param Closure $closure Method to be called when translating is performed
+     * @return string
+     */
+    protected static function instructionToBool($logicString, Closure $closure)
     {
 
         $matches = [];
@@ -114,11 +161,24 @@ class LogicParser
 
     }
 
+    /**
+     * Checks whether logic string has any brackets.
+     *
+     * @param string $logic String Logic string.
+     * @return @bool
+     */
     protected static function hasAnyBrackets($logicString)
     {
         return (false !== strpos($logicString, '(') || false !== strpos($logicString, ')'));
     }
 
+    /**
+     * Checks for correct depth of brackets in logic string.
+     *
+     * @param string $logicString Logic string.
+     * @return void
+     * @throws BracketsMismatchException
+     */
     protected static function checkBrackets($logicString)
     {
 
@@ -127,21 +187,41 @@ class LogicParser
         $checker = new BracketChecker;
         $checker->setString($logicString);
 
-        if(!$checker->check()) {
+        try {
+            $checker->check();
+        } catch (\Exception $e) {
             throw new BracketsMismatchException;
         }
     }
 
+    /**
+     * Cleans logic string of any whitespace
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function cleanWhitespace($logicString)
     {
         return preg_replace('/\s+/', '', $logicString);
     }
 
+    /**
+     * Adds brackets to single middleware instructions
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function addBracketsToInstructions($logicString)
     {
         return preg_replace('/([A-Za-z*]{1,}:[A-Za-z*\/]{1,})/im', '(\1)', $logicString);
     }
 
+    /**
+     * Changes single TrustNoSql operands into PHP-like ones.
+     *
+     * @param string $logic String Logic string.
+     * @return string
+     */
     protected static function doubleOperands($logicString)
     {
         foreach([
@@ -153,7 +233,5 @@ class LogicParser
 
         return $logicString;
     }
-
-
 
 }

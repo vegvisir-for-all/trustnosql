@@ -108,8 +108,6 @@ class BaseMiddleware {
 
         $result = LogicParser::parseLogicString($instruction);
 
-        die();
-
         $instruction = preg_replace('/([A-Za-z*]{1,}:[A-Za-z*\/]{1,})/im', '(\1)', preg_replace('/\s+/', '', $instruction));
 
         foreach([
