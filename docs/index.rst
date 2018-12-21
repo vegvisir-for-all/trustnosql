@@ -121,6 +121,20 @@ TrustNoSql comes with handy CLI of its own. It's especially useful at the initia
 
 TrustNoSql CLI provides all possible actions for Permission, Role and Team (create, delete, attach, detach, list, info), as well as detailed info for chosen user.
 
+Commands description
+====================
+
+You don't have to specify parameters for commands inline, as all of them provide simple interactive interface.
+
+Permission namespace
+--------------------
+
++----------------------------------+--------------------------------------------------+
+| Command                          | Description                                      |
++==================================+==================================================+
+| ``trustnosql:permission:attach`` | Attaches permission(s) to role(s) and/or user(s) |
++----------------------------------+--------------------------------------------------+
+
 Troubleshooting
 ###############
 
