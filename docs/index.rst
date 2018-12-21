@@ -1,41 +1,12 @@
-$project
-========
+##########
+TrustNoSql
+##########
 
-$project will solve your problem of where to start with documentation,
-by providing a basic explanation of how to do it easily.
+.. image:: https://readthedocs.org/projects/trustnosql/badge/?version=latest :target: https://trustnosql.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
 
-Look how easy it is to use:
+What is TrustNoSql
+##################
+    
+TrustNoSql is a Laravel (>=5.3) role/permission manager for MongoDB-based applications. It supports roles, permissions, and teams, provides a complex way of determining ownage (grabbing) of objects, and offers a nice CLI for your convenience. TrustNoSql is built atop a great `jenssegers/laravel-mongodb <https://github.com/jenssegers/laravel-mongodb>`_ package, and it's inspired by `Laratrust <https://github.com/santigarcor/laratrust>`_.
 
-    import project
-    # Get your stuff done
-    project.do_stuff()
-
-Features
---------
-
-- Be awesome
-- Make things faster
-
-Installation
-------------
-
-Install $project by running:
-
-    install project
-
-Contribute
-----------
-
-- Issue Tracker: github.com/$project/$project/issues
-- Source Code: github.com/$project/$project
-
-Support
--------
-
-If you are having issues, please let us know.
-We have a mailing list located at: project@google-groups.com
-
-License
--------
-
-The project is licensed under the BSD license.
+**TrustNoSql is in the development phase. We can take no responsibility for any damage it creates when used in production projects. However, we hope to publish a stable version soon.**
