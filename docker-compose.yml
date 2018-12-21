@@ -11,7 +11,7 @@ services:
         working_dir: /code
         command: bash -c "composer install --prefer-source --no-interaction && php ./vendor/bin/phpunit --verbose"
         depends_on:
-          - mongodb_trustnosql
+          - mongodb
 
     mongodb:
         container_name: mongodb_trustnosql
