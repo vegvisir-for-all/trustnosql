@@ -11,18 +11,7 @@ services:
         working_dir: /code
         command: bash -c "composer install --prefer-source --no-interaction && php ./vendor/bin/phpunit"
         depends_on:
-          - mysql
           - mongodb
-
-    mysql:
-        container_name: mysql
-        image: mysql
-        environment:
-            MYSQL_ROOT_PASSWORD:
-            MYSQL_DATABASE: unittest
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        logging:
-            driver: none
 
     mongodb:
         container_name: mongodb
