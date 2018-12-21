@@ -152,6 +152,15 @@ trait ModelTrait
             static::restored($flushCache);
         }
 
+        static::saving(function ($model) {
+            /**
+             * We need to verify name of the model being created
+             */
+            if(!Helper::checkName($model)) {
+                exit;
+            }
+        });
+
         static::deleting(function ($model) {
             /**
              * The objective is to remove all deleted model keys from collections.

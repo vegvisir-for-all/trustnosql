@@ -38,6 +38,7 @@ class TestCase extends OrchestraTestCase
                 'database' => 'admin' // sets the authentication database required by mongo 3
             ]
         ]);
+        $app['config']->set('trustnosql.user_models.users', 'Vegvisir\TrustnoSql\Tests\Infrastructure\Models\User');
     }
 
     protected function getPackageProviders($app)

@@ -16,12 +16,25 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 
 class PermissionsTest extends TestCase
 {
-    public function testCreate() {
+
+    public function testDeleteAll()
+    {
+        Permission::where(1)->delete();
+        $this->assertCount(0, Permission::where('name', 'namespace/task')->get()->toArray());
+    }
+
+    public function testCreate()
+    {
 
         $permission = Permission::create([
             'name' => 'namespace/task'
         ]);
         $this->assertSame('namespace/task', $permission->name);
+
+        $permission = Permission::create([
+            'name' => 'namespace/task'
+        ]);
+        $this->assertCount(1, Permission::where('name', 'namespace/task')->get()->toArray());
 
         $permission = Permission::create([
             'name' => 'namespace/*'
@@ -33,5 +46,11 @@ class PermissionsTest extends TestCase
         ]);
         $this->assertNull($permission);
 
+    }
+
+    public function testDeleteSingle()
+    {
+        Permission::where('namespace/task')->delete();
+        $this->assertCount(0, Permission::where(1)->get()->toArray());
     }
 }

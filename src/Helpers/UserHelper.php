@@ -22,7 +22,7 @@ class UserHelper extends HelperProxy
      */
     public static function getModel()
     {
-        $userModel = Config::get('laratrust.user_models.users');
+        $userModel = Config::get('trustnosql.user_models.users', 'App\User');
 
         return new $userModel();
     }

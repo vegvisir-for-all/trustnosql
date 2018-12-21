@@ -15,4 +15,5 @@ use Vegvisir\TrustNoSql\Checkers\BaseChecker;
 
 class PermissionChecker extends BaseChecker
 {
+
 }

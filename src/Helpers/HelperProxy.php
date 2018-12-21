@@ -207,4 +207,32 @@ class HelperProxy
 
         return explode(static::ENTITIES_DELIMITER, $rolesOrPermissions);
     }
+
+    public static function checkName($model, $name = null)
+    {
+        if(!is_object($model)) {
+            $model = new $model();
+        } else {
+            $name = $model->name;
+        }
+
+        if(self::isUser($model)) {
+            return true;
+        }
+
+        switch(class_basename($model)) {
+            case 'Permission':
+                return PermissionHelper::checkPermissionName($name);
+                break;
+            case 'Role':
+                return RoleHelper::checkRoleName($name);
+                break;
+            case 'Team':
+                return TeamHelper::checkTeamName($name);
+                break;
+            default:
+                return true;
+                break;
+        }
+    }
 }

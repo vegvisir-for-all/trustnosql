@@ -143,4 +143,14 @@ class PermissionHelper extends HelperProxy
     {
         return is_a(\get_class($object), \get_class(new Permission()), true);
     }
+
+    public static function checkPermissionName($name)
+    {
+        if(null !== Permission::where('name', $name)->first()) {
+            // Permission with that name already exists
+            return false;
+        } else {
+            return !static::isWildcard($name);
+        }
+    }
 }
