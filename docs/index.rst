@@ -82,7 +82,7 @@ Also, you should add an alias to your ``config/app.php`` file:
 Middleware setup
 ================
 
-If you want to use middleware in your application, add folowing lines to your ``app/Http/Kernel.php`` file under `$routeMiddleware`:
+If you want to use middleware in your application, add folowing lines to your ``app/Http/Kernel.php`` file under ``$routeMiddleware``:
 
 .. code-block:: php
 
@@ -98,8 +98,6 @@ If you want to use middleware in your application, add folowing lines to your ``
     ];
 
 Of course, you can use only one of our middleware classes. You can also use your custom middleware aliases, f.e. ``wedontlikethem`` instead of ``reject`` or ``yescomeon`` instead of ``trust``, but remember to use your custom aliases while defining middleware routes.
-
-.. code-block:: php
 
 Publish config
 ==============
