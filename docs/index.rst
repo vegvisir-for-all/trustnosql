@@ -63,6 +63,8 @@ Add the TrustNoSql service provider in your ``config/app.php`` file:
 
 .. code-block:: php
 
+    <?php
+
     'providers' => [
         // ...
         Vegvisir\TrustNoSql\TrustNoSqlServiceProvider::class,
@@ -72,6 +74,8 @@ Add the TrustNoSql service provider in your ``config/app.php`` file:
 Also, you should add an alias to your ``config/app.php`` file:
 
 .. code-block:: php
+
+    <?php
 
     'aliases' => [
         // ...
@@ -100,6 +104,8 @@ Middleware setup
 If you want to use middleware in your application, add folowing lines to your ``app/Http/Kernel.php`` file under ``$routeMiddleware``:
 
 .. code-block:: php
+
+    <?php
 
     protected $routeMiddleware = [
         // ...
@@ -170,6 +176,8 @@ Given that your user is stored within ``$user`` variable, and you want to check 
 
 .. code-block:: php
 
+    <?php
+
     $user->hasPermission('user/create');
     $user->hasPermissions('user/create');
     $user->can('user/create');
@@ -197,6 +205,8 @@ Currently, we offer support for ``*`` wildcard, with its alias ``all``, like in 
 
 .. code-block:: php
 
+    <?php
+
     /*
      * Suppose the $user has the permissions: order/view and order/update
      */
@@ -216,6 +226,8 @@ Checking for roles
 Given that your user is stored within ``$user`` variable, and you want to check if ``$user`` has a role ``manager``, you can do that using one of following methods:
 
 .. code-block:: php
+
+    <?php
 
     $user->hasRole('manager');
     $user->hasRoles('manager');
