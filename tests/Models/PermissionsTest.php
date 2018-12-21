@@ -11,6 +11,27 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-class PermissionsTest extends Models
+use Vegvisir\TrustNoSql\Tests\TestCase;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
+
+class PermissionsTest extends TestCase
 {
+    public function testCreate() {
+
+        $permission = Permission::create([
+            'name' => 'namespace/task'
+        ]);
+        $this->assertSame('namespace/task', $permission->name);
+
+        $permission = Permission::create([
+            'name' => 'namespace/*'
+        ]);
+        $this->assertNull($permission);
+
+        $permission = Permission::create([
+            'name' => 'namespace-task'
+        ]);
+        $this->assertNull($permission);
+
+    }
 }

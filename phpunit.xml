@@ -7,13 +7,16 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
+         stopOnError="true"
+         stopOnFailure="true"
          verbose="true"
 >
     <testsuites>
-        <testsuite name="TrustNoSql Test Suite">
-            <directory suffix="Test.php">./tests/</directory>
+        <testsuite name="TrustNoSql Environment Test Suite">
+            <directory suffix="Test.php">./tests/Environment</directory>
+        </testsuite>
+        <testsuite name="TrustNoSql Models Test Suite">
+            <directory suffix="Test.php">./tests/Models</directory>
         </testsuite>
     </testsuites>
 </phpunit>

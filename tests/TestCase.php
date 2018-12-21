@@ -15,4 +15,34 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->withFactories(__DIR__.'/database/factories');
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        // Setup mongodb connection
+        $app['config']->set('database.default', 'mongodb');
+        $app['config']->set('database.connections.mongodb', [
+            'driver'   => 'mongodb',
+            'host'     => env('DB_HOST', 'mongodb_trustnosql'),
+            'port'     => env('DB_PORT', 27017),
+            'database' => env('DB_DATABASE', 'trustnosql'),
+            'username' => env('DB_USERNAME', 'trustnosql'),
+            'password' => env('DB_PASSWORD', 'trustnosql'),
+            'options'  => [
+                'database' => 'admin' // sets the authentication database required by mongo 3
+            ]
+        ]);
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return ['Jenssegers\Mongodb\MongodbServiceProvider'];
+    }
+
 }
