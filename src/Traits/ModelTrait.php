@@ -156,7 +156,7 @@ trait ModelTrait
             /**
              * We need to verify name of the model being created
              */
-            if(!Helper::checkName($model)) {
+            if (!Helper::checkName($model)) {
                 exit;
             }
         });

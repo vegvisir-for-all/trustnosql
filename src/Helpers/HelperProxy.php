@@ -208,19 +208,28 @@ class HelperProxy
         return explode(static::ENTITIES_DELIMITER, $rolesOrPermissions);
     }
 
+    /**
+     * Checks whether name of the model is valid. Always returns true for models
+     * other than role, permission and team. You can specify model name and name to check
+     * or just a model being created.
+     *
+     * @param string|object $model Model being created or its name
+     * @param string|null $name (Optional) name of the entity being created
+     * @return bool
+     */
     public static function checkName($model, $name = null)
     {
-        if(!is_object($model)) {
+        if (!is_object($model)) {
             $model = new $model();
         } else {
             $name = $model->name;
         }
 
-        if(self::isUser($model)) {
+        if (self::isUser($model)) {
             return true;
         }
 
-        switch(class_basename($model)) {
+        switch (class_basename($model)) {
             case 'Permission':
                 return PermissionHelper::checkPermissionName($name);
                 break;

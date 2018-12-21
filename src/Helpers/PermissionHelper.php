@@ -144,9 +144,16 @@ class PermissionHelper extends HelperProxy
         return is_a(\get_class($object), \get_class(new Permission()), true);
     }
 
+    /**
+     * Checks whether given permission name can be used (i.e. if the name
+     * doesn't exist and if the name is not a wildcard name).
+     *
+     * @param string $name Name of the permission
+     * @return bool
+     */
     public static function checkPermissionName($name)
     {
-        if(null !== Permission::where('name', $name)->first()) {
+        if (null !== Permission::where('name', $name)->first()) {
             // Permission with that name already exists
             return false;
         } else {
