@@ -29,7 +29,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('database.default', 'mongodb');
         $app['config']->set('database.connections.mongodb', [
             'driver'   => 'mongodb',
-            'host'     => env('DB_HOST', 'mongodb_trustnosql'),
+            'host'     => env('DB_HOST', 'mongodb'),
             'port'     => env('DB_PORT', 27017),
             'database' => env('DB_DATABASE', 'trustnosql'),
             'username' => env('DB_USERNAME', 'trustnosql'),
