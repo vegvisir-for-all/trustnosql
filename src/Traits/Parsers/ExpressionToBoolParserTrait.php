@@ -171,7 +171,7 @@ trait ExpressionToBoolParserTrait
      * Checks whether logic string has any brackets.
      *
      * @param string $logic String Logic string.
-     * @return @bool
+     * @return bool
      */
     protected static function hasAnyBrackets($logicString)
     {

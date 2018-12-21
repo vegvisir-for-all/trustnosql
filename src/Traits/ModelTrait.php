@@ -128,7 +128,7 @@ trait ModelTrait
     /**
      * Returns the right checker for the User model.
      *
-     * @return \Vegvisir\TrustNoSql\Checkers\User\UserChecker;
+     * @return BaseChecker
      */
     protected function modelChecker()
     {

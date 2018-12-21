@@ -7,7 +7,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Vegvisir\\TrustNoSql\\Tests": "tests/"
+            "Vegvisir\\TrustNoSql\\Tests\\": "tests/"
         }
     },
     "description": "Laravel role/permission package working with MongoDB database",
