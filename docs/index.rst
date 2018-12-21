@@ -114,11 +114,8 @@ If you want to use middleware in your application, add folowing lines to your ``
 
 Of course, you can use only one of our middleware classes. You can also use your custom middleware aliases, f.e. ``wedontlikethem`` instead of ``reject`` or ``yescomeon`` instead of ``trust``, but remember to use your custom aliases while defining middleware routes.
 
-Usage
-#####
-
 Configuration
-=============
+#############
 
 All configuration setting are included in ``config/trustnosql.php`` file.
 
@@ -139,18 +136,18 @@ You'll see that the ``config/trustnosql.php`` file is divided into few sections,
 * Teams
 * User models
 
-Concepts
-========
+Usage
+#####
 
 Permission
-----------
+==========
 
 Permission is a right to perform a specific task. Permissions can be attached both to Roles and (explicitely) Users.
 
 Permission names
 ^^^^^^^^^^^^^^^^
 
-Unlike it Lararust or Zizaco's Entrust packages, TrustNoSql permissions names must be created in a ``namespace/task`` manner. The slash sign ``/`` is ```really important```, because it's used by TrustNoSql to distinguish namespace from task.
+Unlike it Lararust or Zizaco's Entrust packages, TrustNoSql permissions names must be created in a ``namespace/task`` manner. The slash sign ``/`` is **really important**, because it's used by TrustNoSql to distinguish namespace from task.
 
 Therefore such permission names are not valid:
 
@@ -169,7 +166,7 @@ It's important not to use ``all`` or ``*`` as a task name, since those are keywo
 Checking for permissions
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Given that your user is stored within ``$user`` variable, and you want to check if ``$user`` can create users (permission ``user/create``), you can check for permissions using one of following methods:
+Given that your user is stored within ``$user`` variable, and you want to check if ``$user`` can create users (permission ``user/create``), you can do that using one of following methods:
 
 .. code-block:: php
 
@@ -184,7 +181,7 @@ Given that your user is stored within ``$user`` variable, and you want to check 
     $user->canCreateUser();
     TrustNoSql::canCreateUser($user);
 
-As an argument for ``hasPermission``, ``hasPermissions`` and ``can`` methods, you can provide:
+As an argument for ``hasPermission``, ``hasPermissions`` and ``can`` methods, you can pass:
 
 * permission name as a string (``user/create``),
 * permission names as comma-separated string (``user/create,user/delete``),
@@ -196,22 +193,52 @@ Wildcard permissions
 
 TrustNoSql provides wildcard permission functionality to use for checking if a user can perform a specific task.
 
-Currently, we offer support for ``*`` wildcard, with its alias ``all``.
+Currently, we offer support for ``*`` wildcard, with its alias ``all``, like in the example below:
+
+.. code-block:: php
+
+    /*
+     * Suppose the $user has the permissions: order/view and order/update
+     */
+
+    $user->can('order/view');         // true
+    $user->can('order/*');            // true
+    $user->can('order/all');          // true
+    $user->can('order/everything');   // false
+    $user->can('orders/*');           // false because of namespace mismatch
 
 Role
-----
+====
+
+Checking for roles
+^^^^^^^^^^^^^^^^^^
+
+Given that your user is stored within ``$user`` variable, and you want to check if ``$user`` has a role ``manager``, you can do that using one of following methods:
+
+.. code-block:: php
+
+    $user->hasRole('manager');
+    $user->hasRoles('manager');
+    $user->isA('manager');
+    $user->isAn('manager');
+
+    // You can all TrustNoSql facade method...
+    TrustNoSql::isA($user, 'manager');
+    TrustNoSql::isAn($user, 'manager');
+
+Similar to permissions, you can pass an array of role names as an argument to one of the abovementioned methods.
 
 Team
-----
+====
 
 Grabbable
----------
+=========
 
 Events
-------
+======
 
 Middleware
-----------
+==========
 
 Command-line interface (CLI)
 ############################
