@@ -1,27 +1,27 @@
 <?php
 
-namespace Vegvisir\TrustNoSql\Helpers;
-
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
  *
- * @license GPL-3.0-or-later
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
  */
-use Vegvisir\TrustNoSql\Helpers\PermissionHelper;
-use Vegvisir\TrustNoSql\Helpers\RoleHelper;
-use Vegvisir\TrustNoSql\Helpers\TeamHelper;
-use Vegvisir\TrustNoSql\Helpers\UserHelper;
+
+namespace Vegvisir\TrustNoSql\Helpers;
 
 class HelperProxy
 {
-
     const ENTITIES_DELIMITER = ',';
 
     /**
-     * Checks whether $object is a Permission
+     * Checks whether $object is a Permission.
      *
-     * @param Object $object Object to be checked against.
+     * @param object $object object to be checked against
+     *
      * @return bool
      */
     public static function isPermission($object)
@@ -30,9 +30,10 @@ class HelperProxy
     }
 
     /**
-     * Gets _id for a single permission
+     * Gets _id for a single permission.
      *
      * @param string $permissionName Name of the permission
+     *
      * @return string
      */
     public static function getPermissionId($permissionName)
@@ -41,9 +42,10 @@ class HelperProxy
     }
 
     /**
-     * Gets an array of permissions
+     * Gets an array of permissions.
      *
-     * @param string|array $permissions Comma-separated permission names or array of them
+     * @param array|string $permissions Comma-separated permission names or array of them
+     *
      * @return array
      */
     public static function getPermissionsArray($permissions)
@@ -52,9 +54,10 @@ class HelperProxy
     }
 
     /**
-     * Gets an array of permission keys (_ids)
+     * Gets an array of permission keys (_ids).
      *
-     * @param string|array $permissions Comma-separated permission names or array of them
+     * @param array|string $permissions Comma-separated permission names or array of them
+     *
      * @return array
      */
     public static function getPermissionKeys($permissions)
@@ -63,7 +66,7 @@ class HelperProxy
     }
 
     /**
-     * Gets permission wildcards from config
+     * Gets permission wildcards from config.
      *
      * @return array
      */
@@ -73,9 +76,10 @@ class HelperProxy
     }
 
     /**
-     * Checks whether permission is a wildcard permission ('namespace/*')
+     * Checks whether permission is a wildcard permission ('namespace/*').
      *
-     * @param string $permissionName Name of the permission.
+     * @param string $permissionName name of the permission
+     *
      * @return bool
      */
     public static function isPermissionWildcard($permissionName)
@@ -84,9 +88,10 @@ class HelperProxy
     }
 
     /**
-     * Checks whether $object is a Role
+     * Checks whether $object is a Role.
      *
-     * @param Object $object Object to be checked against.
+     * @param object $object object to be checked against
+     *
      * @return bool
      */
     public static function isRole($object)
@@ -95,19 +100,22 @@ class HelperProxy
     }
 
     /**
-     * Gets _id for a single role
+     * Gets _id for a single role.
      *
      * @param string $roleName Name of the role
+     *
      * @return string
      */
     public static function getRoleId($roleName)
     {
         return RoleHelper::getId($roleName);
     }
+
     /**
-     * Gets an array of roles keys (_ids)
+     * Gets an array of roles keys (_ids).
      *
-     * @param string|array $roles Comma-separated roles names or array of them
+     * @param array|string $roles Comma-separated roles names or array of them
+     *
      * @return array
      */
     public static function getRolesArray($roles)
@@ -116,9 +124,10 @@ class HelperProxy
     }
 
     /**
-     * Gets an array of role keys (_ids)
+     * Gets an array of role keys (_ids).
      *
-     * @param string|array $roles Comma-separated role names or array of them
+     * @param array|string $roles Comma-separated role names or array of them
+     *
      * @return array
      */
     public static function getRoleKeys($roles)
@@ -127,9 +136,10 @@ class HelperProxy
     }
 
     /**
-     * Checks whether $object is a Team
+     * Checks whether $object is a Team.
      *
-     * @param Object $object Object to be checked against.
+     * @param object $object object to be checked against
+     *
      * @return bool
      */
     public static function isTeam($object)
@@ -138,9 +148,10 @@ class HelperProxy
     }
 
     /**
-     * Gets an array of team keys (_ids)
+     * Gets an array of team keys (_ids).
      *
-     * @param string|array $teams Comma-separated team names or array of them
+     * @param array|string $teams Comma-separated team names or array of them
+     *
      * @return array
      */
     public static function getTeamKeys($teams)
@@ -149,9 +160,10 @@ class HelperProxy
     }
 
     /**
-     * Checks whether $object is a User
+     * Checks whether $object is a User.
      *
-     * @param Object $object Object to be checked against.
+     * @param object $object object to be checked against
+     *
      * @return bool
      */
     public static function isUser($object)
@@ -160,7 +172,7 @@ class HelperProxy
     }
 
     /**
-     * Gets a user model used by application
+     * Gets a user model used by application.
      *
      * @return Jenssegers\Mongodb\Eloquent\Model
      */
@@ -170,9 +182,10 @@ class HelperProxy
     }
 
     /**
-     * Provide a user logic proxy for middleware checking
+     * Provide a user logic proxy for middleware checking.
      *
      * @param User $user
+     *
      * @return Closure
      */
     public static function getUserLogicProxy($user)
@@ -182,18 +195,18 @@ class HelperProxy
 
     /**
      * Gets an array from comma-separated values.
-     * If $rolesOrPermissions is an array, function returns $rolesOrPermissions itself
+     * If $rolesOrPermissions is an array, function returns $rolesOrPermissions itself.
      *
-     * @param string|array $rolesOrPermissions Comma-separated values or array
+     * @param array|string $rolesOrPermissions Comma-separated values or array
+     *
      * @return array
      */
     public static function getArray($rolesOrPermissions)
     {
-        if(is_array($rolesOrPermissions)) {
+        if (\is_array($rolesOrPermissions)) {
             return $rolesOrPermissions;
         }
 
         return explode(static::ENTITIES_DELIMITER, $rolesOrPermissions);
     }
-
 }

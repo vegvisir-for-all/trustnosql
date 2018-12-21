@@ -1,19 +1,23 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Helpers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class PermissionHelper extends HelperProxy
 {
-
     /**
      * Delimiter for entities string list.
      *
@@ -29,78 +33,16 @@ class PermissionHelper extends HelperProxy
     const NAMESPACE_DELIMITER = '/';
 
     /**
-     * Returns key (_id) of a permission
-     *
-     * @param string $permissionName Name of the permission.
-     * @return string
-     */
-    protected static function getId($permissionName)
-    {
-        return static::$model->where('name', $permissionName)->id;
-    }
-
-    /**
      * Gets an array from comma-separated values.
-     * If $permissions is an array, function returns $permissions itself
+     * If $permissions is an array, function returns $permissions itself.
      *
-     * @param string|array $permissions Array of permission names or comma-separated string
+     * @param array|string $permissions Array of permission names or comma-separated string
+     *
      * @return array
      */
     public static function getArray($permissions)
     {
         return parent::getArray($permissions);
-    }
-
-    /**
-     * Gets an array of permissions' keys (_ids)
-     *
-     * @param string|array $permissions Comma-separated values or array
-     * @return array
-     */
-    protected static function getKeys($permissions)
-    {
-        if(!is_array($permissions)) {
-            $permissions = static::getArray($permissions);
-        }
-
-        $wildcards = static::getWildcards();
-
-        $noWildCardPermissions = [];
-        $wildCardPermissions = [];
-
-        foreach($permissions as $permission) {
-            if(!static::isWildcard($permission)) {
-                $noWildCardPermissions[] = $permission;
-            } else {
-                $permission = str_replace($wildcards, '*', $permission);
-                $wildCardPermissions[] = $permission;
-            }
-        }
-
-        $permissionKeys = collect(Permission::whereIn('name', $noWildCardPermissions)->get())->map(function ($item, $key) {
-            return $item->id;
-        })->toArray();
-
-        foreach($wildCardPermissions as $wildcardPermission) {
-            $thisPermissionKeys = collect(Permission::where('name', 'like', static::getNamespace($wildcardPermission) . static::NAMESPACE_DELIMITER)->get())->map(function ($item, $key) {
-                return $item->id;
-            })->toArray();
-            $permissionKeys = array_merge($permissionKeys, $thisPermissionKeys);
-        }
-
-        return array_unique($permissionKeys);
-
-    }
-
-    /**
-     * Gets namespace of a given permission.
-     *
-     * @param string $permissionName Name of the permission.
-     * @return string
-     */
-    protected static function getNamespace($permissionName)
-    {
-        return explode(static::NAMESPACE_DELIMITER, $permissionName)[0];
     }
 
     /**
@@ -116,26 +58,91 @@ class PermissionHelper extends HelperProxy
     /**
      * Checks whether given permission is a wildcard permission.
      *
-     * @param string $permissionName Name of the permission.
+     * @param string $permissionName name of the permission
+     *
      * @return array
      */
     public static function isWildcard($permissionName)
     {
         $permissionNameExploded = explode(static::NAMESPACE_DELIMITER, $permissionName);
 
-        return in_array($permissionNameExploded[1], static::getWildcards());
+        return \in_array($permissionNameExploded[1], static::getWildcards(), true);
     }
 
+    /**
+     * Returns key (_id) of a permission.
+     *
+     * @param string $permissionName name of the permission
+     *
+     * @return string
+     */
+    protected static function getId($permissionName)
+    {
+        return static::$model->where('name', $permissionName)->id;
+    }
 
     /**
-     * Checks whether an object is a permission model
+     * Gets an array of permissions' keys (_ids).
      *
-     * @param Object $object Object to be checked
+     * @param array|string $permissions Comma-separated values or array
+     *
+     * @return array
+     */
+    protected static function getKeys($permissions)
+    {
+        if (!\is_array($permissions)) {
+            $permissions = static::getArray($permissions);
+        }
+
+        $wildcards = static::getWildcards();
+
+        $noWildCardPermissions = [];
+        $wildCardPermissions = [];
+
+        foreach ($permissions as $permission) {
+            if (!static::isWildcard($permission)) {
+                $noWildCardPermissions[] = $permission;
+            } else {
+                $permission = str_replace($wildcards, '*', $permission);
+                $wildCardPermissions[] = $permission;
+            }
+        }
+
+        $permissionKeys = collect(Permission::whereIn('name', $noWildCardPermissions)->get())->map(function ($item, $key) {
+            return $item->id;
+        })->toArray();
+
+        foreach ($wildCardPermissions as $wildcardPermission) {
+            $thisPermissionKeys = collect(Permission::where('name', 'like', static::getNamespace($wildcardPermission).static::NAMESPACE_DELIMITER)->get())->map(function ($item, $key) {
+                return $item->id;
+            })->toArray();
+            $permissionKeys = array_merge($permissionKeys, $thisPermissionKeys);
+        }
+
+        return array_unique($permissionKeys);
+    }
+
+    /**
+     * Gets namespace of a given permission.
+     *
+     * @param string $permissionName name of the permission
+     *
+     * @return string
+     */
+    protected static function getNamespace($permissionName)
+    {
+        return explode(static::NAMESPACE_DELIMITER, $permissionName)[0];
+    }
+
+    /**
+     * Checks whether an object is a permission model.
+     *
+     * @param object $object Object to be checked
+     *
      * @return bool
      */
     protected static function isOne($object)
     {
-        return is_a(get_class($object), get_class(new Permission), true);
+        return is_a(\get_class($object), \get_class(new Permission()), true);
     }
-
 }

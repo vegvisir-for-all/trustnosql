@@ -1,25 +1,29 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Contracts;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 interface GrabbableInterface
 {
-
     /**
-     * Grabability can be checked only by grabber_ids or owner_ids on model
+     * Grabability can be checked only by grabber_ids or owner_ids on model.
      *
      * @var int
      */
     const MODE_ONLY_EXPLICIT = 1;
 
     /**
-     * Grabability can be checked only by grabbableBy($user) method
+     * Grabability can be checked only by grabbableBy($user) method.
      *
      * @var int
      */
@@ -42,7 +46,7 @@ interface GrabbableInterface
     const MODE_EITHER = 4;
 
     /**
-     * Don't check grabability
+     * Don't check grabability.
      *
      * @var int
      */
@@ -52,24 +56,26 @@ interface GrabbableInterface
      * Function called by TrustNoSql on object to establish grabability rules.
      *
      * @param $user
+     *
      * @return bool
      */
-    function canBeGrabbedBy($user); // TODO: Make a proper type comparison
+    public function canBeGrabbedBy($user); // TODO: Make a proper type comparison
 
     /**
-     * Checks whether $user->id is in the grabber_ids or owner_ids field of $this
+     * Checks whether $user->id is in the grabber_ids or owner_ids field of $this.
      *
      * @param User $user
+     *
      * @return bool
      */
-    function explicitelyGrabbedBy($user);
+    public function explicitelyGrabbedBy($user);
 
     /**
      * Function to be overriden in the model to establish grabability rules.
      *
      * @param User $user
+     *
      * @return bool
      */
-    function grabbableBy($user);
-
+    public function grabbableBy($user);
 }

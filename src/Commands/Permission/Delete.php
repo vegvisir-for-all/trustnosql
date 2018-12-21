@@ -1,19 +1,23 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Commands\Permission;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Vegvisir\TrustNoSql\Commands\BaseDelete;
 use Vegvisir\TrustNoSql\Models\Permission;
 
 class Delete extends BaseDelete
 {
-
     /**
      * The name of the signature in the console command.
      *
@@ -43,6 +47,6 @@ class Delete extends BaseDelete
      */
     public function handle()
     {
-        $this->entityDelete(new Permission);
+        $this->entityDelete(new Permission());
     }
 }

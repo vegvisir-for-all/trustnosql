@@ -1,14 +1,17 @@
 <?php
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
  *
- * @license GPL-3.0-or-later
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | TrustNoSql Cache
@@ -18,11 +21,8 @@ return [
     |
     */
     'cache' => [
-
-        /**
-         * Should TrustNoSql use cache functionality
-         */
-        'use_cache' => true
+        // Should TrustNoSql use cache functionality
+        'use_cache' => true,
     ],
 
     /*
@@ -34,18 +34,11 @@ return [
     |
     */
     'cli' => [
-
-
-        /**
-         * Should TrustNoSql use CLI
-         */
+        // Should TrustNoSql use CLI
         'use_cli' => true,
 
-        /**
-         * CLI default signature
-         */
-        'signature' => 'trustnosql.'
-
+        // CLI default signature
+        'signature' => 'trustnosql.',
     ],
 
     /*
@@ -57,25 +50,16 @@ return [
     |
     */
     'collections' => [
-
-        /**
-         * Roles collection.
-         */
+        // Roles collection.
         'roles' => 'roles',
 
-        /**
-         * Permissions collection.
-         */
+        // Permissions collection.
         'permissions' => 'permissions',
 
-        /**
-         * Teams collection.
-         */
+        // Teams collection.
         'teams' => 'teams',
 
-        /**
-         * Users collection.
-         */
+        // Users collection.
         'users' => 'users',
     ],
 
@@ -88,35 +72,21 @@ return [
     |
     */
     'events' => [
-
-        /**
-         * Whether to use events
-         */
+        // Whether to use events
         'use_events' => true,
 
-        /**
-         * Observers list
-         */
+        // Observers list
         'observers' => [
-
-            /**
-             * Observer for Permission model
-             */
+            // Observer for Permission model
             'Permission' => \Vegvisir\TrustNoSql\Observers\PermissionObserver::class,
 
-            /**
-             * Observer for Role model
-             */
+            // Observer for Role model
             'Role' => \Vegvisir\TrustNoSql\Observers\RoleObserver::class,
 
-            /**
-             * Observer for Team model
-             */
+            // Observer for Team model
             'Team' => \Vegvisir\TrustNoSql\Observers\TeamObserver::class,
 
-            /**
-             * Observer for application user model
-             */
+            // Observer for application user model
             'User' => \Vegvisir\TrustNoSql\Observers\UserObserver::class,
         ],
     ],
@@ -130,32 +100,26 @@ return [
     |
     */
     'middleware' => [
-
-        /**
-         * Define if the TrustNoSql middleware are registered automatically in the service provider
-         */
+        // Define if the TrustNoSql middleware are registered automatically in the service provider
         'register' => true,
 
-        /**
+        /*
          * Method to be called in the middleware return case.
          * Available: abort|redirect
          */
         'handling' => 'abort',
 
-        /**
+        /*
          * Handlers for the unauthorized method in the middlewares.
          * The name of the handler must be the same as the handling.
          */
         'handlers' => [
-
-            /**
-             * Aborts the execution with a 403 code.
-             */
+            // Aborts the execution with a 403 code.
             'abort' => [
-                'code' => 403
+                'code' => 403,
             ],
 
-            /**
+            /*
              * Redirects the user to the given url.
              * If a message is needed to show, set the type and the message content.
              * If the message content is empty it won't be added to the redirection.
@@ -164,10 +128,10 @@ return [
                 'url' => '/home',
                 'message' => [
                     'type' => 'error',
-                    'content' => ''
-                ]
-            ]
-        ]
+                    'content' => '',
+                ],
+            ],
+        ],
     ],
 
     /*
@@ -179,14 +143,11 @@ return [
     |
     */
     'permissions' => [
-
-        /**
-         * Wildcards list
-         */
+        // Wildcards list
         'wildcards' => [
             '*',
-            'all'
-        ]
+            'all',
+        ],
     ],
 
     /*
@@ -198,13 +159,10 @@ return [
     |
     */
     'teams' => [
-
-        /**
-         * Should TrustNoSql use team functionality
-         */
+        // Should TrustNoSql use team functionality
         'use_teams' => true,
 
-        /**
+        /*
          * Handling of the team functionality. Two options are possible:
          *
          * 1. explicit - team name(s) must be excplicitely enlisted in the middleware function,
@@ -228,11 +186,7 @@ return [
     |
     */
     'user_models' => [
-
-        /**
-         * Role model
-         */
-        'users' => 'App\User'
-    ]
-
+        // Role model
+        'users' => 'App\User',
+    ],
 ];

@@ -1,18 +1,22 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Helpers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Vegvisir\TrustNoSql\Models\Role;
 
 class RoleHelper extends HelperProxy
 {
-
     /**
      * Entities delimiter.
      *
@@ -22,9 +26,10 @@ class RoleHelper extends HelperProxy
 
     /**
      * Gets an array from comma-separated values.
-     * If $roles is an array, function returns $roles itself
+     * If $roles is an array, function returns $roles itself.
      *
-     * @param string|array $roles Array of role names or comma-separated string
+     * @param array|string $roles Array of role names or comma-separated string
+     *
      * @return array
      */
     public static function getArray($roles)
@@ -33,32 +38,32 @@ class RoleHelper extends HelperProxy
     }
 
     /**
-     * Gets an array of roles' keys (_ids)
+     * Gets an array of roles' keys (_ids).
      *
-     * @param string|array $roles Comma-separated values or array
+     * @param array|string $roles Comma-separated values or array
+     *
      * @return array
      */
     protected static function getKeys($roles)
     {
-        if(!is_array($roles)) {
+        if (!\is_array($roles)) {
             $roles = static::getArray($roles);
         }
 
         return collect(Role::whereIn('name', $roles)->get())->map(function ($item, $key) {
             return $item->id;
         })->toArray();
-
     }
 
     /**
-     * Checks whether an object is a role model
+     * Checks whether an object is a role model.
      *
-     * @param Object $object Object to be checked
+     * @param object $object Object to be checked
+     *
      * @return bool
      */
     protected static function isOne($object)
     {
-        return is_a(get_class($object), get_class(new Role), true);
+        return is_a(\get_class($object), \get_class(new Role()), true);
     }
-
 }

@@ -1,13 +1,18 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Checkers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Checkers\Permission\PermissionChecker;
@@ -16,7 +21,6 @@ use Vegvisir\TrustNoSql\Checkers\User\UserChecker;
 
 class CheckProxy
 {
-
     /**
      * Permission model name.
      *
@@ -55,15 +59,15 @@ class CheckProxy
      */
     public function getChecker()
     {
-        if(is_a($this->model, static::PERMISSION_MODEL, true)) {
+        if (is_a($this->model, static::PERMISSION_MODEL, true)) {
             return $this->getPermissionChecker();
         }
 
-        if(is_a($this->model, static::ROLE_MODEL, true)) {
+        if (is_a($this->model, static::ROLE_MODEL, true)) {
             return $this->getRoleChecker();
         }
 
-        if(is_a($this->model, Config::get('laratrust.user_models.users'), true)) {
+        if (is_a($this->model, Config::get('laratrust.user_models.users'), true)) {
             return $this->getUserChecker();
         }
     }
@@ -75,7 +79,7 @@ class CheckProxy
      */
     protected function getPermissionChecker()
     {
-        return (new PermissionChecker($this->model));
+        return new PermissionChecker($this->model);
     }
 
     /**
@@ -85,7 +89,7 @@ class CheckProxy
      */
     protected function getRoleChecker()
     {
-        return (new RoleChecker($this->model));
+        return new RoleChecker($this->model);
     }
 
     /**
@@ -95,7 +99,7 @@ class CheckProxy
      */
     protected function getTeamChecker()
     {
-        return (new TeamChecker($this->model));
+        return new TeamChecker($this->model);
     }
 
     /**
@@ -105,7 +109,6 @@ class CheckProxy
      */
     protected function getUserChecker()
     {
-        return (new UserChecker($this->model));
+        return new UserChecker($this->model);
     }
-
 }

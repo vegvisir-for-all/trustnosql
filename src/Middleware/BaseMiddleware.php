@@ -1,13 +1,18 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Middleware;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +23,6 @@ use Vegvisir\TrustNoSql\Middleware\Parser\LogicStringParser;
 
 class BaseMiddleware
 {
-
     /**
      * The request is unauthorized, so it handles the aborting/redirecting.
      *
@@ -29,7 +33,7 @@ class BaseMiddleware
         $handling = Config::get('trustnosql.middleware.handling', 'abort');
         $handler = Config::get("trustnosql.middleware.handlers.{$handling}");
 
-        if ($handling == 'abort') {
+        if ('abort' === $handling) {
             return App::abort($handler['code']);
         }
 
@@ -43,18 +47,19 @@ class BaseMiddleware
     }
 
     /**
-     * Return authorized user (or null if unauthorized)
+     * Return authorized user (or null if unauthorized).
      *
-     * @param string $guard Optional guard name.
-     * @return User|null
+     * @param string $guard optional guard name
+     *
+     * @return null|User
      */
     protected static function authUser($guard = null)
     {
-        if($guard == null) {
+        if (null === $guard) {
             $guard = Config::get('auth.defaults.guard');
         }
 
-        if(Auth::guard($guard)->guest()) {
+        if (Auth::guard($guard)->guest()) {
             return null;
         }
 
@@ -64,13 +69,14 @@ class BaseMiddleware
     /**
      * Check whether current user passes conditions given in the middleware call.
      * It calls $this->unauthorized() if conditions were not met, or returns $next($request)
-     * for the next middleware to run
+     * for the next middleware to run.
      *
      * @param \Illuminate\Http\Request $request
-     * @param Closure $next
-     * @param string $expression
-     * @param string|null $guard
-     * @param bool $negateExpression
+     * @param Closure                  $next
+     * @param string                   $expression
+     * @param null|string              $guard
+     * @param bool                     $negateExpression
+     *
      * @return mixed
      */
     protected function authorize($request, Closure $next, $expression, $guard = null, $negateExpression = false)
@@ -79,7 +85,7 @@ class BaseMiddleware
 
         $parsingResult = LogicStringParser::expressionToBool($expression, Helper::getUserLogicProxy($user));
 
-        if($parsingResult == $negateExpression) {
+        if ($parsingResult === $negateExpression) {
             $this->unauthorized();
         }
 
@@ -87,16 +93,16 @@ class BaseMiddleware
     }
 
     /**
-     * Translate entity pipeline to expression (like in the trust middleware)
+     * Translate entity pipeline to expression (like in the trust middleware).
      *
-     * @param string $entityName Name of the entity
+     * @param string $entityName       Name of the entity
      * @param string $entitiesPipeline Pipeline of entity names
-     * @param bool $requireAll Checks if all entities in pipeline must be attached to model (& operands)
+     * @param bool   $requireAll       Checks if all entities in pipeline must be attached to model (& operands)
+     *
      * @return string
      */
     protected function parseToExpression($entityName, $entitiesPipeline, $requireAll = false)
     {
         return LogicStringParser::pipelineToExpression($entityName, $entitiesPipeline, $requireAll);
     }
-
 }

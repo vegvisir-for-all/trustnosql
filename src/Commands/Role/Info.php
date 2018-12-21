@@ -1,13 +1,18 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Commands\Role;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Vegvisir\TrustNoSql\Commands\BaseCommand;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Models\Permission;
@@ -16,7 +21,6 @@ use Vegvisir\TrustNoSql\Models\Team;
 
 class Info extends BaseCommand
 {
-
     /**
      * The name of the signature in the console command.
      *
@@ -46,25 +50,22 @@ class Info extends BaseCommand
      */
     public function handle()
     {
-        $rolesNames = $this->getEntitiesList(new Role);
+        $rolesNames = $this->getEntitiesList(new Role());
 
-        foreach($rolesNames as $roleName) {
-            $this->line("Showing information for role '$roleName'");
+        foreach ($rolesNames as $roleName) {
+            $this->line("Showing information for role '${roleName}'");
 
             $role = $this->getRole($roleName, true);
 
-            /**
-             * 0. Info
-             */
+            // 0. Info
 
-            $this->line("Name: $roleName");
-            $this->line("Display name: $role->display_name");
-            $this->line("Description: $role->description");
+            $this->line("Name: ${roleName}");
+            $this->line("Display name: {$role->display_name}");
+            $this->line("Description: {$role->description}");
 
             /**
-             * 1. Permissions
+             * 1. Permissions.
              */
-
             $permissionsNames = $role->getRoleCurrentPermissions();
 
             $permissions = Permission::whereIn('name', $permissionsNames)->get(['name', 'display_name', 'description'])->toArray();
@@ -73,9 +74,8 @@ class Info extends BaseCommand
             $this->table(['Id', 'Permission', 'Display name', 'Description'], $permissions);
 
             /**
-             * 2. Teams
+             * 2. Teams.
              */
-
             $teamsNames = $role->getRoleCurrentTeams();
 
             $teams = Team::whereIn('name', $teamsNames)->get(['name', 'display_name', 'description'])->toArray();
@@ -84,9 +84,8 @@ class Info extends BaseCommand
             $this->table(['Id', 'Team', 'Display name', 'Description'], $teams);
 
             /**
-             * 3. Users
+             * 3. Users.
              */
-
             $usersEmails = $role->getRoleCurrentUsers();
             $userModel = Helper::getUserModel();
 
