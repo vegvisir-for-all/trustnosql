@@ -11,10 +11,12 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
+use Vegvisir\TrustNoSql\Tests\TestCase;
+
 /**
  * @internal
  * @coversNothing
  */
-final class RoleMiddlewareTest extends Middleware
+final class Middleware extends TestCase
 {
 }
