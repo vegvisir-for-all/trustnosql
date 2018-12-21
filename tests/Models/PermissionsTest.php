@@ -53,4 +53,39 @@ class PermissionsTest extends TestCase
         Permission::where('namespace/task')->delete();
         $this->assertCount(0, Permission::where(1)->get()->toArray());
     }
+
+    // public function testAttaching()
+    // {
+
+    // }
+
+    // public function testDetaching()
+    // {
+
+    // }
+
+    // public function testHasPermission()
+    // {
+
+    // }
+
+    // public function testHasPermissionAliases()
+    // {
+
+    // }
+
+    // public function testMagicCan()
+    // {
+
+    // }
+
+    // public function testHasMultipleOr()
+    // {
+
+    // }
+
+    // public function testHasMultipleAnd()
+    // {
+
+    // }
 }
