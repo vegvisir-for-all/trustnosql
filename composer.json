@@ -49,5 +49,5 @@
                 "TrustNoSql": "Vegvisir\\TrustNoSql\\TrustNoSqlFacade"
             }
         }
-}
+    }
 }
