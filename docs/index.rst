@@ -16,8 +16,8 @@ TrustNoSql is a Laravel (>=5.3) role/permission manager for MongoDB-based applic
 
 **This documentation is also under development. We work day and night to complete it as soon as possible.**
 
-Features
-========
+Key features
+============
 
 * permission/role/team
 * grabbable (ownable) objects support with two ways to determining ownership
@@ -79,6 +79,21 @@ Also, you should add an alias to your ``config/app.php`` file:
         // ...
     ]
 
+Create models for your TrustNoSql
+=================================
+
+Permission
+----------
+
+Role
+----
+
+Team
+----
+
+Grabbable
+---------
+
 Middleware setup
 ================
 
@@ -98,12 +113,6 @@ If you want to use middleware in your application, add folowing lines to your ``
     ];
 
 Of course, you can use only one of our middleware classes. You can also use your custom middleware aliases, f.e. ``wedontlikethem`` instead of ``reject`` or ``yescomeon`` instead of ``trust``, but remember to use your custom aliases while defining middleware routes.
-
-Publish config
-==============
-
-Create models for your TrustNoSql
-=================================
 
 Usage
 #####
