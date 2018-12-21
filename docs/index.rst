@@ -2,7 +2,7 @@
 TrustNoSql
 ##########
 
-.. image:: http://img.shields.io/github/release/vegvisir/trustnosql.svg :target: https://packagist.org/packages/vegvisir/trustnosql :alt: Latest Stable Version .. image:: http://img.shields.io/packagist/dm/vegvisir/trustnosql.svg :target: https://packagist.org/packages/vegvisir/trustnosql :alt: Total Downloads .. image:: https://api.travis-ci.org/vegvisir-for-all/trustnosql.svg?branch=master :target: https://travis-ci.org/vegvisir-for-all/trustnosql :alt: Build Status .. image:: http://img.shields.io/coveralls/vegvisir-for-all/trustnosql.svg?branch=master :target: https://coveralls.io/r/vegvisir-for-all/trustnosql?branch=master :alt: Coverage Status .. image:: https://github.styleci.io/repos/161784926/shield?branch=master :target: https://github.styleci.io/repos/161784926 :alt: StyleCI .. image:: https://readthedocs.org/projects/trustnosql/badge/?version=latest :target: https://trustnosql.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
+# .. image:: http://img.shields.io/github/release/vegvisir/trustnosql.svg :target: https://packagist.org/packages/vegvisir/trustnosql :alt: Latest Stable Version .. image:: http://img.shields.io/packagist/dm/vegvisir/trustnosql.svg :target: https://packagist.org/packages/vegvisir/trustnosql :alt: Total Downloads .. image:: https://api.travis-ci.org/vegvisir-for-all/trustnosql.svg?branch=master :target: https://travis-ci.org/vegvisir-for-all/trustnosql :alt: Build Status .. image:: http://img.shields.io/coveralls/vegvisir-for-all/trustnosql.svg?branch=master :target: https://coveralls.io/r/vegvisir-for-all/trustnosql?branch=master :alt: Coverage Status .. image:: https://github.styleci.io/repos/161784926/shield?branch=master :target: https://github.styleci.io/repos/161784926 :alt: StyleCI .. image:: https://readthedocs.org/projects/trustnosql/badge/?version=latest :target: https://trustnosql.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
 
 What is TrustNoSql
 ##################
@@ -58,3 +58,77 @@ Also, you should add an alias to your ``config/app.php`` file:
         'TrustNoSql' => Vegvisir\TrustNoSql\TrustNoSqlFacade::class,
         // ...
     ]
+
+Middleware setup
+================
+
+Publish config
+==============
+
+Create models for your TrustNoSql
+=================================
+
+Usage
+#####
+
+Configuration
+=============
+
+All configuration setting are included in ``config/trustnosql.php`` file.
+
+If you don't see ``trustnosql.php`` in ``config`` folder, try publishing config files from TrustNoSql:
+
+.. code-block:: bash
+
+    $ artisan vendor:publish
+
+You'll see that the ``config/trustnosql.php`` file is divided into few sections, reflecting concepts and key parts of TrustNoSql:
+
+* Cache
+* Command-line interface (CLI)
+* Collections
+* Events
+* Middleware
+* Permissions
+* Teams
+* User models
+
+Concepts
+========
+
+Permission
+----------
+
+Role
+----
+
+Team
+----
+
+Grabbable
+---------
+
+Events
+------
+
+Middleware
+----------
+
+Command-line interface (CLI)
+############################
+
+TrustNoSql comes with handy CLI of its own. It's especially useful at the initial phase of application development, when you have to create admin roles.
+
+TrustNoSql CLI provides all possible actions for Permission, Role and Team (create, delete, attach, detach, list, info), as well as detailed info for chosen user.
+
+Troubleshooting
+###############
+
+License
+#######
+
+Contributing
+############
+
+About us
+########
