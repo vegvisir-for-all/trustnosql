@@ -9,7 +9,7 @@
  * @license GNU General Public License, version 3
  */
 
-namespace Vegvisir\TrustNoSql\Tests\Middleware;
+namespace Vegvisir\TrustNoSql\Tests\Events;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
 
