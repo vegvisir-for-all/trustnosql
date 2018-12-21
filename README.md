@@ -7,7 +7,7 @@ TrustNoSql is built atop a great jenssegers/mongodb package, and it's inspired b
 Documentation
 -------------
 
-Since TrustNoSql is in a heavy development phase, the documentation is not ready yet. It's being written at the time being :)
+Since TrustNoSql is in a heavy development phase, the documentation is not ready yet. It's being written at the time being :) It would be available at [https://trustnosql.readthedocs.io/en/latest/](https://trustnosql.readthedocs.io/en/latest/).
 
 Development
 -----------
