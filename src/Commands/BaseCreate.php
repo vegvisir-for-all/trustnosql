@@ -57,7 +57,7 @@ class BaseCreate extends BaseCommand
 
             $this->successCreating($modelName, $entityName);
         } catch (\Exception $e) {
-            $this->errorCreating($modelName, $entityName, $e->getMessage());
+            $this->errorCreating($modelName, $entityName);
         }
     }
 }

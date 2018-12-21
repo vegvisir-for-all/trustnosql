@@ -102,13 +102,13 @@ class BaseDetach extends BaseCommand
                             $entity->{'detach'.ucfirst($entityModelName)}($entityDetachedName);
                             $this->info('    '.ucfirst($entityModelName).' detached');
                         } catch (\Exception $e) {
-                            $this->error('    '.ucfirst($entityModelName).' not detached ('.$e->getMessage().')');
+                            $this->error('    '.ucfirst($entityModelName).' not detached');
                         }
                     }
                 }
             }
         } catch (\Exception $e) {
-            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached ('.$e->getMessage().')');
+            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached');
         }
     }
 }

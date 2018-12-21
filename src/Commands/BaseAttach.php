@@ -90,13 +90,13 @@ class BaseAttach extends BaseCommand
                             $entity->{'attach'.ucfirst($entityModelName)}($entityAttachedName);
                             $this->info('    '.ucfirst(str_plural($entityModelName)).' attached');
                         } catch (\Exception $e) {
-                            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached ('.$e->getMessage().')');
+                            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached');
                         }
                     }
                 }
             }
         } catch (\Exception $e) {
-            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached ('.$e->getMessage().')');
+            $this->error('    '.ucfirst(str_plural($entityModelName)).' not attached');
         }
     }
 }

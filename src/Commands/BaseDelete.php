@@ -42,7 +42,7 @@ class BaseDelete extends BaseCommand
                 $this->successDeleting($modelName, $entityName);
             }
         } catch (\Exception $e) {
-            $this->errorDeleting($modelName, $teamName, $e->getMessage());
+            $this->errorDeleting($modelName, $teamName);
         }
     }
 }
