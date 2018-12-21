@@ -1,25 +1,30 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits\Parsers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
-use \BracketChecker\BracketChecker;
+use BracketChecker\BracketChecker;
 use Closure;
 use Vegvisir\TrustNoSql\Exceptions\Parser\BracketsMismatchException;
 
 trait ExpressionToBoolParserTrait
 {
-
     /**
      * Parse logic string into boolean value.
      *
-     * @param string $logicString
-     * @param Closure $closure Method to be called when translation of instruction to bools is performed
+     * @param string  $logicString
+     * @param Closure $closure     Method to be called when translation of instruction to bools is performed
+     *
      * @return bool
      */
     public static function expressionToBool($logicString, Closure $closure)
@@ -28,45 +33,42 @@ trait ExpressionToBoolParserTrait
 
         $logicString = static::doubleOperands(static::addBracketsToInstructions(static::cleanWhitespace($logicString)));
 
-        while(static::hasAnyBrackets($logicString)) {
-
+        while (static::hasAnyBrackets($logicString)) {
             /**
              * Step 0
-             * Reduce basic brackets with middleware instructions
+             * Reduce basic brackets with middleware instructions.
              */
-             $logicString = static::instructionToBool($logicString, $closure);
+            $logicString = static::instructionToBool($logicString, $closure);
 
-             /**
+            /**
              * Step 1
-             * Reduce basic brackets with single bool
+             * Reduce basic brackets with single bool.
              */
             $logicString = static::reduceSingleBools($logicString);
 
             /**
              * Step 2
-             * Reduce bool&&bool and bool||bool
+             * Reduce bool&&bool and bool||bool.
              */
             $logicString = static::reduceSingleComparisons($logicString);
 
             /**
              * Step 3
-             * Putting conjunction into brackets
+             * Putting conjunction into brackets.
              */
-
             $oldLogicString = $logicString;
 
             $logicString = static::putConjunctionIntoBrackets($logicString);
 
-            if($oldLogicString !== $logicString) {
+            if ($oldLogicString !== $logicString) {
                 continue;
             }
 
             /**
              * Step 4
-             * Putting disjunction into brackets
+             * Putting disjunction into brackets.
              */
             $logicString = static::putDisjunctionIntoBrackets($logicString);
-
         }
 
         return filter_var($logicString, FILTER_VALIDATE_BOOLEAN);
@@ -76,7 +78,9 @@ trait ExpressionToBoolParserTrait
      * Put FIRST disjunction (like ' false || true ') into brackets, so the parser can
      * solve operation on next iteration.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function putDisjunctionIntoBrackets($logicString)
@@ -88,7 +92,9 @@ trait ExpressionToBoolParserTrait
      * Put all conjunctions (like ' false && true ') into brackets, so the parser can
      * solve operation on next iteration.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function putConjunctionIntoBrackets($logicString)
@@ -100,23 +106,24 @@ trait ExpressionToBoolParserTrait
      * Reduces loose operations with two vars and replaces them with string reflection
      * of bool result.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function reduceSingleComparisons($logicString)
     {
         $matches = [];
 
-        while(1 == preg_match_all('/\((true|false)([\&\|]{2})(true|false)\)/im', $logicString, $matches)) {
-
-            foreach($matches[0] as $key => $fullString) {
-                $result = $matches[2][$key] == '||'
+        while (1 === preg_match_all('/\((true|false)([\&\|]{2})(true|false)\)/im', $logicString, $matches)) {
+            foreach ($matches[0] as $key => $fullString) {
+                $result = '||' === $matches[2][$key]
                     ? filter_var($matches[1][$key], FILTER_VALIDATE_BOOLEAN) || filter_var($matches[3][$key], FILTER_VALIDATE_BOOLEAN)
                     : filter_var($matches[1][$key], FILTER_VALIDATE_BOOLEAN) && filter_var($matches[3][$key], FILTER_VALIDATE_BOOLEAN);
 
-                    $strResult = $result ? 'true' : 'false';
+                $strResult = $result ? 'true' : 'false';
 
-                    $logicString = str_replace($fullString, $strResult, $logicString);
+                $logicString = str_replace($fullString, $strResult, $logicString);
             }
         }
 
@@ -126,12 +133,14 @@ trait ExpressionToBoolParserTrait
     /**
      * Reduces single bools in brackets.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function reduceSingleBools($logicString)
     {
-        while(false !== strpos($logicString, '(false)') || false !== strpos($logicString, '(true)')) {
+        while (false !== strpos($logicString, '(false)') || false !== strpos($logicString, '(true)')) {
             $logicString = str_replace('(false)', 'false', $logicString);
             $logicString = str_replace('(true)', 'true', $logicString);
         }
@@ -141,19 +150,19 @@ trait ExpressionToBoolParserTrait
 
     /**
      * Performs an actual operation on logic instruction and replaces instruction
-     * with string reflection of bool result
+     * with string reflection of bool result.
      *
-     * @param string $logic String Logic string.
-     * @param Closure $closure Method to be called when translating is performed
+     * @param string  $logic       string Logic string
+     * @param Closure $closure     Method to be called when translating is performed
+     * @param mixed   $logicString
+     *
      * @return string
      */
     protected static function instructionToBool($logicString, Closure $closure)
     {
-
         $matches = [];
-        while(1 == preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $logicString, $matches)) {
-
-            $exploded = explode(':', substr($matches[0], 1, strlen($matches[0]) - 2));
+        while (1 === preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $logicString, $matches)) {
+            $exploded = explode(':', substr($matches[0], 1, \strlen($matches[0]) - 2));
 
             $result = $closure($exploded[0], $exploded[1]);
 
@@ -164,46 +173,48 @@ trait ExpressionToBoolParserTrait
         }
 
         return $logicString;
-
     }
 
     /**
      * Checks whether logic string has any brackets.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return bool
      */
     protected static function hasAnyBrackets($logicString)
     {
-        return (false !== strpos($logicString, '(') || false !== strpos($logicString, ')'));
+        return false !== strpos($logicString, '(') || false !== strpos($logicString, ')');
     }
 
     /**
      * Checks for correct depth of brackets in logic string.
      *
-     * @param string $logicString Logic string.
-     * @return void
+     * @param string $logicString logic string
+     *
      * @throws BracketsMismatchException
      */
     protected static function checkBrackets($logicString)
     {
-
         $logicString = preg_replace('/[A-Za-z\:\&\|\/\*]/', '', $logicString);
 
-        $checker = new BracketChecker;
+        $checker = new BracketChecker();
         $checker->setString($logicString);
 
         try {
             $checker->check();
         } catch (\Exception $e) {
-            throw new BracketsMismatchException;
+            throw new BracketsMismatchException();
         }
     }
 
     /**
-     * Cleans logic string of any whitespace
+     * Cleans logic string of any whitespace.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function cleanWhitespace($logicString)
@@ -212,9 +223,11 @@ trait ExpressionToBoolParserTrait
     }
 
     /**
-     * Adds brackets to single middleware instructions
+     * Adds brackets to single middleware instructions.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function addBracketsToInstructions($logicString)
@@ -225,19 +238,20 @@ trait ExpressionToBoolParserTrait
     /**
      * Changes single TrustNoSql operands into PHP-like ones.
      *
-     * @param string $logic String Logic string.
+     * @param string $logic       string Logic string
+     * @param mixed  $logicString
+     *
      * @return string
      */
     protected static function doubleOperands($logicString)
     {
-        foreach([
+        foreach ([
             '|' => '||',
-            '&' => '&&'
+            '&' => '&&',
         ] as $from => $to) {
             $logicString = str_replace($from, $to, $logicString);
         }
 
         return $logicString;
     }
-
 }

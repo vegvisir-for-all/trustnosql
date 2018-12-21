@@ -1,23 +1,25 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits\Events;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Closure;
 use Vegvisir\TrustNoSql\Observers\ObserverProxy;
 
 trait ModelEventsTrait
 {
-
     /**
-     * Boots TrustNoSql events for model
-     *
-     * @return void
+     * Boots TrustNoSql events for model.
      */
     public static function bootTrustNoSqlEvents()
     {
@@ -25,27 +27,26 @@ trait ModelEventsTrait
     }
 
     /**
-     * Register observables
+     * Register observables.
      *
      * @param object $observer
-     * @return void
      */
     protected static function trustNoSqlObserve($observer = null)
     {
-        $observerName = is_string($observer) ? $observer : get_class($observer);
+        $observerName = \is_string($observer) ? $observer : \get_class($observer);
 
-        foreach(self::$trustNoSqlObservables as $event) {
+        foreach (self::$trustNoSqlObservables as $event) {
             static::registerTrustNoSqlEvent(snake_case($event, '.'), $observerName.'@'.$event);
         }
     }
 
     /**
-     * Register single TrustNoSqlEvent
+     * Register single TrustNoSqlEvent.
      *
-     * @param string $eventName
+     * @param string  $eventName
      * @param Closure $callback
      */
-    protected static function registerTrustNoSqlEvent($eventName, Closure $callback)
+    protected static function registerTrustNoSqlEvent($eventName, $callback)
     {
         if (isset(static::$dispatcher)) {
             $name = static::class;
@@ -54,15 +55,16 @@ trait ModelEventsTrait
     }
 
     /**
-     * Fire a TrustNoSql event
+     * Fire a TrustNoSql event.
      *
-     * @param string $event Event name
-     * @param array $payload Payload
+     * @param string $event   Event name
+     * @param array  $payload Payload
+     *
      * @return mixed
      */
     protected function fireTrustNoSqlEvent($event, $payload = [])
     {
-        if(!isset(static::$dispatcher)) {
+        if (!isset(static::$dispatcher)) {
             return true;
         }
 

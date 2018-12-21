@@ -1,42 +1,47 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits\Parsers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
-trait PipelineToExpressionParserTrait {
-
-
+trait PipelineToExpressionParserTrait
+{
     /**
-     * Translate pipeline to expression
+     * Translate pipeline to expression.
      *
      * @param $entitnyName
      * @param $entitiesPipeline
-     * @return string
+     * @param mixed $entityName
+     *
      * @throws \Exception
+     *
+     * @return string
      */
     public static function pipelineToExpression($entityName, $entitiesPipeline)
     {
-        if(!is_string($entitiesPipeline) || !$entitiesPipeline) {
+        if (!\is_string($entitiesPipeline) || !$entitiesPipeline) {
             return 'true';
         }
 
         $areAmpersands = false !== strpos('&', $entitiesPipeline) ? true : false;
         $areBars = false !== strpos('|', $entitiesPipeline) ? true : false;
 
-        if($areAmpersands && $areBars) {
-            throw new \Exception;
+        if ($areAmpersands && $areBars) {
+            throw new \Exception();
         }
 
         $pattern = '/([A-Za-z0-9\*\/]+)/im';
-        $replace = $entityName . ':\1';
-        $expression = preg_replace($pattern, $replace, $entitiesPipeline);
+        $replace = $entityName.':\1';
 
-        return $expression;
+        return preg_replace($pattern, $replace, $entitiesPipeline);
     }
-
 }

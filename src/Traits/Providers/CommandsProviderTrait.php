@@ -1,18 +1,22 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits\Providers;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Illuminate\Support\Facades\Config;
 
 trait CommandsProviderTrait
 {
-
     /**
      * List of commands to be bound.
      *
@@ -21,25 +25,24 @@ trait CommandsProviderTrait
     protected $trustNoSqlCommands = [];
 
     /**
-     * Base signature for TrustNoSql commands
+     * Base signature for TrustNoSql commands.
      *
      * @var string
      */
     protected $baseSignature = 'command.trustnosql.';
 
     /**
-     * Base class namespace for TrustNoSql commands
+     * Base class namespace for TrustNoSql commands.
      *
      * @var string
      */
     protected $baseClassNamespace = '\\Vegvisir\\TrustNoSql\\Commands\\';
 
     /**
-     * Registers commands (called by main service provider)
+     * Registers commands (called by main service provider).
      */
     protected function registerCommands()
     {
-
         $this->baseSignature = Config::get('trustnosql.cli.signature', $this->baseSignature);
 
         $this->registerPermissionCommands();
@@ -51,7 +54,7 @@ trait CommandsProviderTrait
     }
 
     /**
-     * Register permission commands
+     * Register permission commands.
      */
     private function registerPermissionCommands()
     {
@@ -61,12 +64,12 @@ trait CommandsProviderTrait
             '.delete' => 'Delete',
             '.detach' => 'Detach',
             '.info' => 'Info',
-            's' => 'ListAll'
+            's' => 'ListAll',
         ]);
     }
 
     /**
-     * Register role commands
+     * Register role commands.
      */
     private function registerRoleCommands()
     {
@@ -76,12 +79,12 @@ trait CommandsProviderTrait
             '.delete' => 'Delete',
             '.detach' => 'Detach',
             '.info' => 'Info',
-            's' => 'ListAll'
+            's' => 'ListAll',
         ]);
     }
 
     /**
-     * Register team commands
+     * Register team commands.
      */
     private function registerTeamCommands()
     {
@@ -91,42 +94,38 @@ trait CommandsProviderTrait
             '.delete' => 'Delete',
             '.detach' => 'Detach',
             '.info' => 'Info',
-            's' => 'ListAll'
+            's' => 'ListAll',
         ]);
     }
 
     /**
-     * Register user commands
+     * Register user commands.
      */
     private function registerUserCommands()
     {
         $this->registerModelCommands('user', [
-            '.info' => 'Info'
+            '.info' => 'Info',
         ]);
     }
 
     /**
-     * Register model commands, by given signature and available commands
+     * Register model commands, by given signature and available commands.
      *
      * @param string $signatureNamespace Namespace of the signature
-     * @param array $availableCommands Available commands
+     * @param array  $availableCommands  Available commands
      */
     private function registerModelCommands($signatureNamespace, $availableCommands)
     {
+        foreach ($availableCommands as $command => $className) {
+            $className = $this->baseClassNamespace.ucfirst($signatureNamespace).'\\'.$className;
 
-        foreach($availableCommands as $command => $className) {
-
-            $className = $this->baseClassNamespace . ucfirst($signatureNamespace) . '\\' . $className;
-
-            $this->app->singleton($this->baseSignature . $signatureNamespace . $command, function () use ($className) {
+            $this->app->singleton($this->baseSignature.$signatureNamespace.$command, function () use ($className) {
                 return new $className();
             });
 
             $this->trustNoSqlCommands = array_merge($this->trustNoSqlCommands, [
-                $this->baseSignature . $signatureNamespace . $command
+                $this->baseSignature.$signatureNamespace.$command,
             ]);
-
         }
     }
-
 }

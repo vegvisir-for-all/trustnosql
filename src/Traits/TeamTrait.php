@@ -1,21 +1,24 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
 use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Traits\ModelTrait;
 use Vegvisir\TrustNoSql\Traits\Cacheable\TeamCacheableTrait;
 use Vegvisir\TrustNoSql\Traits\Events\TeamEventsTrait;
 
 trait TeamTrait
 {
-
     use ModelTrait, TeamCacheableTrait, TeamEventsTrait;
 
     /**
@@ -45,7 +48,6 @@ trait TeamTrait
      */
     public function users()
     {
-        return $this->belongsToMany(get_class(Helper::getUserModel()));
+        return $this->belongsToMany(\get_class(Helper::getUserModel()));
     }
-
 }

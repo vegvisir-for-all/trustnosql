@@ -1,21 +1,23 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * (c) Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ *
+ * This source file is subject to the GPL-3.0-or-later license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Vegvisir\TrustNoSql\Traits;
 
-/**
- * This file is part of TrustNoSql,
- * a role/permission/team MongoDB management solution for Laravel.
- *
- * @license GPL-3.0-or-later
- */
-use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\Traits\ModelTrait;
 use Vegvisir\TrustNoSql\Traits\Cacheable\UserCacheableTrait;
 use Vegvisir\TrustNoSql\Traits\Events\UserEventsTrait;
 
 trait UserTrait
 {
-
     use ModelTrait, UserCacheableTrait, UserEventsTrait;
 
     /**
@@ -25,9 +27,7 @@ trait UserTrait
      */
     public function roles()
     {
-        $roles = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Role::class);
-
-        return $roles;
+        return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Role::class);
     }
 
     /**
@@ -37,9 +37,7 @@ trait UserTrait
      */
     public function permissions()
     {
-        $permissions = $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
-
-        return $permissions;
+        return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Permission::class);
     }
 
     /**
@@ -51,6 +49,4 @@ trait UserTrait
     {
         return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Team::class);
     }
-
-
 }
