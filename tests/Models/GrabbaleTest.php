@@ -11,10 +11,6 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-/**
- * @internal
- * @coversNothing
- */
-final class GrabbaleTest extends Models
+class GrabbaleTest extends Models
 {
 }

@@ -11,10 +11,6 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-/**
- * @internal
- * @coversNothing
- */
-final class RolesTest extends Models
+class RolesTest extends Models
 {
 }

@@ -11,10 +11,6 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-/**
- * @internal
- * @coversNothing
- */
-final class PermissionsTest extends Models
+class PermissionsTest extends Models
 {
 }

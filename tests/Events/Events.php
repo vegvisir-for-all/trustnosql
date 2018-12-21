@@ -13,10 +13,6 @@ namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
-final class Events extends TestCase
+class Events extends TestCase
 {
 }

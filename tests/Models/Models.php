@@ -13,10 +13,6 @@ namespace Vegvisir\TrustNoSql\Tests\Models;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
-final class Models extends TestCase
+class Models extends TestCase
 {
 }

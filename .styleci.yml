@@ -5,6 +5,6 @@ enabled:
 
 finder:
   exclude:
-    - "tests"
+    - tests
   name:
     - "*.php"

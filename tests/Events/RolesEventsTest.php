@@ -11,10 +11,6 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Events;
 
-/**
- * @internal
- * @coversNothing
- */
-final class RolesEventsTest extends Events
+class RolesEventsTest extends Events
 {
 }

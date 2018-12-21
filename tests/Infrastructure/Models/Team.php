@@ -9,8 +9,10 @@
  * @license GNU General Public License, version 3
  */
 
-namespace Vegvisir\TrustNoSql\Tests\Events;
+namespace Vegvisir\TrustNoSql\Tests\Infrastructure\Models;
 
-class TeamsEventsTest extends Events
+use Vegvisir\TrustNoSql\Models\Team as TrustNoSqlTeam;
+
+class Team extends TrustNoSqlTeam
 {
 }

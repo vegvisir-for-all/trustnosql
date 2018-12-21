@@ -11,10 +11,6 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
-/**
- * @internal
- * @coversNothing
- */
-final class AbilityMiddlewareTest extends Middleware
+class AbilityMiddlewareTest extends Middleware
 {
 }
