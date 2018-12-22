@@ -13,6 +13,7 @@ namespace Vegvisir\TrustNoSql\Tests\Models;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsTest extends TestCase
 {
@@ -56,7 +57,19 @@ class PermissionsTest extends TestCase
 
     // public function testAttaching()
     // {
+    //     $permissionNamespaceTask = Permission::create([
+    //         'name' => 'namespace/task'
+    //     ]);
 
+    //     $permissionNamespaceAnother = Permission::create([
+    //         'name' => 'namespace/another'
+    //     ]);
+
+    //     $userFirst = User::sortBy('name')->first();
+    //     $userLast = User::sortBy('name')->last();
+
+    //     $userFirst->attachPermissions('namespace/task');
+    //     $userLast->attachPermissions('namespace/task,namespace/another');
     // }
 
     // public function testDetaching()
