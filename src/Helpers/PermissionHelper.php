@@ -156,8 +156,7 @@ class PermissionHelper extends HelperProxy
         if (null !== Permission::where('name', $name)->first()) {
             // Permission with that name already exists
             return false;
-        } else {
-            return !static::isWildcard($name);
         }
+        return !static::isWildcard($name);
     }
 }
