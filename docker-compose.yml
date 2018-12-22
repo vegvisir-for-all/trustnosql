@@ -9,7 +9,7 @@ services:
         volumes:
             - .:/code
         working_dir: /code
-        command: bash -c "composer install --prefer-source --no-interaction && php ./vendor/bin/phpunit --verbose"
+        command: bash -c "composer clear-cache && composer update --prefer-source --no-interaction && php ./vendor/bin/phpunit --verbose"
         depends_on:
           - mongodb
 
