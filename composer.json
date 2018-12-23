@@ -19,7 +19,7 @@
     ],
     "type": "library",
     "require": {
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "^5.4",
         "jenssegers/mongodb": "~2.0|~3.0",
         "php": "^7.0",
         "shumik/bracket-checker": "~1.0"
