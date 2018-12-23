@@ -55,6 +55,11 @@ class PermissionsTest extends TestCase
         $this->assertCount(0, Permission::where(1)->get()->toArray());
     }
 
+    public function fakeFailedTest()
+    {
+        $this->assertTrue(false);
+    }
+
     // public function testAttaching()
     // {
     //     $permissionNamespaceTask = Permission::create([
