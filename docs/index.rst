@@ -38,9 +38,11 @@ Requirements
 
 In order to have TrustNoSql working correctly you need to have:
 
-* `Laravel <https://packagist.org/packages/laravel/framework>`_ >=5.3
-* `Laravel-MongoDB <https://packagist.org/packages/jenssegers/mongodb>`_ >3.4
-* PHP >7.0
+* `Laravel <https://packagist.org/packages/laravel/framework>`_ >=5.4
+* `Laravel-MongoDB <https://packagist.org/packages/jenssegers/mongodb>`_ >=3.2
+* PHP >=7.0
+
+TrustNoSql would probably run also with Laravel 5.3 (and Laravel-MongoDB >=3.1), but no tests for Laravel 5.3 have been performed. As soon as we run such tests, we'll relase official statement on that.
 
 Make sure your Laravel application have correct configuration for Laravel-MongoDB (database configuration).
 
@@ -86,17 +88,153 @@ Also, you should add an alias to your ``config/app.php`` file:
 Create models for your TrustNoSql
 =================================
 
-Permission
-----------
+Permission (obligatory)
+-----------------------
+
+In your models directory, create a base model for permission, using a TrustNoSql permission trait.
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Vegvisir\TrustNoSql\Models\Permission as TrustNoSqlPermission;
+    use Vegvisir\TrustNoSql\Traits\PermissionTrait as TrustNoSqlPermissionTrait;
+
+    class Permission extends TrustNoSqlPermission
+    {
+        use TrustNoSqlPermissionTrait;
+    }
+
+``Vegvisir\TrustNoSql\Models\Permission`` extends Moloquent model. ``Vegvisir\TrustNoSql\Traits\PermissionTrait`` provides necessary methods.
 
 Role
 ----
 
+In your models directory, create a base model for role, using a TrustNoSql role trait.
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Vegvisir\TrustNoSql\Models\Role as TrustNoSqlRole;
+    use Vegvisir\TrustNoSql\Traits\RoleTrait as TrustNoSqlRoleTrait;
+
+    class Role extends TrustNoSqlRole
+    {
+        use TrustNoSqlRoleTrait;
+    }
+
+``Vegvisir\TrustNoSql\Models\Role`` extends Moloquent model. ``Vegvisir\TrustNoSql\Traits\RoleTrait`` provides necessary methods.
+
+User
+----
+
+Additionaly to permission and role models, you need to modify your user model, adding a TrustNoSql user trait:
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Jenssegers\Mongodb\Auth\User as Authenticable;
+    use Vegvisir\TrustNoSql\Traits\UserTrait as TrustNoSqlUserTrait;
+
+    class User extends Authenticable
+    {
+        use TrustNoSqlUserTrait;
+        // ...
+    }
+
+Optimally, you could also extend your user model with TrustNoSql user model. It extends ``Jenssegers\Mongodb\Auth\User``, so you don't need to worry about your user model methods:
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Vegvisir\TrustNoSql\Models\User as Authenticable;
+    use Vegvisir\TrustNoSql\Traits\UserTrait as TrustNoSqlUserTrait;
+
+    class User extends Authenticable
+    {
+        use TrustNoSqlUserTrait;
+        // ...
+    }
+
+Thus, your user model will inherit implementation of the ``UserInterface`` contract, being a part of TrustNoSql package, making your code more compatible with SOLID principles.
+
 Team
 ----
 
+**This model is optional - create it only if you intend to use team functionality.**
+
+In your models directory, create a base model for team, using a TrustNoSql team trait.
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Vegvisir\TrustNoSql\Models\Team as TrustNoSqlTeam;
+    use Vegvisir\TrustNoSql\Traits\TeamTrait as TrustNoSqlTeamTrait;
+
+    class Team extends TrustNoSqlTeam
+    {
+        use TrustNoSqlTeamTrait;
+    }
+
+``Vegvisir\TrustNoSql\Models\Team`` extends Moloquent model. ``Vegvisir\TrustNoSql\Traits\TeamTrait`` provides necessary methods.
+
+
 Grabbable
 ---------
+
+Grabbable is a model that every model of your application having ownage (grabability) rules should extend. Supposing, you have an e-learning platform and you want to give access to lessons only for those users, who are enlisted for particular courses, you should extend your Lesson and Course models with following Grabbable model:
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    use Vegvisir\TrustNoSql\Models\Grabbable as TrustNoSqlGrabbable;
+    use Vegvisir\TrustNoSql\Models\GrabableTrait as TrustNoSqlGrababbleTrait;
+
+    class Grababble extends TrustNoSqlGrababble
+    {
+        use TrustNoSqlGrababbleTrait;
+    }
+
+And then, in your ``Lesson`` and ``Course`` models add ``Grababble`` model as their parent:
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    class Course extends Grababble
+    {
+        // grabability methods
+    }
+
+.. code-block:: php
+
+    <?php
+
+    namespace App\Models;
+
+    class Lesson extends Grababble
+    {
+        // grabability methods
+    }
 
 Middleware setup
 ================
@@ -150,10 +288,16 @@ Permission
 
 Permission is a right to perform a specific task. Permissions can be attached both to Roles and (explicitely) Users.
 
+Permissions have three fillable fields:
+
+* ``name`` - a unique name created in a manner described below,
+* ``display_name`` - a user-friendly name of the permission,
+* ``description`` - a user-friendly description of the permission.
+
 Permission names
 ^^^^^^^^^^^^^^^^
 
-Unlike it Lararust or Zizaco's Entrust packages, TrustNoSql permissions names must be created in a ``namespace/task`` manner. The slash sign ``/`` is **really important**, because it's used by TrustNoSql to distinguish namespace from task.
+Unlike it Lararust or Zizaco's Entrust packages, TrustNoSql permissions names (field ``name``) must be created in a ``namespace/task`` manner. The slash sign ``/`` is **really important**, because it's used by TrustNoSql to distinguish namespace from task.
 
 Therefore such permission names are not valid:
 
@@ -219,6 +363,19 @@ Currently, we offer support for ``*`` wildcard, with its alias ``all``, like in 
 
 Role
 ====
+
+Role is a set of permissions. Users can have roles, like ``admin`` or ``manager``, and that means they have a set of permissions related to the roles they have.
+
+Roles have three fillable fields:
+
+* ``name`` - a unique name created in a manner described below,
+* ``display_name`` - a user-friendly name of the role,
+* ``description`` - a user-friendly description of the role.
+
+Role names
+^^^^^^^^^^
+
+Roles can have any name you think of (unlike permisisons). However, it's a good practice to keep your role names as representative as they can be.
 
 Checking for roles
 ^^^^^^^^^^^^^^^^^^
@@ -358,3 +515,9 @@ TrustNoSql uses Travis for continuous integration and tests. However, if you wan
 
 About us
 ########
+
+TrustNoSql have been created by Vegvisir - a small software house from Warsaw, Poland and its main developer was Marek Ognicki (Kapusta).
+
+We specialize in Laravel applications, using NoSQL databases (mainly MongoDB). We tend to keep our code clean and professional (SOLID/DRY principles), that's why we use such services like StyleCI. For our tests we use TravisCI.
+
+We'd love to make your software dreams come true. If you believe, we migt be the right choice for you, let us know :)
