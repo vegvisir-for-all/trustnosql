@@ -518,6 +518,6 @@ About us
 
 TrustNoSql have been created by Vegvisir - a small software house from Warsaw, Poland and its main developer was Marek Ognicki (Kapusta).
 
-We specialize in Laravel applications, using NoSQL databases (mainly MongoDB). We tend to keep our code clean and professional (SOLID/DRY principles), that's why we use such services like StyleCI. For our tests we use TravisCI.
+We specialize in Laravel applications, using NoSQL databases (mainly MongoDB), deployed on mainly Google Cloud Engine. We tend to keep our code clean and professional (SOLID/DRY principles), that's why we use such services like StyleCI. For our tests we use TravisCI.
 
 We'd love to make your software dreams come true. If you believe, we migt be the right choice for you, let us know :)
