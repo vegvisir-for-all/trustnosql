@@ -43,7 +43,10 @@ class TestCase extends OrchestraTestCase
 
     protected function getPackageProviders($app)
     {
-        return ['Jenssegers\Mongodb\MongodbServiceProvider'];
+        return [
+            'Jenssegers\Mongodb\MongodbServiceProvider',
+            'Vegvisir\TrustNoSql\TrustNoSqlServiceProvider'
+        ];
     }
 
 }

@@ -17,93 +17,63 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsTest extends TestCase
 {
-
-    public function testDeleteAll()
-    {
-        Permission::where(1)->delete();
-        $this->assertCount(0, Permission::where('name', 'namespace/task')->get()->toArray());
-    }
-
     public function testCreate()
     {
 
-        $permission = Permission::create([
-            'name' => 'namespace/task'
-        ]);
-        $this->assertSame('namespace/task', $permission->name);
+        $permissionsArray = [
+            [
+                'name' => 'namespace/task',
+                'display_name' => 'Namespace Task'
+            ],
+            [
+                'name' => 'namespace/another',
+                'display_name' => 'Namespace Another'
+            ],
+            [
+                'name' => 'namespace/third',
+                'display_name' => 'Namespace Third'
+            ]
+        ];
 
+        foreach($permissionsArray as $permissionData) {
+            $permission = Permission::create($permissionData);
+
+            $this->assertSame($permissionData['name'], $permission->name);
+            $this->assertSame($permissionData['display_name'], $permission->display_name);
+        }
+    }
+
+    public function testRejectCreate()
+    {
         $permission = Permission::create([
             'name' => 'namespace/task'
         ]);
-        $this->assertCount(1, Permission::where('name', 'namespace/task')->get()->toArray());
+
+        $this->assertNull($permission);
 
         $permission = Permission::create([
             'name' => 'namespace/*'
         ]);
+
         $this->assertNull($permission);
 
         $permission = Permission::create([
-            'name' => 'namespace-task'
+            'name' => 'namespace/all'
         ]);
+
         $this->assertNull($permission);
-
     }
 
-    public function testDeleteSingle()
+    public function testDelete()
     {
-        Permission::where('namespace/task')->delete();
-        $this->assertCount(0, Permission::where(1)->get()->toArray());
+        $permission = Permission::where('name', 'namespace/task');
+        $permission->delete();
+
+        $this->assertSame(0, Permission::where('name', 'namespace/task')->count());
     }
 
-    public function fakeFailedTest()
+    public function testFakeFalse()
     {
         $this->assertTrue(false);
     }
-
-    // public function testAttaching()
-    // {
-    //     $permissionNamespaceTask = Permission::create([
-    //         'name' => 'namespace/task'
-    //     ]);
-
-    //     $permissionNamespaceAnother = Permission::create([
-    //         'name' => 'namespace/another'
-    //     ]);
-
-    //     $userFirst = User::sortBy('name')->first();
-    //     $userLast = User::sortBy('name')->last();
-
-    //     $userFirst->attachPermissions('namespace/task');
-    //     $userLast->attachPermissions('namespace/task,namespace/another');
-    // }
-
-    // public function testDetaching()
-    // {
-
-    // }
-
-    // public function testHasPermission()
-    // {
-
-    // }
-
-    // public function testHasPermissionAliases()
-    // {
-
-    // }
-
-    // public function testMagicCan()
-    // {
-
-    // }
-
-    // public function testHasMultipleOr()
-    // {
-
-    // }
-
-    // public function testHasMultipleAnd()
-    // {
-
-    // }
 }
