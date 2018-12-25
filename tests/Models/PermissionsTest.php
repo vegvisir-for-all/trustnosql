@@ -98,7 +98,7 @@ class PermissionsTest extends TestCase
 
         $user->attachPermission('namespace/task');
 
-        var_dump($user->permissions);
+        var_dump($user);
     }
 
     public function testDetachingFromUsers()
