@@ -20,7 +20,7 @@ script:
   - mkdir -p build/logs
   - chmod 777 -R build/logs
   - docker-compose up --exit-code-from php
-  - ls -l build/logs
 
 after_script:
+  - ls -l build/logs
   - travis_retry php vendor/bin/php-coveralls -v --root_dir ./
