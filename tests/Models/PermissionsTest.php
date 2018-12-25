@@ -73,19 +73,32 @@ class PermissionsTest extends TestCase
         $this->assertEquals(0, Permission::where('name', 'namespace/task')->count());
     }
 
-    public function testAttachingToRoles()
-    {
-        $this->assertTrue(false);
-    }
-
-    public function testDetachingFromRoles()
-    {
-        $this->assertTrue(false);
-    }
-
     public function testAttachingToUsers()
     {
-        $this->assertTrue(false);
+        $user = User::first();
+
+        $permissionsArray = [
+            [
+                'name' => 'namespace/task',
+                'display_name' => 'Namespace Task'
+            ],
+            [
+                'name' => 'namespace/another',
+                'display_name' => 'Namespace Another'
+            ],
+            [
+                'name' => 'namespace/third',
+                'display_name' => 'Namespace Third'
+            ]
+        ];
+
+        foreach($permissionsArray as $permissionData) {
+            Permission::create($permissionData);
+        }
+
+        $user->attachPermission('namespace/task');
+
+        var_dump($user->permissions);
     }
 
     public function testDetachingFromUsers()

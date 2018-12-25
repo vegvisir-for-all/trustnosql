@@ -3,3 +3,4 @@
 composer.lock
 phpdoc.dist.xml
 .php_cs*
+.phpunit-result.cache
