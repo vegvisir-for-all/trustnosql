@@ -17,4 +17,9 @@ install:
   - docker-compose build --build-arg PHP_VERSION=${TRAVIS_PHP_VERSION}
 
 script:
+  - mkdir -p build/logs
   - docker-compose up --exit-code-from php
+
+after_script:
+  - php vendor/bin/phpcov merge --clover build/logs/clover.xml build/cov
+  - travis_retry php vendor/bin/php-coveralls

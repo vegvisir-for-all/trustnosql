@@ -28,7 +28,9 @@
         "phpunit/phpunit": "^6.0|^7.0",
         "orchestra/testbench": "~3.0",
         "mockery/mockery": "~1.0",
-        "jenssegers/mongodb": "~2.0|~3.0"
+        "jenssegers/mongodb": "~2.0|~3.0",
+        "phpunit/phpcov": "^5.0",
+        "php-coveralls/php-coveralls": "^2.1"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

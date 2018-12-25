@@ -44,7 +44,7 @@ class PermissionsTest extends TestCase
         }
     }
 
-    public function testRejectCreated()
+    public function testRejectCreate()
     {
         $permission = Permission::create([
             'name' => 'namespace/task'
@@ -78,7 +78,7 @@ class PermissionsTest extends TestCase
         $this->assertTrue(false);
     }
 
-    public function testDetachingToRoles()
+    public function testDetachingFromRoles()
     {
         $this->assertTrue(false);
     }
@@ -88,7 +88,7 @@ class PermissionsTest extends TestCase
         $this->assertTrue(false);
     }
 
-    public function testDetachingToUsers()
+    public function testDetachingFromUsers()
     {
         $this->assertTrue(false);
     }

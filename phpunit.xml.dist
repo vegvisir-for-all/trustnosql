@@ -12,6 +12,9 @@
          stopOnFailure="false"
          verbose="true"
 >
+    <logging>
+        <log type="coverage-php" target="build/cov/coverage.cov"/>
+    </logging>
     <testsuites>
         <testsuite name="TrustNoSql Models Test Suite">
             <directory suffix="Test.php">./tests/Models</directory>

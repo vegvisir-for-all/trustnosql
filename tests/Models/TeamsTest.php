@@ -15,8 +15,18 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class RolesTest extends TestCase
+class TeamsTest extends TestCase
 {
+
+    protected function setConfigToTrue()
+    {
+
+    }
+
+    protected function setConfigToFalse()
+    {
+
+    }
 
     public function testCreate()
     {
@@ -33,8 +43,18 @@ class RolesTest extends TestCase
 
     }
 
+    public function testAttachingToRoles()
+    {
+    }
+
     public function testAttachingToUsers()
     {
+
+    }
+
+    public function testDetachingFromRoles()
+    {
+
     }
 
     public function testDetachingFromUsers()
