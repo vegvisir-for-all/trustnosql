@@ -36,20 +36,21 @@ class PermissionsTest extends TestCase
         ];
 
         foreach($permissionsArray as $permissionData) {
+
             $permission = Permission::create($permissionData);
 
-            $this->assertSame($permissionData['name'], $permission->name);
-            $this->assertSame($permissionData['display_name'], $permission->display_name);
+            $this->assertEquals($permissionData['name'], $permission->name);
+            $this->assertEquals($permissionData['display_name'], $permission->display_name);
         }
     }
 
-    public function testRejectCreate()
+    public function testRejectCreated()
     {
         $permission = Permission::create([
             'name' => 'namespace/task'
         ]);
 
-        $this->assertNull($permission);
+        $this->assertNotNull($permission);
 
         $permission = Permission::create([
             'name' => 'namespace/*'
@@ -69,10 +70,40 @@ class PermissionsTest extends TestCase
         $permission = Permission::where('name', 'namespace/task');
         $permission->delete();
 
-        $this->assertSame(0, Permission::where('name', 'namespace/task')->count());
+        $this->assertEquals(0, Permission::where('name', 'namespace/task')->count());
     }
 
-    public function testFakeFalse()
+    public function testAttachingToRoles()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testDetachingToRoles()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testAttachingToUsers()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testDetachingToUsers()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testHasPermission()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testHasPermissionAliases()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testMagicCan()
     {
         $this->assertTrue(false);
     }

@@ -17,5 +17,8 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class RolesTest extends TestCase
 {
-
+    public function testCreate()
+    {
+        $this->assertTrue(false);
+    }
 }
