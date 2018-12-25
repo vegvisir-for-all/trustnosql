@@ -21,4 +21,4 @@ script:
   - docker-compose up --exit-code-from php
 
 after_script:
-  - travis_retry php vendor/bin/php-coveralls -v -r
+  - travis_retry php vendor/bin/php-coveralls -v --root_dir ./
