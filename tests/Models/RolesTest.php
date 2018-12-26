@@ -90,7 +90,7 @@ class RolesTest extends TestCase
 
         $user->detachRole('admin');
 
-        $this->assertEquals(2, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(0, $user->roles()->where('name', 'admin')->count());
 
         $user->detachRole('superadmin,manager');
 
@@ -117,15 +117,14 @@ class RolesTest extends TestCase
 
     public function testHasRoleAliases()
     {
+        $user = User::first();
 
+        $this->assertTrue($user->hasRoles('admin'));
+        $this->assertTrue($user->isA('admin'));
+        $this->assertTrue($user->isAn('admin'));
     }
 
     public function testAttachingPermissions()
-    {
-
-    }
-
-    public function testDetachingPermissions()
     {
 
     }
@@ -136,6 +135,11 @@ class RolesTest extends TestCase
     }
 
     public function testHasPermissionAliases()
+    {
+
+    }
+
+    public function testDetachingPermissions()
     {
 
     }

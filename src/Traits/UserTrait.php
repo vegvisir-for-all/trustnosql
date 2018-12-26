@@ -47,4 +47,14 @@ trait UserTrait
     {
         return $this->belongsToMany(\Vegvisir\TrustNoSql\Models\Team::class);
     }
+
+    public function isA($roleName)
+    {
+        return $this->hasRole($roleName);
+    }
+
+    public function isAn($roleName)
+    {
+        return $this->hasRole($roleName);
+    }
 }
