@@ -13,4 +13,8 @@ namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 class RoleMiddlewareTest extends Middleware
 {
+    public function testRoleMiddleware()
+    {
+
+    }
 }

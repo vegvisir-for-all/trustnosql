@@ -13,4 +13,23 @@ namespace Vegvisir\TrustNoSql\Tests\Events;
 
 class PermissionsEventsTest extends Events
 {
+    public function testRolesAttachedEvent()
+    {
+
+    }
+
+    public function testRolesDetachedEvent()
+    {
+
+    }
+
+    public function testUsersAttachedEvent()
+    {
+
+    }
+
+    public function testUsersDetachedEvent()
+    {
+
+    }
 }
