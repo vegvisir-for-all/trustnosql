@@ -52,4 +52,24 @@ class RolesTest extends TestCase
 
     }
 
+    public function testAttachingPermissions()
+    {
+
+    }
+
+    public function testDetachingPermissions()
+    {
+
+    }
+
+    public function testHasPermission()
+    {
+
+    }
+
+    public function testHasPermissionAliases()
+    {
+
+    }
+
 }
