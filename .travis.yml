@@ -23,4 +23,7 @@ script:
 after_script:
   - mkdir -p code
   - sudo ln -s /tests /code
+  - ls -l tests
+  - ls -l code
+  - ls -l code/tests
   - php vendor/bin/php-coveralls -v --root_dir ./
