@@ -64,4 +64,20 @@ class RoleHelper extends HelperProxy
     {
         return is_a(\get_class($object), \get_class(new Role()), true);
     }
+
+    /**
+     * Checks whether given role name can be used (i.e. if the name
+     * doesn't exist.
+     *
+     * @param string $name Name of the role
+     * @return bool
+     */
+    public static function checkRoleName($name)
+    {
+        if (null !== Role::where('name', $name)->first()) {
+            // Role with that name already exists
+            return false;
+        }
+        return true;
+    }
 }

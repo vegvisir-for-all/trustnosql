@@ -64,6 +64,10 @@ trait ModelTrait
 
             return $this->hasEntities('permission', $permissionName, false);
         }
+        if ('can' === $originalName) {
+            $requireAll = (isset($arguments[1])) ? $arguments[1] : false;
+            return $this->hasEntities('permission', $argument[0], $requireAll);
+        }
 
         return parent::__call($originalName, $arguments);
     }

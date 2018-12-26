@@ -133,9 +133,9 @@ class PermissionsTest extends TestCase
 
         $this->assertTrue($user->hasPermissions('namespace/task'));
         $this->assertTrue($user->can('namespace/task'));
-
         $this->assertTrue($user->hasPermission('namespace/*'));
         $this->assertTrue($user->hasPermission('namespace/all'));
+        $this->assertFalse($user->hasPermission('namespace/everything'));
     }
 
     public function testMagicCan()
