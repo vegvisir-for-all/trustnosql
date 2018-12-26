@@ -48,7 +48,7 @@ class PermissionsTest extends TestCase
     public function testRejectCreate()
     {
         $permission = Permission::create([
-            'name' => 'namespace/task'
+            'name' => 'namespace/task2'
         ]);
 
         $this->assertNotNull($permission);
@@ -133,7 +133,6 @@ class PermissionsTest extends TestCase
 
         $this->assertTrue($user->hasPermissions('namespace/task'));
         $this->assertTrue($user->can('namespace/task'));
-        $this->assertTrue(TrustNoSql::userCan('namespace/task'));
 
         $this->assertTrue($user->hasPermission('namespace/*'));
         $this->assertTrue($user->hasPermission('namespace/all'));

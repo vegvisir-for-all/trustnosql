@@ -21,7 +21,7 @@ class BaseObserver
      * @param mixed $name
      * @param mixed $arguments
      */
-    public function __call($name, $arguments)
+    public static function __callStatic($name, $arguments)
     {
         ($arguments[0])->currentModelFlushCache();
 
@@ -29,6 +29,11 @@ class BaseObserver
             return false;
         }
 
-        return call_user_fun_array($this->{$name}, $arguments);
+        if(method_exists(__CLASS__, $name)) {
+            return call_user_func_array(self::$name, $arguments);
+        }
+
+        return true;
+
     }
 }

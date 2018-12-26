@@ -25,5 +25,7 @@ trait PermissionEventsTrait
         'rolesDetached',
         'usersAttached',
         'usersDetached',
+        'usersNotAtached',
+        'usersNotDetached'
     ];
 }

@@ -34,7 +34,7 @@ trait ModelEventsTrait
         $observerName = \is_string($observer) ? $observer : \get_class($observer);
 
         foreach (self::$trustNoSqlObservables as $event) {
-            static::registerTrustNoSqlEvent(snake_case($event, '.'), $observerName.'@'.$event);
+            static::registerTrustNoSqlEvent(snake_case($event, '.'), [$observerName, $event]);
         }
     }
 

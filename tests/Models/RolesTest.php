@@ -12,7 +12,7 @@
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class RolesTest extends TestCase
@@ -20,17 +20,53 @@ class RolesTest extends TestCase
 
     public function testCreate()
     {
-        $this->assertTrue(false);
+
+        $rolesArray = [
+            [
+                'name' => 'superadmin',
+                'display_name' => 'Superadmin'
+            ],
+            [
+                'name' => 'admin',
+                'display_name' => 'Admin'
+            ],
+            [
+                'name' => 'manager',
+                'display_name' => 'Manager'
+            ]
+        ];
+
+        foreach($rolesArray as $roleData) {
+
+            $role = Role::create($roleData);
+
+            $this->assertEquals($roleData['name'], $role->name);
+            $this->assertEquals($roleData['display_name'], $role->display_name);
+        }
     }
 
     public function testRejectCreate()
     {
-        $this->assertTrue(false);
+        $role = Role::create([
+            'name' => 'superadmin',
+            'display_name' => 'Super admin'
+        ]);
+
+        $this->assertNull($role);
+
+        $role = Role::create([
+            'name' => 'super/admin',
+            'display_name' => 'Super/admin'
+        ]);
+
+        $this->assertNull($role);
     }
 
     public function testDelete()
     {
+        Role::where('name', 'superadmin')->first()->delete();
 
+        $this->assertEqual(0, Role::where('name', 'superadmin')->count());
     }
 
     public function testAttachingToUsers()

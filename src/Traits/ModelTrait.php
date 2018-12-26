@@ -60,9 +60,9 @@ trait ModelTrait
         }
         if ('can' === $name[0]) {
             // permission magic method
-            $permissionName = strtolower($name[1]).'/'.strtolower($name[2]);
+            $permissionName = strtolower($name[2]).'/'.strtolower($name[1]);
 
-            return $this->hasEntities('permission', $permissionName);
+            return $this->hasEntities('permission', $permissionName, false);
         }
 
         return parent::__call($originalName, $arguments);
@@ -120,16 +120,16 @@ trait ModelTrait
     {
         $entitiesKeys = Helper::{'get'.ucfirst($entityModelName).'Keys'}($entityList);
 
-        try {
+        // try {
             $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
 
             $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
             $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.detached', [$this, $entityList]);
-        } catch (\Exception $e) {
-            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.not-detached', [$this, $entityList]);
+        // } catch (\Exception $e) {
+        //     $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.not-detached', [$this, $entityList]);
 
-            throw new DetachEntitiesException($entityModelName);
-        }
+        //     throw new DetachEntitiesException($entityModelName . ' ' . $e->getMessage());
+        // }
 
         return $this;
     }
@@ -226,9 +226,7 @@ trait ModelTrait
 
         $field = 'users' === $entityModelName ? 'email' : 'name';
 
-        $entityCollection->sortBy($field);
-
-        return collect($entityCollection->get())->map(function ($item, $key) use ($field) {
+        return collect($entityCollection->get()->sortBy('name'))->map(function ($item, $key) use ($field) {
             return $item->{$field};
         })->toArray();
     }

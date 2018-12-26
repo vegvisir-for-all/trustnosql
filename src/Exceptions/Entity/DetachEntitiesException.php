@@ -27,6 +27,6 @@ class DetachEntitiesException extends HttpException
     public function __construct($entitiesModelName, \Exception $previous = null, $code = 0)
     {
         $entitiesModelName = strtolower(str_plural($entitiesModelName));
-        parent::__construct(500, "Error attaching ${entitiesModelName}", $previous, [], $code);
+        parent::__construct(500, "Error detaching ${entitiesModelName}", $previous, [], $code);
     }
 }

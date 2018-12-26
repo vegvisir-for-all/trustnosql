@@ -65,7 +65,7 @@ class CheckProxy
             return $this->getRoleChecker();
         }
 
-        if (is_a($this->model, Config::get('laratrust.user_models.users'), true)) {
+        if (is_a($this->model, Config::get('trustnosql.user_models.users'), true)) {
             return $this->getUserChecker();
         }
     }
