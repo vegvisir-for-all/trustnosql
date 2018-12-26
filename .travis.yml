@@ -21,6 +21,6 @@ script:
   - docker-compose up --exit-code-from php
 
 after_script:
-  - mkdir -p code
-  - sudo ln -s /tests /code
+  - mv build/logs/coverage.xml build/logs/coverage.xml.bak
+  - sed 's#/code/#/#g' build/logs/coverage.xml.bak > build/logs/coverage.xml
   - php vendor/bin/php-coveralls -v --root_dir ./
