@@ -40,8 +40,8 @@ class RolesTest extends TestCase
 
             $role = Role::create($roleData);
 
-            $this->assertEqual($roleData['name'], $role->name);
-            $this->assertEqual($roleData['display_name'], $role->display_name);
+            $this->assertEquals($roleData['name'], $role->name);
+            $this->assertEquals($roleData['display_name'], $role->display_name);
         }
     }
 
@@ -66,7 +66,7 @@ class RolesTest extends TestCase
     {
         Role::where('name', 'superadmin')->first()->delete();
 
-        $this->assertEqual(0, Role::where('name', 'superadmin')->count());
+        $this->assertEquals(0, Role::where('name', 'superadmin')->count());
     }
 
     public function testAttachingToUsers()
@@ -75,15 +75,13 @@ class RolesTest extends TestCase
 
         $user->attachRole('admin');
 
-        $this->assertEqual(1, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(1, $user->roles()->where('name', 'admin')->count());
 
         Role::create(['name' => 'superadmin']);
 
-        $user = User::last();
+        $user->attachRole('superadmin,manager');
 
-        $user->attachRole('superadmin', 'manager');
-
-        $this->assertEqual(2, $user->roles()->count());
+        $this->assertEquals(3, $user->roles()->count());
     }
 
     public function testDetachingFromUsers()
@@ -92,13 +90,11 @@ class RolesTest extends TestCase
 
         $user->detachRole('admin');
 
-        $this->assertEqual(0, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(2, $user->roles()->where('name', 'admin')->count());
 
-        $user = User::last();
+        $user->detachRole('superadmin,manager');
 
-        $user->detachRole('superadmin', 'manager');
-
-        $this->assertEqual(0, $user->roles()->count());
+        $this->assertEquals(0, $user->roles()->count());
     }
 
     public function testHasRole()
@@ -115,6 +111,7 @@ class RolesTest extends TestCase
 
         $this->assertTrue($user->hasRole('admin,manager', false));
 
+        // Failure
         $this->assertFalse($user->hasRole('admin,manager', true));
     }
 
