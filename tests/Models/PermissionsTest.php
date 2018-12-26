@@ -11,6 +11,7 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
+use Vegvisir\TrustNoSql\TrustNoSql;
 use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
@@ -98,26 +99,51 @@ class PermissionsTest extends TestCase
 
         $user->attachPermission('namespace/task');
 
-        var_dump($user);
+        $hasPermissionCount = $user->permissions->where('name', 'namespace/task')->count();
+
+        $this->assertEquals(1, $hasPermissionCount);
     }
 
     public function testDetachingFromUsers()
     {
-        $this->assertTrue(false);
+        $user = User::first();
+
+        $user->detachPermission('namespace/task');
+
+        $hasPermissionCount = $user->permissions->where('name', 'namespace/task')->count();
+
+        $this->assertEquals(0, $hasPermissionCount);
+
     }
 
     public function testHasPermission()
     {
-        $this->assertTrue(false);
+        $user = User::first();
+
+        $this->assertFalse($user->hasPermission('namespace/task'));
+
+        $user->attachPermission('namespace/task');
+
+        $this->assertTrue($user->hasPermission('namespace/task'));
     }
 
     public function testHasPermissionAliases()
     {
-        $this->assertTrue(false);
+        $user = User::first();
+
+        $this->assertTrue($user->hasPermissions('namespace/task'));
+        $this->assertTrue($user->can('namespace/task'));
+        $this->assertTrue(TrustNoSql::userCan('namespace/task'));
+
+        $this->assertTrue($user->hasPermission('namespace/*'));
+        $this->assertTrue($user->hasPermission('namespace/all'));
     }
 
     public function testMagicCan()
     {
-        $this->assertTrue(false);
+        $user = User::first();
+
+        $this->assertTrue($user->canTaskNamespace());
+        $this->assertFalse($user->canRemoveNamespace());
     }
 }
