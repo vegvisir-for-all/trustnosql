@@ -13,4 +13,8 @@ namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 class RejectMiddlewareTest extends Middleware
 {
+    public function testRejectMiddleware()
+    {
+
+    }
 }

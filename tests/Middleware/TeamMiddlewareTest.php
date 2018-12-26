@@ -13,4 +13,8 @@ namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 class TeamMiddlewareTest extends Middleware
 {
+    public function testTeamMiddleware()
+    {
+
+    }
 }

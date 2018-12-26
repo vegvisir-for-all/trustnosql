@@ -13,4 +13,23 @@ namespace Vegvisir\TrustNoSql\Tests\Events;
 
 class TeamsEventsTest extends Events
 {
+    public function testTeamsAttachedEvent()
+    {
+
+    }
+
+    public function testTeamsDetachedEvent()
+    {
+
+    }
+
+    public function testUsersAttachedEvent()
+    {
+
+    }
+
+    public function testUsersDetachedEvent()
+    {
+
+    }
 }

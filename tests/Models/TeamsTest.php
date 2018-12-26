@@ -18,12 +18,22 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 class TeamsTest extends TestCase
 {
 
-    protected function setConfigToTrue()
+    protected static function setConfigToTrue()
     {
 
     }
 
-    protected function setConfigToFalse()
+    protected static function setConfigToFalse()
+    {
+
+    }
+
+    public function testTeamFunctionalityOn()
+    {
+
+    }
+
+    public function testTeamFunctionalityOff()
     {
 
     }
@@ -47,12 +57,12 @@ class TeamsTest extends TestCase
     {
     }
 
-    public function testAttachingToUsers()
+    public function testDetachingFromRoles()
     {
 
     }
 
-    public function testDetachingFromRoles()
+    public function testAttachingToUsers()
     {
 
     }
