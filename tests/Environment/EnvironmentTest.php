@@ -18,7 +18,6 @@ class EnvironmentTest extends TestCase
 {
     public function testMongoConnection()
     {
-        echo "testMongoConnection";
         $defaultDriver = config('database.default');
         $this->assertSame('mongodb', $defaultDriver);
     }
@@ -28,7 +27,6 @@ class EnvironmentTest extends TestCase
         $users = test_seed_users();
 
         foreach($users as $seedUser) {
-            echo "testUsersCreated";
             $user = User::where('name', $seedUser['name'])->first();
             $this->assertSame($seedUser['name'], $user->name);
         }

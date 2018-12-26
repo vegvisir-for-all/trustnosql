@@ -18,9 +18,9 @@ install:
 
 script:
   - mkdir -p build/logs
-  - chmod 777 -R build/logs
   - docker-compose up --exit-code-from php
 
 after_script:
-  - ls -l build/logs
+  - mkdir -p code
+  - ln -s tests code/tests
   - travis_retry php vendor/bin/php-coveralls -v --root_dir ./

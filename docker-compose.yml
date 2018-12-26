@@ -5,7 +5,7 @@ services:
         container_name: php_trustnosql
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: ./docker/phpmongodb/Dockerfile
         volumes:
             - .:/code
         working_dir: /code
