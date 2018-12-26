@@ -22,5 +22,5 @@ script:
 
 after_script:
   - mkdir -p code
-  - ln -s /tests /code
-  - travis_retry php vendor/bin/php-coveralls -v --root_dir ./
+  - sudo ln -s /tests /code
+  - php vendor/bin/php-coveralls -v --root_dir ./
