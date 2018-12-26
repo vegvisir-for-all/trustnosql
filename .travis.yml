@@ -22,9 +22,5 @@ script:
 
 after_script:
   - mkdir -p code
-  - ls -l
-  - realpath tests
-  - ln -s tests code
-  - ls -l code
-  - ls -l code/tests
+  - ln -s /tests /code
   - travis_retry php vendor/bin/php-coveralls -v --root_dir ./
