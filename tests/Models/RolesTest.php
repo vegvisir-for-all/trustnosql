@@ -42,4 +42,14 @@ class RolesTest extends TestCase
 
     }
 
+    public function testHasRole()
+    {
+
+    }
+
+    public function testHasRoleAliases()
+    {
+
+    }
+
 }
