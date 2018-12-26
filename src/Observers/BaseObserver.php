@@ -29,11 +29,10 @@ class BaseObserver
             return false;
         }
 
-        if(method_exists(__CLASS__, $name)) {
+        if (method_exists(__CLASS__, $name)) {
             return call_user_func_array(self::$name, $arguments);
         }
 
         return true;
-
     }
 }

@@ -121,10 +121,10 @@ trait ModelTrait
         $entitiesKeys = Helper::{'get'.ucfirst($entityModelName).'Keys'}($entityList);
 
         // try {
-            $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
+        $this->{strtolower(str_plural($entityModelName))}()->detach($entitiesKeys);
 
-            $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
-            $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.detached', [$this, $entityList]);
+        $this->currentModelFlushCache(strtolower(str_plural($entityModelName)));
+        $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.detached', [$this, $entityList]);
         // } catch (\Exception $e) {
         //     $this->fireTrustNoSqlEvent(strtolower(str_plural($entityModelName)).'.not-detached', [$this, $entityList]);
 
