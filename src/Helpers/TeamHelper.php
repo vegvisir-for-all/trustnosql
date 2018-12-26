@@ -66,4 +66,33 @@ class TeamHelper extends HelperProxy
     {
         return is_a(\get_class($object), \get_class(new Team()), true);
     }
+
+    /**
+     * Checks whether team functionality is on.
+     *
+     * @return bool
+     */
+    public static function isFunctionalityOn()
+    {
+        return config('trustnosql.teams.use_teams', false);
+    }
+
+    /**
+     * Checks whether given team name can be used (i.e. if the name
+     * doesn't exist.
+     *
+     * @param string $name Name of the team
+     * @return bool
+     */
+    public static function checkTeamName($name)
+    {
+        if (!self::isFunctionalityOn()) {
+            return false;
+        }
+        if (null !== Team::where('name', $name)->first()) {
+            // Team with that name already exists
+            return false;
+        }
+        return true;
+    }
 }

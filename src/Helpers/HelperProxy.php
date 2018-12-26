@@ -146,6 +146,16 @@ class HelperProxy
     }
 
     /**
+     * Checks whether team functionality is on.
+     *
+     * @return bool
+     */
+    public static function isTeamFunctionalityOn()
+    {
+        return TeamHelper::isFunctionalityOn();
+    }
+
+    /**
      * Gets an array of team keys (_ids).
      *
      * @param array|string $teams Comma-separated team names or array of them
