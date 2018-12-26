@@ -12,6 +12,7 @@
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
 use Vegvisir\TrustNoSql\Tests\TestCase;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
@@ -127,11 +128,50 @@ class RolesTest extends TestCase
     public function testAttachingPermissions()
     {
 
+        Permission::where(1)->delete();
+
+        $permissionsArray = [
+            [
+                'name' => 'namespace/task',
+                'display_name' => 'Namespace Task'
+            ],
+            [
+                'name' => 'namespace/another',
+                'display_name' => 'Namespace Another'
+            ],
+            [
+                'name' => 'namespace/third',
+                'display_name' => 'Namespace Third'
+            ]
+        ];
+
+        foreach($permissionsArray as $key => $permissionData) {
+            $permission[$key] = Permission::create($permissionData);
+        }
+
+        $admin = Role::where('name', 'admin')->first();
+
+        $superadmin = Role::where('name', 'superadmin')->first();
+
+        $admin->attachPermission('namespace/task');
+        $superadmin->attachPermission('namespace/another,namespace/third');
+
+        $this->assertEquals(1, $admin->permissions()->count());
+        $this->assertEquals(2, $superadmin->permissions()->count());
+
+
     }
 
     public function testHasPermission()
     {
+        $admin = Role::where('name', 'admin')->first();
+        $superadmin = Role::where('name', 'superadmin')->first();
 
+        $this->assertTrue($admin->hasPermission('namespace/task'));
+        $this->assertTrue($superadmin->hasPermission('namespace/another,namespace/third', true));
+        $this->assertTrue($admin->hasPermission('namespace/task,namespace/third', false));
+        //failure
+        $this->assertFalse($admin->hasPermission('namespace/task,namespace/third', true));
     }
 
     public function testHasPermissionAliases()
