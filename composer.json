@@ -33,7 +33,8 @@
         "php-coveralls/php-coveralls": "^2.1"
     },
     "conflict": {
-        "santigarcor/laratrust": "*"
+        "santigarcor/laratrust": "*",
+        "zizaco/entrust": "*"
     },
     "license": "GPL-3.0-or-later",
     "authors": [
