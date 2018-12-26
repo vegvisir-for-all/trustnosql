@@ -32,6 +32,9 @@
         "phpunit/phpcov": "^4.0|^5.0",
         "php-coveralls/php-coveralls": "^2.1"
     },
+    "conflict": {
+        "santigarcor/laratrust": "*"
+    },
     "license": "GPL-3.0-or-later",
     "authors": [
         {
