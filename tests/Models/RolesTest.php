@@ -176,12 +176,23 @@ class RolesTest extends TestCase
 
     public function testHasPermissionAliases()
     {
+        $admin = Role::where('name', 'admin')->first();
+        $superadmin = Role::where('name', 'superadmin')->first();
 
+        $this->assertTrue($admin->hasPermissions('namespace/task'));
+        $this->assertTrue($admin->hasPermissions('namespace/*'));
     }
 
     public function testDetachingPermissions()
     {
+        $admin = Role::where('name', 'admin')->first();
+        $superadmin = Role::where('name', 'superadmin')->first();
 
+        $admin->detachPermission('namespace/task');
+        $superadmin->detachPermission('namespace/*');
+
+        $this->assertEquals(0, $admin->permissions()->where('name', 'admin')->count());
+        $this->assertEquals(0, $superadmin->permissions()->where('name', 'like', 'namespace/%')->count());
     }
 
 }

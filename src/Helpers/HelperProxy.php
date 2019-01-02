@@ -168,6 +168,18 @@ class HelperProxy
     }
 
     /**
+     * Alias for getTeamKeys.
+     *
+     * @param array|string $teams Comma-separated team names or array of them
+     *
+     * @return array
+     */
+    public static function getTeamsKeys($teams)
+    {
+        return self::getTeamKeys($teams);
+    }
+
+    /**
      * Checks whether $object is a User.
      *
      * @param object $object object to be checked against

@@ -14,6 +14,7 @@ namespace Vegvisir\TrustNoSql\Tests\Models;
 use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Tests\TestCase;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
@@ -99,22 +100,82 @@ class TeamsTest extends TestCase
     {
         self::setConfigToTrue();
 
-        Team::create(['name' => 'sigrun']);
+        $teams = ['sigrun', 'vegvisir', 'vegdev'];
+        $roles = ['admin', 'superadmin', 'manager'];
+
+        foreach($teams as $team) {
+            $$team = Team::create(['name' => $team]);
+        }
+
+        foreach($roles as $role) {
+            $$role = Role::create(['name' => $role]);
+        }
+
+        $admin->attachTeam('sigrun');
+        $superadmin->attachTeams('vegvisir,vegdev');
+        $manager->attachTeams('vegvisir, sigrun');
+
+        $this->assertEquals(1, $admin->teams()->count());
+        $this->assertEquals(2, $superadmin->teams()->count());
+        $this->assertEquals(2, $manager->teams()->count());
     }
 
     public function testDetachingFromRoles()
     {
+        self::setConfigToTrue();
 
+        $admin = Role::where('name', 'admin')->first();
+        $superadmin = Role::where('name', 'superadmin')->first();
+        $manager = Role::where('name', 'manager')->first();
+
+        $admin->detachTeam('sigrun');
+        $superadmin->detachTeams('vegvisir');
+        $manager->detachTeams('vegvisir,sigrun');
+
+        $this->assertEquals(0, $admin->teams()->count());
+        $this->assertEquals(1, $superadmin->teams()->count());
+        $this->assertEquals(0, $manager->teams()->count());
     }
 
     public function testAttachingToUsers()
     {
+        self::setConfigToTrue();
 
+        $teams = ['sigrun', 'vegvisir', 'vegdev'];
+
+        $first = User::skip(0)->first();
+        $second = User::skip(1)->first();
+        $third = User::skip(2)->first();
+
+        foreach($teams as $team) {
+            Team::where('name', $team)->delete();
+            $$team = Team::create(['name' => $team]);
+        }
+
+        $first->attachTeam('sigrun');
+        $second->attachTeams('vegvisir,vegdev');
+        $third->attachTeams('vegvisir, sigrun');
+
+        $this->assertEquals(1, $first->teams()->count());
+        $this->assertEquals(2, $second->teams()->count());
+        $this->assertEquals(2, $third->teams()->count());
     }
 
     public function testDetachingFromUsers()
     {
+        self::setConfigToTrue();
 
+        $first = User::skip(0)->first();
+        $second = User::skip(1)->first();
+        $third = User::skip(2)->first();
+
+        $first->detachTeam('sigrun');
+        $second->detachTeams('vegvisir');
+        $third->detachTeams('vegvisir,sigrun');
+
+        $this->assertEquals(0, $first->teams()->count());
+        $this->assertEquals(1, $second->teams()->count());
+        $this->assertEquals(0, $third->teams()->count());
     }
 
 }
