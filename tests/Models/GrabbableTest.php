@@ -88,23 +88,61 @@ class GrabbableTest extends TestCase
     {
         $modeExplicit = new ModeExplicit;
         $this->assertEquals($modeExplicit::MODE_EXPLICIT, $modeExplicit->getGrababilityMode());
+
+        // ---
+
+        $modeExplicit->save();
+
+        $this->assertTrue($modeExplicit->canBeGrabbedBy(User::where(1)->first()));
     }
 
     public function testModeGrabbable()
     {
         $modeGrabbable = new ModeGrabbable;
         $this->assertEquals($modeGrabbable::MODE_GRABBABLE, $modeGrabbable->getGrababilityMode());
+
+        // ---
+
+        $modeGrabbable->save();
+
+        $user = User::where(1)->orderBy('_id', 'desc')->first();
+
+        $this->assertTrue($modeGrabbable->canBeGrabbedBy($user));
+
+        $user = User::where(1)->orderBy('_id', 'asc')->first();
+
+        $this->assertFalse($modeGrabbable->canBeGrabbedBy($user));
     }
 
     public function testModeBoth()
     {
         $modeBoth = new ModeBoth;
         $this->assertEquals($modeBoth::MODE_BOTH, $modeBoth->getGrababilityMode());
+
+        // ---
+
+        $modeBoth->save();
+
+        $first = User::where(1)->first();
+        $last = User::where(1)->orderBy('_id', 'desc')->first();
+
+        $this->assertFalse($modeBoth->canBeGrabbedBy($first));
+        $this->assertTrue($modeBoth->canBeGrabbedBy($last));
     }
 
     public function testModeEither()
     {
         $modeEither = new ModeEither;
         $this->assertEquals($modeEither::MODE_EITHER, $modeEither->getGrababilityMode());
+
+        // ---
+
+        $modeEither->save();
+
+        $first = User::where(1)->first();
+        $last = User::where(1)->orderBy('_id', 'desc')->first();
+
+        $this->assertTrue($modeEither->canBeGrabbedBy($first));
+        $this->assertTrue($modeEither->canBeGrabbedBy($last));
     }
 }

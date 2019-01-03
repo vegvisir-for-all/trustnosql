@@ -93,6 +93,14 @@ trait GrabbableTrait
             return true;
         }
 
+        if (!isset($this->grabber_ids) || !is_array($this->grabber_ids)) {
+            $this->grabber_ids = [];
+        }
+
+        if (!isset($this->owner_ids) || !is_array($this->owner_ids)) {
+            $this->owner_ids = [];
+        }
+
         return \in_array($user->id, $this->grabber_ids, true) || \in_array($user->id, $this->owner_ids, true);
     }
 
