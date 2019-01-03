@@ -14,7 +14,7 @@ namespace Vegvisir\TrustNoSql\Tests\Environment;
 use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class EnvironmentTest extends TestCase
+class EnvironmentTest extends EnvironmentTestCase
 {
     public function testMongoConnection()
     {

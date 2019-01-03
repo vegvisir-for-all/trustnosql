@@ -11,7 +11,7 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
-class AaaGeneralMiddlewareTest extends Middleware
+class AaaGeneralMiddlewareTest extends MiddlewareTestCase
 {
     public function testIsMiddlewareRegistered()
     {
