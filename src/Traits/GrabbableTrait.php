@@ -97,4 +97,14 @@ trait GrabbableTrait
     {
         $this->grababilityLock = true;
     }
+
+    /**
+     * Checks whether model has overwritten grabability rules.
+     *
+     * @return bool
+     */
+    public function isGrababilityOverwritten()
+    {
+        return !$this->grababilityLock;
+    }
 }

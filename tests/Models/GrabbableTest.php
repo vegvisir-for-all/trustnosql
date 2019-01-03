@@ -16,6 +16,8 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Top as GrabbableTop;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Middle as GrabbableMiddle;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom as GrabbableBottom;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesOverwritten;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesNotOverwritten;
 
 class GrabbableTest extends TestCase
 {
@@ -59,6 +61,11 @@ class GrabbableTest extends TestCase
 
     public function testRulesOverwritten()
     {
+        $rulesOverwritten = new RulesOverwritten;
+        $this->assertTrue($rulesOverwritten->isGrababilityOverwritten());
+
+        $rulesNotOverwritten = new RulesNotOverwritten;
+        $this->assertFalse($rulesNotOverwritten->isGrababilityOverwritten());
     }
 
     public function testModeNone()
