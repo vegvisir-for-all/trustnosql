@@ -64,6 +64,18 @@ class HelperProxy
     }
 
     /**
+     * Alias for getPermissionKeys.
+     *
+     * @param array|string $permissions Comma-separated permission names or array of them
+     *
+     * @return array
+     */
+    public static function getPermissionsKeys($permissions)
+    {
+        return PermissionHelper::getKeys($permissions);
+    }
+
+    /**
      * Gets permission wildcards from config.
      *
      * @return array
@@ -134,6 +146,18 @@ class HelperProxy
     }
 
     /**
+     * Alias for getRoleKeys.
+     *
+     * @param array|string $roles Comma-separated role names or array of them
+     *
+     * @return array
+     */
+    public static function getRolesKeys($roles)
+    {
+        return RoleHelper::getKeys($roles);
+    }
+
+    /**
      * Checks whether $object is a Team.
      *
      * @param object $object object to be checked against
@@ -199,6 +223,18 @@ class HelperProxy
      * @return array
      */
     public static function getUserKeys($users)
+    {
+        return UserHelper::getKeys($users);
+    }
+
+    /**
+     * Alias for getUserKeys
+     *
+     * @param array|string $users Comma-separated user names or array of them
+     *
+     * @return array
+     */
+    public static function getUsersKeys($users)
     {
         return UserHelper::getKeys($users);
     }

@@ -18,88 +18,74 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsTest extends TestCase
 {
-    public function testCreate()
+    public function testCount()
     {
-        $permissionsArray = [
+        $this->assertEquals(4, Permission::count());
+    }
+
+    public function testCreated()
+    {
+        $permissionsData = [
             [
-                'name' => 'namespace/task',
-                'display_name' => 'Namespace Task'
+                'name' => 'permission/first',
+                'display_name' => 'Permission First',
+                'description' => 'Permission First'
             ],
             [
-                'name' => 'namespace/another',
-                'display_name' => 'Namespace Another'
+                'name' => 'permission/second',
+                'display_name' => 'Permission Second',
+                'description' => 'Permission Second'
             ],
             [
-                'name' => 'namespace/third',
-                'display_name' => 'Namespace Third'
-            ]
+                'name' => 'permission/third',
+                'display_name' => 'Permission Third',
+                'description' => 'Permission Third'
+            ],
+            [
+                'name' => 'permission/fourth',
+                'display_name' => 'Permission Fourth',
+                'description' => 'Permission Fourth'
+            ],
         ];
 
-        foreach ($permissionsArray as $permissionData) {
-            $permission = Permission::create($permissionData);
+        foreach ($permissionsData as $permissionData) {
+            $permission = Permission::where('name', $permissionData['name'])->first();
 
+            $this->assertNotNull($permission);
             $this->assertEquals($permissionData['name'], $permission->name);
             $this->assertEquals($permissionData['display_name'], $permission->display_name);
         }
     }
 
-    public function testRejectCreate()
+    public function testRejectCreateExists()
     {
-        $permission = Permission::create([
-            'name' => 'namespace/task2'
-        ]);
+        $permission = Permission::create(['name' => 'permission/first']);
+        $this->assertEquals(1, $permission->where('name', 'permission/first')->count());
+    }
 
-        $this->assertNotNull($permission);
-
-        $permission = Permission::create([
-            'name' => 'namespace/*'
-        ]);
-
-        $this->assertNull($permission);
-
-        $permission = Permission::create([
-            'name' => 'namespace/all'
-        ]);
+    public function testRejectCreateWildcard()
+    {
+        $permission = Permission::create(['name' => 'permission/*']);
+        $permission2 = Permission::create(['name' => 'permission/all']);
 
         $this->assertNull($permission);
+        $this->assertNull($permission2);
     }
 
     public function testDelete()
     {
-        $permission = Permission::where('name', 'namespace/task');
-        $permission->delete();
+        Permission::where('name', 'permission/fourth')->delete();
 
-        $this->assertEquals(0, Permission::where('name', 'namespace/task')->count());
+        $this->assertEquals(0, Permission::where('name', 'permission/fourth')->count());
     }
 
     public function testAttachingToUsers()
     {
         $user = User::first();
 
-        $permissionsArray = [
-            [
-                'name' => 'namespace/task',
-                'display_name' => 'Namespace Task'
-            ],
-            [
-                'name' => 'namespace/another',
-                'display_name' => 'Namespace Another'
-            ],
-            [
-                'name' => 'namespace/third',
-                'display_name' => 'Namespace Third'
-            ]
-        ];
+        $user->attachPermission('permission/first');
 
-        foreach ($permissionsArray as $permissionData) {
-            Permission::create($permissionData);
-        }
-
-        $user->attachPermission('namespace/task');
-
-        $hasPermissionCount = $user->permissions->where('name', 'namespace/task')->count();
-
-        $this->assertEquals(1, $hasPermissionCount);
+        $this->assertEquals(1, $user->permissions->where('name', 'permission/first')->count());
     }
 
     public function testDetachingFromUsers()
@@ -108,38 +94,46 @@ class PermissionsTest extends TestCase
 
         $user->detachPermission('namespace/task');
 
-        $hasPermissionCount = $user->permissions->where('name', 'namespace/task')->count();
-
-        $this->assertEquals(0, $hasPermissionCount);
+        $this->assertEquals(0, $user->permissions->where('name', 'namespace/task')->count());
     }
 
-    public function testHasPermission()
+    public function testHasPermissionWhenDoesNotHave()
     {
         $user = User::first();
 
-        $this->assertFalse($user->hasPermission('namespace/task'));
+        $this->assertFalse($user->hasPermission('permission/first'));
+    }
 
-        $user->attachPermission('namespace/task');
+    public function testHasPermissionWhenHas()
+    {
+        $user = User::first();
+        $user->attachPermission('permission/first');
 
-        $this->assertTrue($user->hasPermission('namespace/task'));
+        $this->assertTrue($user->hasPermission('permission/first'));
     }
 
     public function testHasPermissionAliases()
     {
         $user = User::first();
 
-        $this->assertTrue($user->hasPermissions('namespace/task'));
-        $this->assertTrue($user->can('namespace/task'));
-        $this->assertTrue($user->hasPermission('namespace/*'));
-        $this->assertTrue($user->hasPermission('namespace/all'));
-        $this->assertFalse($user->hasPermission('namespace/everything'));
+        $this->assertTrue($user->hasPermissions('permission/first'));
+        $this->assertTrue($user->can('permission/first'));
+        $this->assertTrue($user->hasPermission('permission/*'));
+        $this->assertTrue($user->hasPermission('permission/all'));
+        $this->assertFalse($user->hasPermission('permission/everything'));
     }
 
-    public function testMagicCan()
+    public function testMagicCanShouldBeTrue()
     {
         $user = User::first();
 
-        $this->assertTrue($user->canTaskNamespace());
-        $this->assertFalse($user->canRemoveNamespace());
+        $this->assertTrue($user->canFirstPermission());
+    }
+
+    public function testMagicCanShouldBeFalse()
+    {
+        $user = User::first();
+
+        $this->assertTrue($user->canRemovePermission());
     }
 }

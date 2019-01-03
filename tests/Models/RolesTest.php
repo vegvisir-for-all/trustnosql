@@ -18,174 +18,147 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class RolesTest extends TestCase
 {
-    public function testCreate()
+    public function testCount()
     {
-        $rolesArray = [
+        $this->assertEquals(4, Role::count());
+    }
+
+    public function testCreated()
+    {
+        $rolesData = [
             [
-                'name' => 'superadmin',
-                'display_name' => 'Superadmin'
+                'name' => 'role-first',
+                'display_name' => 'Role First',
+                'description' => 'Role First'
             ],
             [
-                'name' => 'admin',
-                'display_name' => 'Admin'
+                'name' => 'role-second',
+                'display_name' => 'Role Second',
+                'description' => 'Role Second'
             ],
             [
-                'name' => 'manager',
-                'display_name' => 'Manager'
-            ]
+                'name' => 'role-third',
+                'display_name' => 'Role Third',
+                'description' => 'Role Third'
+            ],
+            [
+                'name' => 'role-fourth',
+                'display_name' => 'Role Fourth',
+                'description' => 'Role Fourth'
+            ],
         ];
 
-        foreach ($rolesArray as $roleData) {
-            $role = Role::create($roleData);
+        foreach ($rolesData as $roleData) {
+            $role = Role::where('name', $roleData['name'])->first();
 
+            $this->assertNotNull($role);
             $this->assertEquals($roleData['name'], $role->name);
             $this->assertEquals($roleData['display_name'], $role->display_name);
         }
     }
 
-    public function testRejectCreate()
+    public function testRejectCreateExists()
     {
-        $role = Role::create([
-            'name' => 'superadmin',
-            'display_name' => 'Super admin'
-        ]);
+        $role = Role::create(['name' => 'role-fourth']);
+        $this->assertEquals(1, Role::where('name', 'role-fourth')->count());
+    }
 
-        $this->assertNull($role);
-
-        $role = Role::create([
-            'name' => 'super/admin',
-            'display_name' => 'Super/admin'
-        ]);
-
-        $this->assertNull($role);
+    public function testRejectCreateIllegalChars()
+    {
+        $role = Role::create(['name' => 'role/fourth']);
+        $this->assertEquals(0, Role::where('name', 'role/fourth')->count());
     }
 
     public function testDelete()
     {
-        Role::where('name', 'superadmin')->first()->delete();
+        Role::where('name', 'role-fourth')->delete();
 
-        $this->assertEquals(0, Role::where('name', 'superadmin')->count());
+        $this->assertEquals(0, Role::where('name', 'role-fourth')->count());
     }
 
-    public function testAttachingToUsers()
+    public function testAttachingToUsersSingle()
     {
         $user = User::first();
 
-        $user->attachRole('admin');
+        $user->attachRole('role-first');
 
-        $this->assertEquals(1, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(1, $user->roles()->where('name', 'role-first')->count());
+    }
 
-        Role::create(['name' => 'superadmin']);
+    public function testAttachingToUsersMultiple()
+    {
+        $user = User::first();
 
-        $user->attachRole('superadmin,manager');
+        $user->attachRole('role-second,role-third');
 
         $this->assertEquals(3, $user->roles()->count());
     }
 
-    public function testDetachingFromUsers()
+    public function testDetachingFromUsersSingle()
     {
         $user = User::first();
 
-        $user->detachRole('admin');
+        $user->detachRole('role-first');
 
-        $this->assertEquals(0, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(0, $user->roles()->where('name', 'role-first')->count());
+    }
 
-        $user->detachRole('superadmin,manager');
+    public function testDetachingFromUsersMultiple()
+    {
+        $user = User::first();
+
+        $user->detachRole('role-second,role-third');
 
         $this->assertEquals(0, $user->roles()->count());
     }
 
-    public function testHasRole()
+    public function testHasRoleSingleUserSingleRole()
     {
         $user = User::first();
+        $user->attachRole('role-first');
 
-        $user->attachRole('admin');
+        $this->assertTrue($user->hasRole('role-first'));
+    }
 
-        $this->assertTrue($user->hasRole('admin'));
+    public function testHasRoleSingleUserAllRoles()
+    {
+        $user = User::first();
+        $user->attachRoles('role-second,role-third');
+        $this->assertTrue($user->hasRoles('role-first,role-second,role-third', true));
+        $this->assertTrue($user->hasRoles(['role-first'], ['role-second'], ['role-third'], true));
+    }
 
-        $user->attachRole('superadmin');
-
-        $this->assertTrue($user->hasRole('admin,superadmin', true));
-
-        $this->assertTrue($user->hasRole('admin,manager', false));
-
-        // Failure
-        $this->assertFalse($user->hasRole('admin,manager', true));
+    public function testHasRoleSingleUserOneOfRoles()
+    {
+        $user = User::first();
+        $this->assertTrue($user->hasRoles('role-third,role-fourth,role-fifth', false));
+        $this->assertTrue($user->hasRoles(['role-third'], ['role-fourth'], ['role-fifth'], false));
     }
 
     public function testHasRoleAliases()
     {
         $user = User::first();
+        $this->assertTrue($user->hasRoles('role-first'));
+        $this->assertTrue($user->hasRoles(['role-first']));
+        $this->assertTrue($user->isA('role-first'));
+        $this->assertTrue($user->isAn('role-first'));
 
-        $this->assertTrue($user->hasRoles('admin'));
-        $this->assertTrue($user->isA('admin'));
-        $this->assertTrue($user->isAn('admin'));
+        // @todo Tests for facade class
     }
 
     public function testAttachingPermissions()
     {
-        Permission::where(1)->delete();
-
-        $permissionsArray = [
-            [
-                'name' => 'namespace/task',
-                'display_name' => 'Namespace Task'
-            ],
-            [
-                'name' => 'namespace/another',
-                'display_name' => 'Namespace Another'
-            ],
-            [
-                'name' => 'namespace/third',
-                'display_name' => 'Namespace Third'
-            ]
-        ];
-
-        foreach ($permissionsArray as $key => $permissionData) {
-            $permission[$key] = Permission::create($permissionData);
-        }
-
-        $admin = Role::where('name', 'admin')->first();
-
-        $superadmin = Role::where('name', 'superadmin')->first();
-
-        $admin->attachPermission('namespace/task');
-        $superadmin->attachPermission('namespace/another,namespace/third');
-
-        $this->assertEquals(1, $admin->permissions()->count());
-        $this->assertEquals(2, $superadmin->permissions()->count());
     }
 
     public function testHasPermission()
     {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
-
-        $this->assertTrue($admin->hasPermission('namespace/task'));
-        $this->assertTrue($superadmin->hasPermission('namespace/another,namespace/third', true));
-        $this->assertTrue($admin->hasPermission('namespace/task,namespace/third', false));
-        //failure
-        $this->assertFalse($admin->hasPermission('namespace/task,namespace/third', true));
     }
 
     public function testHasPermissionAliases()
     {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
-
-        $this->assertTrue($admin->hasPermissions('namespace/task'));
-        $this->assertTrue($admin->hasPermissions('namespace/*'));
     }
 
     public function testDetachingPermissions()
     {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
-
-        $admin->detachPermission('namespace/task');
-        $superadmin->detachPermission('namespace/*');
-
-        $this->assertEquals(0, $admin->permissions()->where('name', 'admin')->count());
-        $this->assertEquals(0, $superadmin->permissions()->where('name', 'like', 'namespace/%')->count());
     }
 }

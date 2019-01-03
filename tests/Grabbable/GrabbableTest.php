@@ -25,7 +25,7 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeBoth;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeEither;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class GrabbableTest extends TestCase
+class GrabbableTest extends GrabbableTestCase
 {
     public function testIsGrabbable()
     {
