@@ -17,6 +17,31 @@ class RoleObserver extends BaseObserver
 {
     protected function permissionsAttached()
     {
-        Cache::put('permissions-attached-event', true, 999999);
+        Cache::put('roles-permissions-attached-event', true, 999999);
+    }
+
+    protected function permissionsDetached()
+    {
+        Cache::put('roles-permissions-detached-event', true, 999999);
+    }
+
+    protected function teamsAttached()
+    {
+        Cache::put('roles-teams-attached-event', true, 999999);
+    }
+
+    protected function teamsDetached()
+    {
+        Cache::put('roles-teams-detached-event', true, 999999);
+    }
+
+    protected function usersAttached()
+    {
+        Cache::put('roles-users-attached-event', true, 999999);
+    }
+
+    protected function usersDetached()
+    {
+        Cache::put('roles-users-detached-event', true, 999999);
     }
 }
