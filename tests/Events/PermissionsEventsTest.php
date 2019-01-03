@@ -21,8 +21,6 @@ class PermissionsEventsTest extends Events
 {
     public function testRolesAttachedEvent()
     {
-        self::clearAfterModelTests();
-        self::setObservers();
 
         $key = 'permissions-roles-attached-event';
 
@@ -38,7 +36,6 @@ class PermissionsEventsTest extends Events
 
     public function testRolesDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'permissions-roles-detached-event';
 
@@ -54,7 +51,6 @@ class PermissionsEventsTest extends Events
 
     public function testUsersAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'permissions-users-attached-event';
 
@@ -70,7 +66,6 @@ class PermissionsEventsTest extends Events
 
     public function testUsersDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'permissions-users-detached-event';
 

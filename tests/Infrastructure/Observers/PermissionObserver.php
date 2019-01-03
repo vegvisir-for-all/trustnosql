@@ -11,24 +11,27 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Infrastructure\Observers;
 
+use Illuminate\Support\Facades\Cache;
+
 class PermissionObserver extends BaseObserver
 {
-    protected function rolesAttached()
+    public static function rolesAttached()
     {
+        var_dump('rolesAttached');
         Cache::put('permissions-roles-attached-event', true, 999999);
     }
 
-    protected function rolesDetached()
+    public static function rolesDetached()
     {
         Cache::put('permissions-roles-detached-event', true, 999999);
     }
 
-    protected function usersAttached()
+    public static function usersAttached()
     {
         Cache::put('permissions-users-attached-event', true, 999999);
     }
 
-    protected function usersDetached()
+    public static function usersDetached()
     {
         Cache::put('permissions-users-detached-event', true, 999999);
     }

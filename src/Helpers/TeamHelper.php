@@ -11,6 +11,7 @@
 
 namespace Vegvisir\TrustNoSql\Helpers;
 
+use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Models\Team;
 
 class TeamHelper extends HelperProxy
@@ -73,12 +74,12 @@ class TeamHelper extends HelperProxy
      */
     public static function isFunctionalityOn()
     {
-        return config('trustnosql.teams.use_teams', false);
+        return Config::get('trustnosql.teams.use_teams', false);
     }
 
     /**
      * Checks whether given team name can be used (i.e. if the name
-     * doesn't exist.
+     * doesn't exist).
      *
      * @param string $name Name of the team
      * @return bool

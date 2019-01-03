@@ -11,24 +11,26 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Infrastructure\Observers;
 
+use Illuminate\Support\Facades\Cache;
+
 class TeamObserver extends BaseObserver
 {
-    protected function rolesAttached()
+    public static function rolesAttached()
     {
         Cache::put('teams-roles-attached-event', true, 999999);
     }
 
-    protected function rolesDetached()
+    public static function rolesDetached()
     {
         Cache::put('teams-roles-detached-event', true, 999999);
     }
 
-    protected function usersAttached()
+    public static function usersAttached()
     {
         Cache::put('teams-users-attached-event', true, 999999);
     }
 
-    protected function usersDetached()
+    public static function usersDetached()
     {
         Cache::put('teams-users-detached-event', true, 999999);
     }

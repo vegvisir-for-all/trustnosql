@@ -12,6 +12,7 @@
 namespace Vegvisir\TrustNoSql\Tests\Events;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
@@ -19,9 +20,13 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class RolesEventsTest extends Events
 {
+    protected static function setConfigToTrue()
+    {
+        Config::set('trustnosql.teams.use_teams', true);
+    }
+
     public function testPermissionsAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-permissions-attached-event';
 
@@ -37,7 +42,6 @@ class RolesEventsTest extends Events
 
     public function testPermissionsDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-permissions-detached-event';
 
@@ -53,14 +57,13 @@ class RolesEventsTest extends Events
 
     public function testTeamsAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-teams-attached-event';
 
         Cache::put($key, false, 999999);
 
         $role = Role::where('name', 'admin')->first();
-        $team = Team::create(['name' => 'vegvisir']);
+        $team = Team::create(['name' => 'roles']);
 
         $role->attachTeam($team->name);
 
@@ -69,14 +72,13 @@ class RolesEventsTest extends Events
 
     public function testTeamsDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-teams-detached-event';
 
         Cache::put($key, false, 999999);
 
         $role = Role::where('name', 'admin')->first();
-        $team = Team::create(['name' => 'vegvisir']);
+        $team = Team::where('name', 'roles')->first();
 
         $role->detachTeam($team->name);
 
@@ -85,7 +87,6 @@ class RolesEventsTest extends Events
 
     public function testUsersAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-users-attached-event';
 
@@ -101,7 +102,6 @@ class RolesEventsTest extends Events
 
     public function testUsersDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'roles-users-detached-event';
 

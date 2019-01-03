@@ -12,6 +12,7 @@
 namespace Vegvisir\TrustNoSql\Tests\Events;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
@@ -19,16 +20,20 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class TeamsEventsTest extends Events
 {
+    protected static function setConfigToTrue()
+    {
+        Config::set('trustnosql.teams.use_teams', true);
+    }
+
     public function testRolesAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'teams-roles-attached-event';
 
         Cache::put($key, false, 999999);
 
         $role = Role::create(['name' => 'admin']);
-        $team = Team::create(['name' => 'vegvisir3']);
+        $team = Team::create(['name' => 'test']);
 
         $team->attachRole($role->name);
 
@@ -37,14 +42,13 @@ class TeamsEventsTest extends Events
 
     public function testRolesDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'teams-roles-detached-event';
 
         Cache::put($key, false, 999999);
 
         $role = Role::where('name', 'admin')->first();
-        $team = Team::where('name', 'vegvisir3')->first();
+        $team = Team::where('name', 'test')->first();
 
         $team->detachRole($role->name);
 
@@ -53,13 +57,12 @@ class TeamsEventsTest extends Events
 
     public function testUsersAttachedEvent()
     {
-        self::setObservers();
 
         $key = 'teams-users-attached-event';
 
         Cache::put($key, false, 999999);
 
-        $team = Team::where('name', 'vegvisir3')->first();
+        $team = Team::where('name', 'test')->first();
         $user = User::where(1)->first();
 
         $team->attachUser($user->email);
@@ -69,13 +72,12 @@ class TeamsEventsTest extends Events
 
     public function testUsersDetachedEvent()
     {
-        self::setObservers();
 
         $key = 'teams-users-detached-event';
 
         Cache::put($key, false, 999999);
 
-        $team = Team::where('name', 'vegvisir2')->first();
+        $team = Team::where('name', 'test')->first();
         $user = User::where(1)->first();
 
         $team->detachUser($user->email);

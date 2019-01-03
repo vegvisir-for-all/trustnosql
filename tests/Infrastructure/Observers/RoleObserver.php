@@ -15,32 +15,32 @@ use Illuminate\Support\Facades\Cache;
 
 class RoleObserver extends BaseObserver
 {
-    protected function permissionsAttached()
+    public static function permissionsAttached()
     {
         Cache::put('roles-permissions-attached-event', true, 999999);
     }
 
-    protected function permissionsDetached()
+    public static function permissionsDetached()
     {
         Cache::put('roles-permissions-detached-event', true, 999999);
     }
 
-    protected function teamsAttached()
+    public static function teamsAttached()
     {
         Cache::put('roles-teams-attached-event', true, 999999);
     }
 
-    protected function teamsDetached()
+    public static function teamsDetached()
     {
         Cache::put('roles-teams-detached-event', true, 999999);
     }
 
-    protected function usersAttached()
+    public static function usersAttached()
     {
         Cache::put('roles-users-attached-event', true, 999999);
     }
 
-    protected function usersDetached()
+    public static function usersDetached()
     {
         Cache::put('roles-users-detached-event', true, 999999);
     }

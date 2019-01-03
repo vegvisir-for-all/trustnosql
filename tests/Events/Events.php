@@ -19,22 +19,4 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 
 class Events extends TestCase
 {
-    protected static function clearAfterModelTests()
-    {
-        Permission::where(1)->delete();
-        Role::where(1)->delete();
-        Team::where(1)->delete();
-    }
-
-    protected static function setObservers()
-    {
-        $observers = [
-            'Permission' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\PermissionObserver::class,
-            'Role' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\RoleObserver::class,
-            'Team' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\TeamObserver::class,
-            'User' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\UserObserver::class,
-        ];
-
-        Config::set('trustnosql.events.observers', $observers);
-    }
 }
