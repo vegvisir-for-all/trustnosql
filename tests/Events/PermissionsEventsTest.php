@@ -19,7 +19,6 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsEventsTest extends EventsTestCase
 {
-
     public function testModelsExist()
     {
         $this->assertEquals(1, Permission::count());
@@ -46,7 +45,6 @@ class PermissionsEventsTest extends EventsTestCase
 
     public function testRolesDetachedEvent()
     {
-
         $role = Role::where('name', $this->roleName)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
 

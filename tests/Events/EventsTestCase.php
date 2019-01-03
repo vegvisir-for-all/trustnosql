@@ -8,9 +8,9 @@ class EventsTestCase extends TestCase
 {
     protected $permissionName = 'permission/test';
 
-    protected $roleName = 'roletest';
+    protected $roleName = 'role-test';
 
-    protected $teamName = 'teamtest';
+    protected $teamName = 'team-test';
 
     public function setUp()
     {
