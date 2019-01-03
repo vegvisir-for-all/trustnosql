@@ -25,7 +25,7 @@ class TeamsEventsTest extends Events
         Config::set('trustnosql.teams.use_teams', true);
     }
 
-    public function testRolesAttachedEvent()
+    public function testRolesAttachedDetachedEvent()
     {
         $key = 'teams-roles-attached-event';
 
@@ -37,10 +37,7 @@ class TeamsEventsTest extends Events
         $team->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testRolesDetachedEvent()
-    {
         $key = 'teams-roles-detached-event';
 
         Cache::put($key, false, 999999);
@@ -53,22 +50,19 @@ class TeamsEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testUsersAttachedEvent()
+    public function testUsersAttachedDetachedEvent()
     {
         $key = 'teams-users-attached-event';
 
         Cache::put($key, false, 999999);
 
-        $team = Team::where('name', 'test')->first();
+        $team = Team::create(['name' => 'test']);
         $user = User::where(1)->first();
 
         $team->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testUsersDetachedEvent()
-    {
         $key = 'teams-users-detached-event';
 
         Cache::put($key, false, 999999);

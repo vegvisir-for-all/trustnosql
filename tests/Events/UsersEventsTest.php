@@ -25,7 +25,7 @@ class UsersEventsTest extends Events
         Config::set('trustnosql.teams.use_teams', true);
     }
 
-    public function testPermissionsAttachedEvent()
+    public function testPermissionsAttachedDetachedEvent()
     {
         $key = 'users-permissions-attached-event';
 
@@ -37,10 +37,7 @@ class UsersEventsTest extends Events
         $user->attachPermission($permission->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testPermissionsDetachedEvent()
-    {
         $key = 'users-permissions-detached-event';
 
         Cache::put($key, false, 999999);
@@ -53,7 +50,7 @@ class UsersEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testRolesAttachedEvent()
+    public function testRolesAttachedDetachedEvent()
     {
         $key = 'users-roles-attached-event';
 
@@ -65,10 +62,7 @@ class UsersEventsTest extends Events
         $user->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testRolesDetachedEvent()
-    {
         $key = 'users-roles-detached-event';
 
         Cache::put($key, false, 999999);
@@ -81,7 +75,7 @@ class UsersEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testTeamsAttachedEvent()
+    public function testTeamsAttachedDetachedEvent()
     {
         $key = 'users-teams-attached-event';
 
@@ -93,10 +87,7 @@ class UsersEventsTest extends Events
         $user->attachTeam($team->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testTeamsDetachedEvent()
-    {
         $key = 'users-teams-detached-event';
 
         Cache::put($key, false, 999999);

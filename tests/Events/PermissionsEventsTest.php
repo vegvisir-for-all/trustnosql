@@ -19,7 +19,7 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsEventsTest extends Events
 {
-    public function testRolesAttachedEvent()
+    public function testRolesAttachedDetachedEvent()
     {
         $key = 'permissions-roles-attached-event';
 
@@ -31,10 +31,7 @@ class PermissionsEventsTest extends Events
         $permission->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testRolesDetachedEvent()
-    {
         $key = 'permissions-roles-detached-event';
 
         Cache::put($key, false, 999999);
@@ -47,22 +44,19 @@ class PermissionsEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testUsersAttachedEvent()
+    public function testUsersAttachedDetachedEvent()
     {
         $key = 'permissions-users-attached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $permission = Permission::where('name', 'everything/do')->first();
+        $permission = Permission::create(['name' => 'everything/do']);
 
         $permission->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testUsersDetachedEvent()
-    {
         $key = 'permissions-users-detached-event';
 
         Cache::put($key, false, 999999);

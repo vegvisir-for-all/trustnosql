@@ -94,7 +94,7 @@ class TeamsTest extends TestCase
         $this->assertEquals(0, Team::where('name', 'sigrun')->count());
     }
 
-    public function testAttachingToRoles()
+    public function testAttachingDetachingRoles()
     {
         self::setConfigToTrue();
 
@@ -116,11 +116,6 @@ class TeamsTest extends TestCase
         $this->assertEquals(1, $admin->teams()->count());
         $this->assertEquals(2, $superadmin->teams()->count());
         $this->assertEquals(2, $manager->teams()->count());
-    }
-
-    public function testDetachingFromRoles()
-    {
-        self::setConfigToTrue();
 
         $admin = Role::where('name', 'admin')->first();
         $superadmin = Role::where('name', 'superadmin')->first();

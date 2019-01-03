@@ -25,22 +25,21 @@ class RolesEventsTest extends Events
         Config::set('trustnosql.teams.use_teams', true);
     }
 
-    public function testPermissionsAttachedEvent()
+    public function testPermissionsAttachedDetachedEvent()
     {
         $key = 'roles-permissions-attached-event';
 
         Cache::put($key, false, 999999);
 
-        $role = Role::where('name', 'admin')->first();
-        $permission = Permission::where(['name' => 'everything/do'])->first();
+        $role = Role::create(['name' => 'admin']);
+        $permission = Permission::create(['name' => 'everything/do']);
 
         $role->attachPermission($permission->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testPermissionsDetachedEvent()
-    {
+        // ---
+
         $key = 'roles-permissions-detached-event';
 
         Cache::put($key, false, 999999);
@@ -53,7 +52,7 @@ class RolesEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testTeamsAttachedEvent()
+    public function testTeamsAttachedDetachedEvent()
     {
         $key = 'roles-teams-attached-event';
 
@@ -65,10 +64,7 @@ class RolesEventsTest extends Events
         $role->attachTeam($team->name);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testTeamsDetachedEvent()
-    {
         $key = 'roles-teams-detached-event';
 
         Cache::put($key, false, 999999);
@@ -81,7 +77,7 @@ class RolesEventsTest extends Events
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testUsersAttachedEvent()
+    public function testUsersAttachedDetachedEvent()
     {
         $key = 'roles-users-attached-event';
 
@@ -93,10 +89,7 @@ class RolesEventsTest extends Events
         $role->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
-    }
 
-    public function testUsersDetachedEvent()
-    {
         $key = 'roles-users-detached-event';
 
         Cache::put($key, false, 999999);
