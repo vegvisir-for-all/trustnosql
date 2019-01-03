@@ -60,4 +60,22 @@ class UserHelper extends HelperProxy
 
         return is_a(\get_class($object), \get_class(new $userModel()), true);
     }
+
+    /**
+     * Gets an array of users' keys (emails).
+     *
+     * @param array|string $users Comma-separated values or array
+     *
+     * @return array
+     */
+    protected static function getKeys($users)
+    {
+        if (!\is_array($users)) {
+            $users = static::getArray($users);
+        }
+
+        return collect(self::getModel()->whereIn('email', (array) $users)->get())->map(function ($item, $key) {
+            return $item->email;
+        })->toArray();
+    }
 }

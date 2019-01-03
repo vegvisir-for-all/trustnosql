@@ -44,6 +44,7 @@ trait ModelTrait
         'permissions',
         'roles',
         'teams',
+        'users'
     ];
 
     public function __call($name, $arguments)

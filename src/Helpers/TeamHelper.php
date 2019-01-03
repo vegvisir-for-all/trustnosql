@@ -39,15 +39,14 @@ class TeamHelper extends HelperProxy
     /**
      * Gets an array of roles' keys (_ids).
      *
-     * @param array|string $roles Comma-separated values or array
-     * @param mixed        $teams
+     * @param array|string $teams Comma-separated values or array
      *
      * @return array
      */
     protected static function getKeys($teams)
     {
         if (!\is_array($teams)) {
-            $roles = static::getArray($teams);
+            $teams = static::getArray($teams);
         }
 
         return collect(Team::whereIn('name', (array) $teams)->get())->map(function ($item, $key) {

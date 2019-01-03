@@ -192,6 +192,18 @@ class HelperProxy
     }
 
     /**
+     * Gets an array of user keys (emails).
+     *
+     * @param array|string $users Comma-separated user names or array of them
+     *
+     * @return array
+     */
+    public static function getUserKeys($users)
+    {
+        return UserHelper::getKeys($users);
+    }
+
+    /**
      * Gets a user model used by application.
      *
      * @return Jenssegers\Mongodb\Eloquent\Model
