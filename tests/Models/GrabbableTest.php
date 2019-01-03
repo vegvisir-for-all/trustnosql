@@ -23,6 +23,7 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeExplicit;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeGrabbable;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeBoth;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeEither;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class GrabbableTest extends TestCase
 {
@@ -77,12 +78,16 @@ class GrabbableTest extends TestCase
     {
         $modeNone = new ModeNone;
         $this->assertEquals($modeNone::MODE_NONE, $modeNone->getGrababilityMode());
+
+        $user = User::where(1)->first();
+
+        $this->assertTrue($modeNone->canBeGrabbedBy($user));
     }
 
     public function testModeExplicit()
     {
         $modeExplicit = new ModeExplicit;
-        $this->assertEquals($modeExplicit::MODE_NONE, $modeExplicit->getGrababilityMode());
+        $this->assertEquals($modeExplicit::MODE_EXPLICIT, $modeExplicit->getGrababilityMode());
     }
 
     public function testModeGrabbable()
