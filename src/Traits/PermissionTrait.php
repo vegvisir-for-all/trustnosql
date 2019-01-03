@@ -20,6 +20,17 @@ trait PermissionTrait
     use ModelTrait, PermissionCacheableTrait, PermissionEventsTrait;
 
     /**
+     * Fillable fields.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'display_name',
+        'description'
+    ];
+
+    /**
      * Moloquent belongs-to-many relationship with the permission model.
      *
      * @return \Jenssegers\Mongodb\Relations\BelongsToMany

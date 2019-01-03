@@ -19,9 +19,12 @@ use Vegvisir\TrustNoSql\Exceptions\Entity\DeleteEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\DetachEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\SyncEntitiesException;
 use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Traits\Aliases\ModelAliasesTrait;
 
 trait ModelTrait
 {
+    use ModelAliasesTrait;
+
     /**
      * Namespaces for checking functions.
      *

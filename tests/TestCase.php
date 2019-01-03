@@ -15,11 +15,13 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    protected $factories = __DIR__.'/database/factories/models';
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->withFactories(__DIR__.'/database/factories');
+        $this->withFactories($this->factories);
     }
 
     protected function getEnvironmentSetUp($app)
@@ -37,7 +39,7 @@ class TestCase extends OrchestraTestCase
                 'database' => 'admin' // sets the authentication database required by mongo 3
             ]
         ]);
-        $app['config']->set('trustnosql.user_models.users', 'Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User');
+        $app['config']->set('trustnosql.user_models.users', \Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User::class);
         $app['config']->set('cache', [
             'default' => 'file',
             'stores' => [

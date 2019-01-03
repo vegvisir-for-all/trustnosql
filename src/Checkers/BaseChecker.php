@@ -11,6 +11,7 @@
 
 namespace Vegvisir\TrustNoSql\Checkers;
 
+use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Exceptions\Model\ModelTypeMismatchException;
 use Vegvisir\TrustNoSql\Helper;
@@ -86,7 +87,12 @@ class BaseChecker
     protected function currentModelHasEntities($entitiesModel, $entitiesList, $requireAll)
     {
         if (!\is_object($entitiesModel)) {
-            $className = "\\Vegvisir\\TrustNoSql\\Models\\${entitiesModel}";
+            if ($entitiesModel == 'User') {
+                $className = "\\" . Config::get('trustnosql.user_models.users');
+            } else {
+                $className = "\\Vegvisir\\TrustNoSql\\Models\\${entitiesModel}";
+            }
+
             $entitiesModel = new $className();
         }
 

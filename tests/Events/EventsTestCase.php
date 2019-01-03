@@ -6,18 +6,13 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 
 class EventsTestCase extends TestCase
 {
+    protected $factories = __DIR__.'/database/factories/events';
+
     protected $permissionName = 'permission/test';
 
     protected $roleName = 'role-test';
 
     protected $teamName = 'team-test';
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->withFactories(__DIR__.'/database/factories/events');
-    }
 
     public function getEnvironmentSetUp($app)
     {

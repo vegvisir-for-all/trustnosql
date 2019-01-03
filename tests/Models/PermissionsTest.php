@@ -12,11 +12,10 @@
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
 use Vegvisir\TrustNoSql\TrustNoSql;
-use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class PermissionsTest extends TestCase
+class PermissionsTest extends ModelsTestCase
 {
     public function testCount()
     {
