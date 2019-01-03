@@ -39,6 +39,15 @@ class TestCase extends OrchestraTestCase
             ]
         ]);
         $app['config']->set('trustnosql.user_models.users', 'Vegvisir\TrustnoSql\Tests\Infrastructure\Models\User');
+        $app['config']->set('cache', [
+            'default' => 'file',
+            'stores' => [
+                'file' => [
+                    'driver' => 'file',
+                    'path' => storage_path('framework/cache/data')
+                ]
+            ]
+        ]);
     }
 
     protected function getPackageProviders($app)

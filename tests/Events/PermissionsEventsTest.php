@@ -14,6 +14,7 @@ namespace Vegvisir\TrustNoSql\Tests\Events;
 use Illuminate\Support\Facades\Cache;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsEventsTest extends Events
