@@ -18,6 +18,11 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Middle as GrabbableMiddl
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom as GrabbableBottom;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesOverwritten;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesNotOverwritten;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeNone;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeExplicit;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeGrabbable;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeBoth;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeEither;
 
 class GrabbableTest extends TestCase
 {
@@ -70,17 +75,31 @@ class GrabbableTest extends TestCase
 
     public function testModeNone()
     {
+        $modeNone = new ModeNone;
+        $this->assertEquals($modeNone::MODE_NONE, $modeNone->getGrababilityMode());
     }
 
     public function testModeExplicit()
     {
+        $modeExplicit = new ModeExplicit;
+        $this->assertEquals($modeExplicit::MODE_NONE, $modeExplicit->getGrababilityMode());
     }
 
     public function testModeGrabbable()
     {
+        $modeGrabbable = new ModeGrabbable;
+        $this->assertEquals($modeGrabbable::MODE_GRABBABLE, $modeGrabbable->getGrababilityMode());
     }
 
     public function testModeBoth()
     {
+        $modeBoth = new ModeBoth;
+        $this->assertEquals($modeBoth::MODE_BOTH, $modeBoth->getGrababilityMode());
+    }
+
+    public function testModeEither()
+    {
+        $modeEither = new ModeEither;
+        $this->assertEquals($modeEither::MODE_EITHER, $modeEither->getGrababilityMode());
     }
 }

@@ -38,6 +38,16 @@ trait GrabbableTrait
     }
 
     /**
+     * Gets grabability mode.
+     *
+     * @return int
+     */
+    public function getGrababilityMode()
+    {
+        return $this->grababilityMode;
+    }
+
+    /**
      * Function called by TrustNoSql on object to establish grabability rules.
      *
      * @param $user
@@ -47,11 +57,11 @@ trait GrabbableTrait
     final public function canBeGrabbedBy($user)
     {
         switch ($this->grababilityMode) {
-            case static::MODE_ONLY_EXPLICIT:
+            case static::MODE_EXPLICIT:
                 return $this->explicitelyGrabbedBy($user);
 
                 break;
-            case static::MODE_ONLY_GRABBABLE:
+            case static::MODE_GRABBABLE:
                 return $this->grababilityLock ? true : $this->grabbableBy($user);
 
                 break;

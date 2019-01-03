@@ -27,9 +27,6 @@
         <testsuite name="TrustNoSql Middleware Test Suite">
             <directory suffix="Test.php">./tests/Middleware</directory>
         </testsuite>
-        <testsuite name="TrustNoSql User Test Suite">
-            <directory suffix="Test.php">./tests/User</directory>
-        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -37,7 +34,6 @@
             <directory suffix="Test.php">./tests/Models</directory>
             <directory suffix="Test.php">./tests/Events</directory>
             <directory suffix="Test.php">./tests/Middleware</directory>
-            <directory suffix="Test.php">./tests/User</directory>
         </whitelist>
     </filter>
 </phpunit>

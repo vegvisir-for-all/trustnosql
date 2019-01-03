@@ -18,14 +18,14 @@ interface GrabbableInterface
      *
      * @var int
      */
-    const MODE_ONLY_EXPLICIT = 1;
+    const MODE_EXPLICIT = 1;
 
     /**
      * Grabability can be checked only by grabbableBy($user) method.
      *
      * @var int
      */
-    const MODE_ONLY_GRABBALE = 2;
+    const MODE_GRABBABLE = 2;
 
     /**
      * Grabability must be checked by explicit DB field AND by grabbableBy($user)
