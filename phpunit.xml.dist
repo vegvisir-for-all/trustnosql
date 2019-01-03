@@ -15,13 +15,25 @@
         <log type="coverage-clover" target="build/logs/coverage.xml"/>
     </logging>
     <testsuites>
+        <testsuite name="TrustNoSql Environment Test Suite">
+            <directory suffix="Test.php">./tests/Environment</directory>
+        </testsuite>
+        <testsuite name="TrustNoSql Models Test Suite">
+            <directory suffix="Test.php">./tests/Models</directory>
+        </testsuite>
         <testsuite name="TrustNoSql Events Test Suite">
             <directory suffix="Test.php">./tests/Events</directory>
+        </testsuite>
+        <testsuite name="TrustNoSql Middleware Test Suite">
+            <directory suffix="Test.php">./tests/Middleware</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix="Test.php">./tests/Environment</directory>
+            <directory suffix="Test.php">./tests/Models</directory>
             <directory suffix="Test.php">./tests/Events</directory>
+            <directory suffix="Test.php">./tests/Middleware</directory>
         </whitelist>
     </filter>
 </phpunit>
