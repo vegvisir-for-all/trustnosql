@@ -18,10 +18,8 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class RolesTest extends TestCase
 {
-
     public function testCreate()
     {
-
         $rolesArray = [
             [
                 'name' => 'superadmin',
@@ -37,8 +35,7 @@ class RolesTest extends TestCase
             ]
         ];
 
-        foreach($rolesArray as $roleData) {
-
+        foreach ($rolesArray as $roleData) {
             $role = Role::create($roleData);
 
             $this->assertEquals($roleData['name'], $role->name);
@@ -127,7 +124,6 @@ class RolesTest extends TestCase
 
     public function testAttachingPermissions()
     {
-
         Permission::where(1)->delete();
 
         $permissionsArray = [
@@ -145,7 +141,7 @@ class RolesTest extends TestCase
             ]
         ];
 
-        foreach($permissionsArray as $key => $permissionData) {
+        foreach ($permissionsArray as $key => $permissionData) {
             $permission[$key] = Permission::create($permissionData);
         }
 
@@ -158,8 +154,6 @@ class RolesTest extends TestCase
 
         $this->assertEquals(1, $admin->permissions()->count());
         $this->assertEquals(2, $superadmin->permissions()->count());
-
-
     }
 
     public function testHasPermission()
@@ -194,5 +188,4 @@ class RolesTest extends TestCase
         $this->assertEquals(0, $admin->permissions()->where('name', 'admin')->count());
         $this->assertEquals(0, $superadmin->permissions()->where('name', 'like', 'namespace/%')->count());
     }
-
 }

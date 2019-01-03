@@ -15,6 +15,5 @@ class PermissionMiddlewareTest extends Middleware
 {
     public function testPermissionMiddleware()
     {
-
     }
 }

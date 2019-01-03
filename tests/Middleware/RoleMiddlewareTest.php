@@ -15,6 +15,5 @@ class RoleMiddlewareTest extends Middleware
 {
     public function testRoleMiddleware()
     {
-
     }
 }

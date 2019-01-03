@@ -15,6 +15,5 @@ class TeamMiddlewareTest extends Middleware
 {
     public function testTeamMiddleware()
     {
-
     }
 }

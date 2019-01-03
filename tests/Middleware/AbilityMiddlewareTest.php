@@ -15,6 +15,5 @@ class AbilityMiddlewareTest extends Middleware
 {
     public function testAbilityMiddleware()
     {
-
     }
 }

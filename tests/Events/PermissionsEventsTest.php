@@ -34,7 +34,6 @@ class PermissionsEventsTest extends Events
         $permission->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
-
     }
 
     public function testRolesDetachedEvent()
@@ -51,7 +50,6 @@ class PermissionsEventsTest extends Events
         $permission->detachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
-
     }
 
     public function testUsersAttachedEvent()

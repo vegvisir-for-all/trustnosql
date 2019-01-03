@@ -20,7 +20,6 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class TeamsTest extends TestCase
 {
-
     protected static function setConfigToTrue()
     {
         Config::set('trustnosql.teams.use_teams', true);
@@ -62,8 +61,7 @@ class TeamsTest extends TestCase
             ]
         ];
 
-        foreach($teamsArray as $teamData) {
-
+        foreach ($teamsArray as $teamData) {
             $team = Team::create($teamData);
 
             $this->assertEquals($teamData['name'], $team->name);
@@ -103,11 +101,11 @@ class TeamsTest extends TestCase
         $teams = ['sigrun', 'vegvisir', 'vegdev'];
         $roles = ['admin', 'superadmin', 'manager'];
 
-        foreach($teams as $team) {
+        foreach ($teams as $team) {
             $$team = Team::create(['name' => $team]);
         }
 
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $$role = Role::create(['name' => $role]);
         }
 
@@ -147,7 +145,7 @@ class TeamsTest extends TestCase
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
 
-        foreach($teams as $team) {
+        foreach ($teams as $team) {
             Team::where('name', $team)->delete();
             $$team = Team::create(['name' => $team]);
         }
@@ -177,5 +175,4 @@ class TeamsTest extends TestCase
         $this->assertEquals(1, $second->teams()->count());
         $this->assertEquals(0, $third->teams()->count());
     }
-
 }

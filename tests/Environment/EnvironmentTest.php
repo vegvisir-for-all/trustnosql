@@ -26,7 +26,7 @@ class EnvironmentTest extends TestCase
     {
         $users = test_seed_users();
 
-        foreach($users as $seedUser) {
+        foreach ($users as $seedUser) {
             $user = User::where('name', $seedUser['name'])->first();
             $this->assertSame($seedUser['name'], $user->name);
         }

@@ -6,5 +6,4 @@ use Vegvisir\TrustNoSql\Models\Grabbable as TrustNoSqlGrabbable;
 
 class Middle extends TrustNoSqlGrabbable
 {
-
 }

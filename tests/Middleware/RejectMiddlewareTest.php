@@ -15,6 +15,5 @@ class RejectMiddlewareTest extends Middleware
 {
     public function testRejectMiddleware()
     {
-
     }
 }

@@ -15,6 +15,5 @@ class TrustMiddlewareTest extends Middleware
 {
     public function testTrustMiddleware()
     {
-
     }
 }

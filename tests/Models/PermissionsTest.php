@@ -20,7 +20,6 @@ class PermissionsTest extends TestCase
 {
     public function testCreate()
     {
-
         $permissionsArray = [
             [
                 'name' => 'namespace/task',
@@ -36,8 +35,7 @@ class PermissionsTest extends TestCase
             ]
         ];
 
-        foreach($permissionsArray as $permissionData) {
-
+        foreach ($permissionsArray as $permissionData) {
             $permission = Permission::create($permissionData);
 
             $this->assertEquals($permissionData['name'], $permission->name);
@@ -93,7 +91,7 @@ class PermissionsTest extends TestCase
             ]
         ];
 
-        foreach($permissionsArray as $permissionData) {
+        foreach ($permissionsArray as $permissionData) {
             Permission::create($permissionData);
         }
 
@@ -113,7 +111,6 @@ class PermissionsTest extends TestCase
         $hasPermissionCount = $user->permissions->where('name', 'namespace/task')->count();
 
         $this->assertEquals(0, $hasPermissionCount);
-
     }
 
     public function testHasPermission()

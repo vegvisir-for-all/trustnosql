@@ -15,7 +15,6 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -57,5 +56,4 @@ class TestCase extends OrchestraTestCase
             'Vegvisir\TrustNoSql\TrustNoSqlServiceProvider'
         ];
     }
-
 }
