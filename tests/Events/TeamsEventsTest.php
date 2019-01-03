@@ -27,7 +27,6 @@ class TeamsEventsTest extends Events
 
     public function testRolesAttachedEvent()
     {
-
         $key = 'teams-roles-attached-event';
 
         Cache::put($key, false, 999999);
@@ -42,7 +41,6 @@ class TeamsEventsTest extends Events
 
     public function testRolesDetachedEvent()
     {
-
         $key = 'teams-roles-detached-event';
 
         Cache::put($key, false, 999999);
@@ -57,7 +55,6 @@ class TeamsEventsTest extends Events
 
     public function testUsersAttachedEvent()
     {
-
         $key = 'teams-users-attached-event';
 
         Cache::put($key, false, 999999);
@@ -72,7 +69,6 @@ class TeamsEventsTest extends Events
 
     public function testUsersDetachedEvent()
     {
-
         $key = 'teams-users-detached-event';
 
         Cache::put($key, false, 999999);

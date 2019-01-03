@@ -27,7 +27,6 @@ class UsersEventsTest extends Events
 
     public function testPermissionsAttachedEvent()
     {
-
         $key = 'users-permissions-attached-event';
 
         Cache::put($key, false, 999999);
@@ -42,7 +41,6 @@ class UsersEventsTest extends Events
 
     public function testPermissionsDetachedEvent()
     {
-
         $key = 'users-permissions-detached-event';
 
         Cache::put($key, false, 999999);
@@ -57,7 +55,6 @@ class UsersEventsTest extends Events
 
     public function testRolesAttachedEvent()
     {
-
         $key = 'users-roles-attached-event';
 
         Cache::put($key, false, 999999);
@@ -72,7 +69,6 @@ class UsersEventsTest extends Events
 
     public function testRolesDetachedEvent()
     {
-
         $key = 'users-roles-detached-event';
 
         Cache::put($key, false, 999999);
@@ -87,7 +83,6 @@ class UsersEventsTest extends Events
 
     public function testTeamsAttachedEvent()
     {
-
         $key = 'users-teams-attached-event';
 
         Cache::put($key, false, 999999);
@@ -102,7 +97,6 @@ class UsersEventsTest extends Events
 
     public function testTeamsDetachedEvent()
     {
-
         $key = 'users-teams-detached-event';
 
         Cache::put($key, false, 999999);
