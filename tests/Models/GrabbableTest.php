@@ -19,7 +19,7 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom as GrabbableBotto
 
 class GrabbableTest extends TestCase
 {
-    public function testIsGrababble() {
+    public function testIsGrabbable() {
         $top = new GrabbableTop;
         $middle = new GrabbableMiddle;
         $bottom = new GrabbableBottom;
@@ -28,15 +28,40 @@ class GrabbableTest extends TestCase
         $this->assertTrue(is_a($bottom, \Vegvisir\TrustNoSql\Models\Grabbable::class));
     }
 
-    public function testHasMethods() {}
+    public function testHasMethods() {
+        /**
+         * Methods:
+         * 1. setGrababilityMode
+         * 2. explicitelyGrabbedBy
+         * 3. grabbableBy
+         */
+
+        $grabbables = [
+            'top' => new GrabbableTop,
+            'middle' => new GrabbableMiddle,
+            'bottom' => new GrabbableBottom,
+        ];
+
+        $methods = [
+            'setGrababilityMode',
+            'explicitelyGrabbedBy',
+            'grabbableBy'
+        ];
+
+        foreach($grabbables as $grabbableName => $grabbableObj) {
+            foreach($methods as $methodName) {
+                $this->assertTrue(method_exists(get_class($grabbableObj), $methodName));
+            }
+        }
+    }
 
     public function testRulesOverwritten() {}
 
     public function testModeNone() {}
 
-    public function testModeDatabase() {}
+    public function testModeExplicit() {}
 
-    public function testModeMethod() {}
+    public function testModeGrabbable() {}
 
     public function testModeBoth() {}
 }
