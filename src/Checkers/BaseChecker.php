@@ -134,22 +134,13 @@ class BaseChecker
     {
         $hasEntity = false;
 
-        /**
-         * Check whether $this->model is instance of Role or User.
-         */
-        if (Helper::isRole($this->model)) {
-            // role
-        } elseif (Helper::isUser($this->model)) {
-            // user
-        }
-
         $modelFunctionName = 'get'
             .ucfirst(class_basename($this->model))
             .'Current'
             .ucfirst(str_plural(class_basename($entityModel)));
 
         foreach ($this->model->{$modelFunctionName}() as $currentEntity) {
-            // Checking for no-wildcard permission name, like 'city:create'
+            // Checking for no-wildcard permission name, like 'city/create'
             if (str_is($entityName, $currentEntity)) {
                 return true;
             }
@@ -164,7 +155,7 @@ class BaseChecker
             }
 
             /*
-             * Another case is when we want to check 'city:*' or 'city:all', and the role has assigned array of no-wildcard
+             * Another case is when we want to check 'city/*' or 'city/all', and the role has assigned array of no-wildcard
              * permissions. In that case, we need to load all 'city' namespace permissions (excluding those with wildcards)
              * and check, whether a role has all permissions assigned to
              */
@@ -185,19 +176,31 @@ class BaseChecker
      */
     protected function currentModelCheckSingleWildcardPermission($permission)
     {
+
         if (!Helper::isPermissionWildcard($permission)) {
             throw new NoWildcardPermissionException($permission);
         }
 
+        $namespace = Helper::getPermissionNamespace($permission);
+
+        var_dump($permission, $namespace);
+
         /**
          * List of all permissions for a namespace ([city:view, city:update, city:create, ...]).
          */
-        $availablePermissions = Permission::getPermissionsInNamespace($namespace);
+        $availablePermissions = Helper::getPermissionsInNamespace($namespace);
 
         /**
          * Current permissions for a role, with a given namespace.
          */
-        $modelPermissions = $this->model->{$this->functionNames['getModelPermissions']}($namespace);
+
+        $modelName = get_class($this->model);
+
+        if (\is_a($modelName, Config::get('trustnosql.user_models.users'), true)) {
+            $modelName = 'User';
+        }
+
+        $modelPermissions = $this->model->getModelCurrentEntities('permission', $namespace);
 
         /*
          * Since $availablePermissions and $rolePermissions must have the very same values, we use

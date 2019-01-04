@@ -78,6 +78,11 @@ class RoleHelper extends HelperProxy
             // Role with that name already exists
             return false;
         }
+        $pattern = '/(^[\p{L}0-9-_]*+)$/mu';
+        if (1 !== preg_match($pattern, $name)) {
+            // Wrong pattern for name
+            return false;
+        }
         return true;
     }
 }

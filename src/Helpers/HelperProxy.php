@@ -75,6 +75,16 @@ class HelperProxy
         return PermissionHelper::getKeys($permissions);
     }
 
+    public static function getPermissionsInNamespace($namespace)
+    {
+        return PermissionHelper::getPermissionsInNamespace($namespace);
+    }
+
+    public static function getPermissionNamespace($permission)
+    {
+        return PermissionHelper::getNamespace($permission);
+    }
+
     /**
      * Gets permission wildcards from config.
      *

@@ -214,7 +214,7 @@ trait ModelTrait
      *
      * @return array
      */
-    protected function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
+    public function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
     {
         /**
          * If TrustNoSql uses cache and $forceNoCache is false, this should be retrieved from cache.

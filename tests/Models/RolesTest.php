@@ -129,14 +129,14 @@ class RolesTest extends ModelsTestCase
         $user = User::first();
         $user->attachRoles('role-second,role-third');
         $this->assertTrue($user->hasRoles('role-first,role-second,role-third', true));
-        $this->assertTrue($user->hasRoles(['role-first'], ['role-second'], ['role-third'], true));
+        $this->assertTrue($user->hasRoles(['role-first', 'role-second', 'role-third'], true));
     }
 
     public function testHasRoleSingleUserOneOfRoles()
     {
         $user = User::first();
         $this->assertTrue($user->hasRoles('role-third,role-fourth,role-fifth', false));
-        $this->assertTrue($user->hasRoles(['role-third'], ['role-fourth'], ['role-fifth'], false));
+        $this->assertTrue($user->hasRoles(['role-third', 'role-fourth', 'role-fifth'], false));
     }
 
     public function testUserHasRoleAliases()
@@ -210,7 +210,7 @@ class RolesTest extends ModelsTestCase
 
         $team->attachRoles('role-second,role-third');
         $this->assertTrue($team->hasRole('role-first,role-second,role-third', true));
-        $this->assertTrue($team->hasRole(['role-first'], ['role-second'], ['role-third'], true));
+        $this->assertTrue($team->hasRole(['role-first', 'role-second', 'role-third'], true));
     }
 
     public function testHasRoleSingleTeamOneOfRoles()
@@ -219,7 +219,7 @@ class RolesTest extends ModelsTestCase
         $this->assertNotNull($team);
 
         $this->assertTrue($team->hasRole('role-third,role-fourth,role-fifth', false));
-        $this->assertTrue($team->hasRole(['role-third'], ['role-fourth'], ['role-fifth'], false));
+        $this->assertTrue($team->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
     }
 
     public function testTeamHasRoleAliases()
@@ -296,7 +296,7 @@ class RolesTest extends ModelsTestCase
 
         $permission->attachRoles('role-second,role-third');
         $this->assertTrue($permission->hasRole('role-first,role-second,role-third', true));
-        $this->assertTrue($permission->hasRole(['role-first'], ['role-second'], ['role-third'], true));
+        $this->assertTrue($permission->hasRole(['role-first', 'role-second', 'role-third'], true));
     }
 
     public function testHasRoleSinglePermissionOneOfRoles()
@@ -305,7 +305,7 @@ class RolesTest extends ModelsTestCase
         $this->assertNotNull($permission);
 
         $this->assertTrue($permission->hasRole('role-third,role-fourth,role-fifth', false));
-        $this->assertTrue($permission->hasRole(['role-third'], ['role-fourth'], ['role-fifth'], false));
+        $this->assertTrue($permission->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
     }
 
     public function testPermissionHasRoleAliases()

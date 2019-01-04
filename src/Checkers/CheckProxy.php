@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Config;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Vegvisir\TrustNoSql\Checkers\Permission\PermissionChecker;
 use Vegvisir\TrustNoSql\Checkers\Role\RoleChecker;
+use Vegvisir\TrustNoSql\Checkers\Team\TeamChecker;
 use Vegvisir\TrustNoSql\Checkers\User\UserChecker;
 
 class CheckProxy
@@ -32,6 +33,13 @@ class CheckProxy
      * @var string
      */
     const ROLE_MODEL = \Vegvisir\TrustNoSql\Models\Role::class;
+
+    /**
+     * Team model name.
+     *
+     * @var string
+     */
+    const TEAM_MODEL = \Vegvisir\TrustNoSql\Models\Team::class;
 
     /**
      * Model to be checked within.
@@ -53,7 +61,7 @@ class CheckProxy
     /**
      * Gets the right checker basing on the type of $this->model.
      *
-     * @return \Vegvisir\TrustNoSql\Checkers\Permission\PermissionChecker|\Vegvisir\TrustNoSql\Checkers\Role\RoleChecker|\Vegvisir\TrustNoSql\Checkers\User\UserChecker
+     * @return \Vegvisir\TrustNoSql\Checkers\Permission\PermissionChecker|\Vegvisir\TrustNoSql\Checkers\Role\RoleChecker|\Vegvisir\TrustNoSql\Checkers\Role\TeamChecker|\Vegvisir\TrustNoSql\Checkers\User\UserChecker
      */
     public function getChecker()
     {
@@ -63,6 +71,10 @@ class CheckProxy
 
         if (is_a($this->model, static::ROLE_MODEL, true)) {
             return $this->getRoleChecker();
+        }
+
+        if (is_a($this->model, static::TEAM_MODEL, true)) {
+            return $this->getTeamChecker();
         }
 
         if (is_a($this->model, Config::get('trustnosql.user_models.users'), true)) {

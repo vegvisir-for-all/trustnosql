@@ -159,4 +159,11 @@ class PermissionHelper extends HelperProxy
         }
         return !static::isWildcard($name);
     }
+
+    public static function getPermissionsInNamespace($namespace)
+    {
+        return collect(Permission::where('name', 'like', $namespace . '/%')->get())->map(function ($item) {
+            return $item->name;
+        })->toArray();
+    }
 }

@@ -22,13 +22,21 @@ class EnvironmentTest extends EnvironmentTestCase
         $this->assertSame('mongodb', $defaultDriver);
     }
 
-    public function testUsersCreated()
+    public function testUsersCreatedName()
     {
         $users = test_seed_users();
-
         foreach ($users as $seedUser) {
             $user = User::where('name', $seedUser['name'])->first();
             $this->assertSame($seedUser['name'], $user->name);
+        }
+    }
+
+    public function testUsersCreatedEmail()
+    {
+        $users = test_seed_users();
+        foreach ($users as $seedUser) {
+            $user = User::where('name', $seedUser['name'])->first();
+            $this->assertSame($seedUser['email'], $user->email);
         }
     }
 }

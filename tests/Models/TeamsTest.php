@@ -20,41 +20,54 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class TeamsTest extends ModelsTestCase
 {
+    protected $teamsData = [
+        [
+            'name' => 'team-first',
+            'display_name' => 'Team First',
+            'description' => 'Team First'
+        ],
+        [
+            'name' => 'team-second',
+            'display_name' => 'Team Second',
+            'description' => 'Team Second'
+        ],
+        [
+            'name' => 'team-third',
+            'display_name' => 'Team Third',
+            'description' => 'Team Third'
+        ],
+        [
+            'name' => 'team-fourth',
+            'display_name' => 'Team Fourth',
+            'description' => 'Team Fourth'
+        ],
+    ];
+
     public function testCount()
     {
         $this->assertEquals(4, Team::count());
     }
 
-    public function testCreated()
+    public function testCreatedNotNull()
     {
-        $teamsData = [
-            [
-                'name' => 'team-first',
-                'display_name' => 'Team First',
-                'description' => 'Team First'
-            ],
-            [
-                'name' => 'team-second',
-                'display_name' => 'Team Second',
-                'description' => 'Team Second'
-            ],
-            [
-                'name' => 'team-third',
-                'display_name' => 'Team Third',
-                'description' => 'Team Third'
-            ],
-            [
-                'name' => 'team-fourth',
-                'display_name' => 'Team Fourth',
-                'description' => 'Team Fourth'
-            ],
-        ];
-
-        foreach ($teamsData as $teamData) {
+        foreach ($this->teamsData as $teamData) {
             $team = Team::where('name', $teamData['name'])->first();
-
             $this->assertNotNull($team);
-            $this->assertEquals($teamData['name'], $team->name);
+        }
+    }
+
+    public function testCreatedName()
+    {
+        foreach ($this->teamsData as $teamData) {
+            $team = Team::where('name', $teamData['name'])->first();
+            $this->assertEquals($teamData['display_name'], $team->display_name);
+        }
+    }
+
+    public function testCreatedDisplayName()
+    {
+        foreach ($this->teamsData as $teamData) {
+            $team = Team::where('name', $teamData['name'])->first();
             $this->assertEquals($teamData['display_name'], $team->display_name);
         }
     }
@@ -74,7 +87,6 @@ class TeamsTest extends ModelsTestCase
     public function testDelete()
     {
         Team::where('name', 'team-fourth')->delete();
-
         $this->assertEquals(0, Team::where('name', 'team-fourth')->count());
     }
 
@@ -85,36 +97,28 @@ class TeamsTest extends ModelsTestCase
     public function testAttachingToUsersSingle()
     {
         $user = User::first();
-
         $user->attachTeam('team-first');
-
         $this->assertEquals(1, $user->teams()->where('name', 'team-first')->count());
     }
 
     public function testAttachingToUsersMultiple()
     {
         $user = User::first();
-
         $user->attachTeam('team-second,team-third');
-
         $this->assertEquals(3, $user->teams()->count());
     }
 
     public function testDetachingFromUsersSingle()
     {
         $user = User::first();
-
         $user->detachTeam('team-first');
-
         $this->assertEquals(0, $user->teams()->where('name', 'team-first')->count());
     }
 
     public function testDetachingFromUsersMultiple()
     {
         $user = User::first();
-
         $user->detachTeam('team-second,team-third');
-
         $this->assertEquals(0, $user->teams()->count());
     }
 
@@ -122,33 +126,50 @@ class TeamsTest extends ModelsTestCase
     {
         $user = User::first();
         $user->attachTeam('team-first');
-
         $this->assertTrue($user->hasTeam('team-first'));
     }
 
-    public function testHasRoleSingleUserAllTeams()
+    public function testHasRoleSingleUserAllTeamsString()
     {
         $user = User::first();
         $user->attachTeams('team-second,team-third');
         $this->assertTrue($user->hasTeams('team-first,team-second,team-third', true));
-        $this->assertTrue($user->hasTeams(['team-first'], ['team-second'], ['team-third'], true));
     }
 
-    public function testHasRoleSingleUserOneOfTeams()
+    public function testHasRoleSingleUserAllTeamsArray()
+    {
+        $user = User::first();
+        $this->assertTrue($user->hasTeams(['team-first', 'team-second', 'team-third'], true));
+    }
+
+    public function testHasRoleSingleUserOneOfTeamsString()
     {
         $user = User::first();
         $this->assertTrue($user->hasTeams('team-first,team-second,team-third', false));
-        $this->assertTrue($user->hasTeams(['team-first'], ['team-second'], ['team-third'], false));
     }
 
-    public function testUserHasTeamAliases()
+    public function testHasRoleSingleUserOneOfTeamsArray()
+    {
+        $user = User::first();
+        $this->assertTrue($user->hasTeams(['team-first', 'team-second', 'team-third'], false));
+    }
+
+    public function testUserHasTeamAliasesHasTeamsString()
     {
         $user = User::first();
         $this->assertTrue($user->hasTeams('team-first'));
-        $this->assertTrue($user->hasTeams(['team-first']));
-        $this->assertTrue($user->memberOf('team-first'));
+    }
 
-        // @todo Tests for facade class
+    public function testUserHasTeamAliasesHasTeamsArray()
+    {
+        $user = User::first();
+        $this->assertTrue($user->hasTeams(['team-first']));
+    }
+
+    public function testUserHasTeamAliasesHasTeamsMemberOf()
+    {
+        $user = User::first();
+        $this->assertTrue($user->memberOf('team-first'));
     }
 
     /**
@@ -158,81 +179,78 @@ class TeamsTest extends ModelsTestCase
     public function testAttachingToRolesSingle()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->attachTeam('team-first');
-
         $this->assertEquals(1, $role->teams()->where('name', 'team-first')->count());
     }
 
     public function testAttachingToRolesMultiple()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->attachTeam('team-second,team-third');
-
         $this->assertEquals(3, $role->teams()->count());
     }
 
     public function testDetachingFromRolesSingle()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->detachTeam('team-first');
-
         $this->assertEquals(0, $role->teams()->where('name', 'team-first')->count());
     }
 
     public function testDetachingFromRolesMultiple()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->detachTeam('team-second,team-third');
-
         $this->assertEquals(0, $role->teams()->count());
     }
 
     public function testHasRoleSingleRoleSingleTeam()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->attachTeam('team-first');
-
         $this->assertTrue($role->hasTeam('team-first'));
     }
 
-    public function testHasRoleSingleRoleAllTeams()
+    public function testHasRoleSingleRoleAllTeamsString()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
-
         $role->attachTeams('team-second,team-third');
         $this->assertTrue($role->hasTeams('team-first,team-second,team-third', true));
-        $this->assertTrue($role->hasTeams(['team-first'], ['team-second'], ['team-third'], true));
     }
 
-    public function testHasRoleSingleRoleOneOfTeams()
+    public function testHasRoleSingleRoleAllTeamsArray()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
+        $this->assertTrue($role->hasTeams(['team-first', 'team-second', 'team-third'], true));
+    }
 
+    public function testHasRoleSingleRoleOneOfTeamsString()
+    {
+        $role = Role::where('name', 'role-first')->first();
         $this->assertTrue($role->hasTeams('team-first,team-second,team-third', false));
-        $this->assertTrue($role->hasTeams(['team-first'], ['team-second'], ['team-third'], false));
     }
 
-    public function testRoleHasTeamAliases()
+    public function testHasRoleSingleRoleOneOfTeamsArray()
     {
         $role = Role::where('name', 'role-first')->first();
-        $this->assertNotNull($role);
+        $this->assertTrue($role->hasTeams(['team-first', 'team-second', 'team-third'], false));
+    }
 
+    public function testRoleHasTeamAliasesHasTeamsString()
+    {
+        $role = Role::where('name', 'role-first')->first();
         $this->assertTrue($role->hasTeams('team-first'));
-        $this->assertTrue($role->hasTeams(['team-first']));
-        $this->assertTrue($role->memberOf('team-first'));
+    }
 
-        // @todo Tests for facade class
+    public function testRoleHasTeamAliasesHasTeamsArray()
+    {
+        $role = Role::where('name', 'role-first')->first();
+        $this->assertTrue($role->hasTeams(['team-first']));
+    }
+
+    public function testRoleHasTeamAliasesMemberOf()
+    {
+        $role = Role::where('name', 'role-first')->first();
+        $this->assertTrue($role->memberOf('team-first'));
     }
 }

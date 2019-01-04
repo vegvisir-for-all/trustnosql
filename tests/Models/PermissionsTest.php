@@ -116,7 +116,7 @@ class PermissionsTest extends ModelsTestCase
         $user = User::first();
 
         $this->assertTrue($user->hasPermissions('permission/first'));
-        $this->assertTrue($user->can('permission/first'));
+        $this->assertTrue($user->does('permission/first'));
         $this->assertTrue($user->hasPermission('permission/*'));
         $this->assertTrue($user->hasPermission('permission/all'));
         $this->assertFalse($user->hasPermission('permission/everything'));
@@ -133,6 +133,6 @@ class PermissionsTest extends ModelsTestCase
     {
         $user = User::first();
 
-        $this->assertTrue($user->canRemovePermission());
+        $this->assertFalse($user->canRemovePermission());
     }
 }
