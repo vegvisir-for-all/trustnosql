@@ -11,181 +11,313 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class RolesTest extends TestCase
+class RolesTest extends ModelsTestCase
 {
-    public function testCreate()
+    public function testCount()
     {
-        $rolesArray = [
+        $this->assertEquals(4, Role::count());
+    }
+
+    public function testCreated()
+    {
+        $rolesData = [
             [
-                'name' => 'superadmin',
-                'display_name' => 'Superadmin'
+                'name' => 'role-first',
+                'display_name' => 'Role First',
+                'description' => 'Role First'
             ],
             [
-                'name' => 'admin',
-                'display_name' => 'Admin'
+                'name' => 'role-second',
+                'display_name' => 'Role Second',
+                'description' => 'Role Second'
             ],
             [
-                'name' => 'manager',
-                'display_name' => 'Manager'
-            ]
+                'name' => 'role-third',
+                'display_name' => 'Role Third',
+                'description' => 'Role Third'
+            ],
+            [
+                'name' => 'role-fourth',
+                'display_name' => 'Role Fourth',
+                'description' => 'Role Fourth'
+            ],
         ];
 
-        foreach ($rolesArray as $roleData) {
-            $role = Role::create($roleData);
+        foreach ($rolesData as $roleData) {
+            $role = Role::where('name', $roleData['name'])->first();
 
+            $this->assertNotNull($role);
             $this->assertEquals($roleData['name'], $role->name);
             $this->assertEquals($roleData['display_name'], $role->display_name);
         }
     }
 
-    public function testRejectCreate()
+    public function testRejectCreateExists()
     {
-        $role = Role::create([
-            'name' => 'superadmin',
-            'display_name' => 'Super admin'
-        ]);
+        $role = Role::create(['name' => 'role-fourth']);
+        $this->assertEquals(1, Role::where('name', 'role-fourth')->count());
+    }
 
-        $this->assertNull($role);
-
-        $role = Role::create([
-            'name' => 'super/admin',
-            'display_name' => 'Super/admin'
-        ]);
-
-        $this->assertNull($role);
+    public function testRejectCreateIllegalChars()
+    {
+        $role = Role::create(['name' => 'role/fourth']);
+        $this->assertEquals(0, Role::where('name', 'role/fourth')->count());
     }
 
     public function testDelete()
     {
-        Role::where('name', 'superadmin')->first()->delete();
+        Role::where('name', 'role-fourth')->delete();
 
-        $this->assertEquals(0, Role::where('name', 'superadmin')->count());
+        $this->assertEquals(0, Role::where('name', 'role-fourth')->count());
     }
 
-    public function testAttachingToUsers()
+    /**
+     * ATTACHING TO USERS
+     */
+
+    public function testAttachingToUsersSingle()
     {
         $user = User::first();
 
-        $user->attachRole('admin');
+        $user->attachRole('role-first');
 
-        $this->assertEquals(1, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(1, $user->roles()->where('name', 'role-first')->count());
+    }
 
-        Role::create(['name' => 'superadmin']);
+    public function testAttachingToUsersMultiple()
+    {
+        $user = User::first();
 
-        $user->attachRole('superadmin,manager');
+        $user->attachRole('role-second,role-third');
 
         $this->assertEquals(3, $user->roles()->count());
     }
 
-    public function testDetachingFromUsers()
+    public function testDetachingFromUsersSingle()
     {
         $user = User::first();
 
-        $user->detachRole('admin');
+        $user->detachRole('role-first');
 
-        $this->assertEquals(0, $user->roles()->where('name', 'admin')->count());
+        $this->assertEquals(0, $user->roles()->where('name', 'role-first')->count());
+    }
 
-        $user->detachRole('superadmin,manager');
+    public function testDetachingFromUsersMultiple()
+    {
+        $user = User::first();
+
+        $user->detachRole('role-second,role-third');
 
         $this->assertEquals(0, $user->roles()->count());
     }
 
-    public function testHasRole()
+    public function testHasRoleSingleUserSingleRole()
     {
         $user = User::first();
+        $user->attachRole('role-first');
 
-        $user->attachRole('admin');
-
-        $this->assertTrue($user->hasRole('admin'));
-
-        $user->attachRole('superadmin');
-
-        $this->assertTrue($user->hasRole('admin,superadmin', true));
-
-        $this->assertTrue($user->hasRole('admin,manager', false));
-
-        // Failure
-        $this->assertFalse($user->hasRole('admin,manager', true));
+        $this->assertTrue($user->hasRole('role-first'));
     }
 
-    public function testHasRoleAliases()
+    public function testHasRoleSingleUserAllRoles()
     {
         $user = User::first();
-
-        $this->assertTrue($user->hasRoles('admin'));
-        $this->assertTrue($user->isA('admin'));
-        $this->assertTrue($user->isAn('admin'));
+        $user->attachRoles('role-second,role-third');
+        $this->assertTrue($user->hasRoles('role-first,role-second,role-third', true));
+        $this->assertTrue($user->hasRoles(['role-first', 'role-second', 'role-third'], true));
     }
 
-    public function testAttachingPermissions()
+    public function testHasRoleSingleUserOneOfRoles()
     {
-        Permission::where(1)->delete();
-
-        $permissionsArray = [
-            [
-                'name' => 'namespace/task',
-                'display_name' => 'Namespace Task'
-            ],
-            [
-                'name' => 'namespace/another',
-                'display_name' => 'Namespace Another'
-            ],
-            [
-                'name' => 'namespace/third',
-                'display_name' => 'Namespace Third'
-            ]
-        ];
-
-        foreach ($permissionsArray as $key => $permissionData) {
-            $permission[$key] = Permission::create($permissionData);
-        }
-
-        $admin = Role::where('name', 'admin')->first();
-
-        $superadmin = Role::where('name', 'superadmin')->first();
-
-        $admin->attachPermission('namespace/task');
-        $superadmin->attachPermission('namespace/another,namespace/third');
-
-        $this->assertEquals(1, $admin->permissions()->count());
-        $this->assertEquals(2, $superadmin->permissions()->count());
+        $user = User::first();
+        $this->assertTrue($user->hasRoles('role-third,role-fourth,role-fifth', false));
+        $this->assertTrue($user->hasRoles(['role-third', 'role-fourth', 'role-fifth'], false));
     }
 
-    public function testHasPermission()
+    public function testUserHasRoleAliases()
     {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
+        $user = User::first();
+        $this->assertTrue($user->hasRoles('role-first'));
+        $this->assertTrue($user->hasRoles(['role-first']));
+        $this->assertTrue($user->isA('role-first'));
+        $this->assertTrue($user->isAn('role-first'));
 
-        $this->assertTrue($admin->hasPermission('namespace/task'));
-        $this->assertTrue($superadmin->hasPermission('namespace/another,namespace/third', true));
-        $this->assertTrue($admin->hasPermission('namespace/task,namespace/third', false));
-        //failure
-        $this->assertFalse($admin->hasPermission('namespace/task,namespace/third', true));
+        // @todo Tests for facade class
     }
 
-    public function testHasPermissionAliases()
-    {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
+    /**
+     * ATTACHING TO TEAMS
+     */
 
-        $this->assertTrue($admin->hasPermissions('namespace/task'));
-        $this->assertTrue($admin->hasPermissions('namespace/*'));
+    public function testAttachingToTeamsSingle()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $team->attachRole('role-first');
+
+        $this->assertEquals(1, $team->roles()->where('name', 'role-first')->count());
     }
 
-    public function testDetachingPermissions()
+    public function testAttachingToTeamsMultiple()
     {
-        $admin = Role::where('name', 'admin')->first();
-        $superadmin = Role::where('name', 'superadmin')->first();
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
 
-        $admin->detachPermission('namespace/task');
-        $superadmin->detachPermission('namespace/*');
+        $team->attachRoles('role-second,role-third');
 
-        $this->assertEquals(0, $admin->permissions()->where('name', 'admin')->count());
-        $this->assertEquals(0, $superadmin->permissions()->where('name', 'like', 'namespace/%')->count());
+        $this->assertEquals(3, $team->roles()->count());
+    }
+
+    public function testDetachingFromTeamsSingle()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $team->detachRole('role-first');
+
+        $this->assertEquals(0, $team->roles()->where('name', 'role-first')->count());
+    }
+
+    public function testDetachingFromTeamsMultiple()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $team->detachRole('role-second,role-third');
+
+        $this->assertEquals(0, $team->roles()->count());
+    }
+
+    public function testHasRoleSingleTeamSingleRole()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+        $team->attachRole('role-first');
+
+        $this->assertTrue($team->hasRole('role-first'));
+    }
+
+    public function testHasRoleSingleTeamAllRoles()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $team->attachRoles('role-second,role-third');
+        $this->assertTrue($team->hasRole('role-first,role-second,role-third', true));
+        $this->assertTrue($team->hasRole(['role-first', 'role-second', 'role-third'], true));
+    }
+
+    public function testHasRoleSingleTeamOneOfRoles()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $this->assertTrue($team->hasRole('role-third,role-fourth,role-fifth', false));
+        $this->assertTrue($team->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
+    }
+
+    public function testTeamHasRoleAliases()
+    {
+        $team = Team::where('name', 'team-first')->first();
+        $this->assertNotNull($team);
+
+        $this->assertTrue($team->hasRoles('role-first'));
+        $this->assertTrue($team->hasRoles(['role-first']));
+        $this->assertTrue($team->isA('role-first'));
+        $this->assertTrue($team->isAn('role-first'));
+
+        // @todo Tests for facade class
+    }
+
+    /**
+     * ATTACHING TO PERMISSIONS
+     */
+
+    public function testAttachingToPermissionsSingle()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->attachRole('role-first');
+
+        $this->assertEquals(1, $permission->roles()->where('name', 'role-first')->count());
+    }
+
+    public function testAttachingToPermissionsMultiple()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->attachRoles('role-second,role-third');
+
+        $this->assertEquals(3, $permission->roles()->count());
+    }
+
+    public function testDetachingFromPermissionsSingle()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->detachRole('role-first');
+
+        $this->assertEquals(0, $permission->roles()->where('name', 'role-first')->count());
+    }
+
+    public function testDetachingFromPermissionsMultiple()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->detachRole('role-second,role-third');
+
+        $this->assertEquals(0, $permission->roles()->count());
+    }
+
+    public function testHasRoleSinglePermissionSingleRole()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->attachRole('role-first');
+
+        $this->assertTrue($permission->hasRole('role-first'));
+    }
+
+    public function testHasRoleSinglePermissionAllRoles()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $permission->attachRoles('role-second,role-third');
+        $this->assertTrue($permission->hasRole('role-first,role-second,role-third', true));
+        $this->assertTrue($permission->hasRole(['role-first', 'role-second', 'role-third'], true));
+    }
+
+    public function testHasRoleSinglePermissionOneOfRoles()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $this->assertTrue($permission->hasRole('role-third,role-fourth,role-fifth', false));
+        $this->assertTrue($permission->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
+    }
+
+    public function testPermissionHasRoleAliases()
+    {
+        $permission = Permission::where('name', 'permission/first')->first();
+        $this->assertNotNull($permission);
+
+        $this->assertTrue($permission->hasRoles('role-first'));
+        $this->assertTrue($permission->hasRoles(['role-first']));
+        $this->assertTrue($permission->isA('role-first'));
+        $this->assertTrue($permission->isAn('role-first'));
+
+        // @todo Tests for facade class
     }
 }

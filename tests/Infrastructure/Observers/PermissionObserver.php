@@ -17,7 +17,6 @@ class PermissionObserver extends BaseObserver
 {
     public static function rolesAttached()
     {
-        var_dump('rolesAttached');
         Cache::put('permissions-roles-attached-event', true, 999999);
     }
 

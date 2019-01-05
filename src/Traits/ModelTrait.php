@@ -19,9 +19,12 @@ use Vegvisir\TrustNoSql\Exceptions\Entity\DeleteEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\DetachEntitiesException;
 use Vegvisir\TrustNoSql\Exceptions\Entity\SyncEntitiesException;
 use Vegvisir\TrustNoSql\Helper;
+use Vegvisir\TrustNoSql\Traits\Aliases\ModelAliasesTrait;
 
 trait ModelTrait
 {
+    use ModelAliasesTrait;
+
     /**
      * Namespaces for checking functions.
      *
@@ -64,10 +67,6 @@ trait ModelTrait
             $permissionName = strtolower($name[2]).'/'.strtolower($name[1]);
 
             return $this->hasEntities('permission', $permissionName, false);
-        }
-        if ('can' === $originalName) {
-            $requireAll = (isset($arguments[1])) ? $arguments[1] : false;
-            return $this->hasEntities('permission', $argument[0], $requireAll);
         }
 
         return parent::__call($originalName, $arguments);
@@ -211,7 +210,7 @@ trait ModelTrait
      *
      * @return array
      */
-    protected function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
+    public function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
     {
         /**
          * If TrustNoSql uses cache and $forceNoCache is false, this should be retrieved from cache.
@@ -266,7 +265,7 @@ trait ModelTrait
      */
     protected function attachEntities($entityModelName, $entityList)
     {
-        $entitiesKeys = Helper::{'get'.ucfirst($entityModelName).'Keys'}($entityList);
+        $entitiesKeys = Helper::{'get'.ucfirst(str_singular($entityModelName)).'Keys'}($entityList);
 
         try {
             $this->{strtolower(str_plural($entityModelName))}()->attach($entitiesKeys);

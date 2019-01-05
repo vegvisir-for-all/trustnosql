@@ -17,52 +17,81 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class PermissionsEventsTest extends Events
+class PermissionsEventsTest extends EventsTestCase
 {
-    public function testRolesAttachedDetachedEvent()
+    public function testPermissionsExist()
+    {
+        $this->assertEquals(1, Permission::count());
+    }
+
+    public function testRolesExist()
+    {
+        $this->assertEquals(1, Role::count());
+    }
+
+    public function testTeamsExist()
+    {
+        $this->assertEquals(1, Team::count());
+    }
+
+    public function testUsersExist()
+    {
+        $this->assertEquals(5, User::count());
+    }
+
+    public function testRolesAttachedEvent()
     {
         $key = 'permissions-roles-attached-event';
 
         Cache::put($key, false, 999999);
 
-        $role = Role::create(['name' => 'admin']);
-        $permission = Permission::create(['name' => 'everything/do']);
+        $role = Role::where('name', $this->roleName)->first();
+        $permission = Permission::where('name', $this->permissionName)->first();
 
         $permission->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
+    }
+
+    public function testRolesDetachedEvent()
+    {
+        $role = Role::where('name', $this->roleName)->first();
+        $permission = Permission::where('name', $this->permissionName)->first();
 
         $key = 'permissions-roles-detached-event';
 
         Cache::put($key, false, 999999);
 
-        $role = Role::where('name', 'admin')->first();
-        $permission = Permission::where('name', 'everything/do')->first();
+        $role = Role::where('name', $this->roleName)->first();
+        $permission = Permission::where('name', $this->permissionName)->first();
 
         $permission->detachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testUsersAttachedDetachedEvent()
+    public function testUsersAttachedEvent()
     {
         $key = 'permissions-users-attached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $permission = Permission::create(['name' => 'everything/do']);
+        $permission = Permission::where('name', $this->permissionName)->first();
 
         $permission->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
+    }
 
+    public function testUsersDetachedEvent()
+    {
         $key = 'permissions-users-detached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $permission = Permission::where('name', 'everything/do')->first();
+        $permission = Permission::where('name', $this->permissionName)->first();
 
         $permission->detachUser($user->email);
 

@@ -15,11 +15,15 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    protected $factories = __DIR__.'/database/factories/models';
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->withFactories(__DIR__.'/database/factories');
+        //var_dump($this->factories);
+
+        $this->withFactories($this->factories);
     }
 
     protected function getEnvironmentSetUp($app)
@@ -37,7 +41,7 @@ class TestCase extends OrchestraTestCase
                 'database' => 'admin' // sets the authentication database required by mongo 3
             ]
         ]);
-        $app['config']->set('trustnosql.user_models.users', 'Vegvisir\TrustnoSql\Tests\Infrastructure\Models\User');
+        $app['config']->set('trustnosql.user_models.users', \Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User::class);
         $app['config']->set('cache', [
             'default' => 'file',
             'stores' => [
@@ -48,14 +52,6 @@ class TestCase extends OrchestraTestCase
             ]
         ]);
         $app['config']->set('trustnosql.teams.use_teams', true);
-        $app['config']->set('trustnosql.events', [
-            'observers' => [
-                'Permission' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\PermissionObserver::class,
-                'Role' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\RoleObserver::class,
-                'Team' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\TeamObserver::class,
-                'User' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Observers\UserObserver::class,
-            ]
-        ]);
     }
 
     protected function getPackageProviders($app)

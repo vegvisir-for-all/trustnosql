@@ -13,6 +13,7 @@ namespace Vegvisir\TrustNoSql\Contracts;
 
 interface PermissionInterface
 {
+
     /**
      * Moloquent belongs-to-many relationship with the role model.
      *

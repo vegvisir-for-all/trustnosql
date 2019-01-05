@@ -9,7 +9,7 @@
  * @license GNU General Public License, version 3
  */
 
-namespace Vegvisir\TrustNoSql\Tests\Models;
+namespace Vegvisir\TrustNoSql\Tests\Grabbable;
 
 use Vegvisir\TrustNoSql\TrustNoSql;
 use Vegvisir\TrustNoSql\Tests\TestCase;
@@ -25,7 +25,7 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeBoth;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeEither;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class GrabbableTest extends TestCase
+class GrabbableTest extends GrabbableTestCase
 {
     public function testIsGrabbable()
     {
@@ -126,8 +126,8 @@ class GrabbableTest extends TestCase
         $first = User::where(1)->first();
         $last = User::where(1)->orderBy('_id', 'desc')->first();
 
-        $this->assertFalse($modeBoth->canBeGrabbedBy($first));
-        $this->assertTrue($modeBoth->canBeGrabbedBy($last));
+        $this->assertTrue($modeBoth->canBeGrabbedBy($first));
+        $this->assertFalse($modeBoth->canBeGrabbedBy($last));
     }
 
     public function testModeEither()

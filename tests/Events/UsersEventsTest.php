@@ -12,88 +12,109 @@
 namespace Vegvisir\TrustNoSql\Tests\Events;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class UsersEventsTest extends Events
+class UsersEventsTest extends EventsTestCase
 {
-    protected static function setConfigToTrue()
-    {
-        Config::set('trustnosql.teams.use_teams', true);
-    }
-
-    public function testPermissionsAttachedDetachedEvent()
+    public function testPermissionsAttachedEvent()
     {
         $key = 'users-permissions-attached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $permission = Permission::where(['name' => 'everything/do'])->first();
+        $permission = Permission::where($this->permissionName)->first();
+
+        $this->assertNotNull($user);
+        $this->assertNotNull($permission);
 
         $user->attachPermission($permission->name);
 
         $this->assertTrue(Cache::pull($key));
+    }
 
+    public function testPermissionsDetachedEvent()
+    {
         $key = 'users-permissions-detached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $permission = Permission::where('name', 'everything/do')->first();
+        $permission = Permission::where($this->permissionName)->first();
+
+        $this->assertNotNull($user);
+        $this->assertNotNull($permission);
 
         $user->detachPermission($permission->name);
 
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testRolesAttachedDetachedEvent()
+    public function testRolesAttachedEvent()
     {
         $key = 'users-roles-attached-event';
 
         Cache::put($key, false, 999999);
 
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::where('name', $this->roleName)->first();
         $user = User::where(1)->first();
+
+        $this->assertNotNull($role);
+        $this->assertNotNull($user);
 
         $user->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
+    }
 
+    public function testRolesDetachedEvent()
+    {
         $key = 'users-roles-detached-event';
 
         Cache::put($key, false, 999999);
 
-        $role = Role::where('name', 'admin')->first();
+        $role = Role::where('name', $this->roleName)->first();
         $user = User::where(1)->first();
+
+        $this->assertNotNull($role);
+        $this->assertNotNull($user);
 
         $user->detachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
     }
 
-    public function testTeamsAttachedDetachedEvent()
+    public function testTeamsAttachedEvent()
     {
         $key = 'users-teams-attached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $team = Team::create(['name' => 'users']);
+        $team = Team::where('name', $this->teamName)->first();
+
+        $this->assertNotNull($user);
+        $this->assertNotNull($team);
 
         $user->attachTeam($team->name);
 
         $this->assertTrue(Cache::pull($key));
+    }
 
+    public function testTeamsDetachedEvent()
+    {
         $key = 'users-teams-detached-event';
 
         Cache::put($key, false, 999999);
 
         $user = User::where(1)->first();
-        $team = Team::where('name', 'users')->first();
+        $team = Team::where('name', $this->teamName)->first();
+
+        $this->assertNotNull($user);
+        $this->assertNotNull($team);
 
         $user->detachTeam($team->name);
 
