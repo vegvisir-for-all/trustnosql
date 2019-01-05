@@ -6,7 +6,7 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 
 class EventsTestCase extends TestCase
 {
-    protected $factories = __DIR__.'/../database/factories/events';
+    protected $factories = __DIR__.'database/factories/events';
 
     protected $permissionName = 'permission/test';
 
