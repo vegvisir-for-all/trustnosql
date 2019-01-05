@@ -60,7 +60,7 @@ class TeamsTest extends ModelsTestCase
     {
         foreach ($this->teamsData as $teamData) {
             $team = Team::where('name', $teamData['name'])->first();
-            $this->assertEquals($teamData['display_name'], $team->display_name);
+            $this->assertEquals($teamData['name'], $team->name);
         }
     }
 
@@ -74,13 +74,17 @@ class TeamsTest extends ModelsTestCase
 
     public function testRejectCreateExists()
     {
-        $team = Team::create(['name' => 'team-fourth']);
+        try {
+            $team = Team::create(['name' => 'team-fourth']);
+        } catch (\Exception $e) {}
         $this->assertEquals(1, Team::where('name', 'team-fourth')->count());
     }
 
     public function testRejectCreateIllegalChars()
     {
-        $team = Team::create(['name' => 'team/fourth']);
+        try {
+            $team = Team::create(['name' => 'team/fourth']);
+        } catch (\Exception $e) {}
         $this->assertEquals(0, Team::where('team', 'role/fourth')->count());
     }
 

@@ -75,7 +75,7 @@ class UserHelper extends HelperProxy
         }
 
         return collect(self::getModel()->whereIn('email', (array) $users)->get())->map(function ($item, $key) {
-            return $item->email;
+            return $item->_id;
         })->toArray();
     }
 }

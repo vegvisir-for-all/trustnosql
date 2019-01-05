@@ -28,9 +28,6 @@ class RolesEventsTest extends EventsTestCase
         $role = Role::where('name', $this->roleName)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
 
-        $this->assertNotNull($role);
-        $this->assertNotNull($permission);
-
         $role->attachPermission($permission->name);
 
         $this->assertTrue(Cache::pull($key));
@@ -44,9 +41,6 @@ class RolesEventsTest extends EventsTestCase
 
         $role = Role::where('name', $this->roleName)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
-
-        $this->assertNotNull($role);
-        $this->assertNotNull($permission);
 
         $role->detachPermission($permission->name);
 
@@ -62,9 +56,6 @@ class RolesEventsTest extends EventsTestCase
         $role = Role::where('name', $this->roleName)->first();
         $team = Team::where('name', $this->teamName)->first();
 
-        $this->assertNotNull($role);
-        $this->assertNotNull($team);
-
         $role->attachTeam($team->name);
 
         $this->assertTrue(Cache::pull($key));
@@ -78,9 +69,6 @@ class RolesEventsTest extends EventsTestCase
 
         $role = Role::where('name', $this->roleName)->first();
         $team = Team::where('name', $this->teamName)->first();
-
-        $this->assertNotNull($role);
-        $this->assertNotNull($team);
 
         $role->detachTeam($team->name);
 
@@ -96,9 +84,6 @@ class RolesEventsTest extends EventsTestCase
         $role = Role::where('name', $this->roleName)->first();
         $user = User::where(1)->first();
 
-        $this->assertNotNull($role);
-        $this->assertNotNull($user);
-
         $role->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
@@ -112,9 +97,6 @@ class RolesEventsTest extends EventsTestCase
 
         $role = Role::where('name', $this->roleName)->first();
         $user = User::where(1)->first();
-
-        $this->assertNotNull($role);
-        $this->assertNotNull($user);
 
         $role->detachUser($user->email);
 

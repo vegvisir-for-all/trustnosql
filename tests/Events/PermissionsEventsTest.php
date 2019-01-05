@@ -19,11 +19,24 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class PermissionsEventsTest extends EventsTestCase
 {
-    public function testModelsExist()
+    public function testPermissionsExist()
     {
         $this->assertEquals(1, Permission::count());
+    }
+
+    public function testRolesExist()
+    {
         $this->assertEquals(1, Role::count());
+    }
+
+    public function testTeamsExist()
+    {
         $this->assertEquals(1, Team::count());
+    }
+
+    public function testUsersExist()
+    {
+        $this->assertEquals(5, User::count());
     }
 
     public function testRolesAttachedEvent()
@@ -35,9 +48,6 @@ class PermissionsEventsTest extends EventsTestCase
         $role = Role::where('name', $this->roleName)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
 
-        $this->assertNotNull($role);
-        $this->assertNotNull($permission);
-
         $permission->attachRole($role->name);
 
         $this->assertTrue(Cache::pull($key));
@@ -47,11 +57,6 @@ class PermissionsEventsTest extends EventsTestCase
     {
         $role = Role::where('name', $this->roleName)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
-
-        $this->assertNotNull($role);
-        $this->assertNotNull($permission);
-
-        $this->assertEquals(1, $permission->roles()->count());
 
         $key = 'permissions-roles-detached-event';
 
@@ -74,9 +79,6 @@ class PermissionsEventsTest extends EventsTestCase
         $user = User::where(1)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
 
-        $this->assertNotNull($user);
-        $this->assertNotNull($permission);
-
         $permission->attachUser($user->email);
 
         $this->assertTrue(Cache::pull($key));
@@ -90,9 +92,6 @@ class PermissionsEventsTest extends EventsTestCase
 
         $user = User::where(1)->first();
         $permission = Permission::where('name', $this->permissionName)->first();
-
-        $this->assertNotNull($user);
-        $this->assertNotNull($permission);
 
         $permission->detachUser($user->email);
 

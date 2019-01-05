@@ -183,8 +183,6 @@ class BaseChecker
 
         $namespace = Helper::getPermissionNamespace($permission);
 
-        var_dump($permission, $namespace);
-
         /**
          * List of all permissions for a namespace ([city:view, city:update, city:create, ...]).
          */

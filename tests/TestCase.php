@@ -21,6 +21,8 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        //var_dump($this->factories);
+
         $this->withFactories($this->factories);
     }
 
