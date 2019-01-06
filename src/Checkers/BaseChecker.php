@@ -139,27 +139,13 @@ class BaseChecker
             .'Current'
             .ucfirst(str_plural(class_basename($entityModel)));
 
+        if (Helper::isPermission($entityModel) && Helper::isPermissionWildcard($entityName)) {
+            return $this->currentModelCheckSingleWildcardPermission($entityName);
+        }
+
         foreach ($this->model->{$modelFunctionName}() as $currentEntity) {
             // Checking for no-wildcard permission name, like 'city/create'
             if (str_is($entityName, $currentEntity)) {
-                return true;
-            }
-
-            /*
-             * If entity is not a permission, we should continue, omitting wildcard permissions.
-             * We also continue is entity is not a wildcard permission
-             */
-            if (!Helper::isPermission($entityModel)
-                || (Helper::isPermission($entityModel) && !Helper::isPermissionWildcard($entityName))) {
-                continue;
-            }
-
-            /*
-             * Another case is when we want to check 'city/*' or 'city/all', and the role has assigned array of no-wildcard
-             * permissions. In that case, we need to load all 'city' namespace permissions (excluding those with wildcards)
-             * and check, whether a role has all permissions assigned to
-             */
-            if ($this->currentModelCheckSingleWildcardPermission($entityName)) {
                 return true;
             }
         }
@@ -197,7 +183,7 @@ class BaseChecker
             $modelName = 'User';
         }
 
-        $modelPermissions = $this->model->getModelCurrentEntities('permission', $namespace);
+        $modelPermissions = $this->model->getModelCurrentEntities('permission', $namespace, true);
 
         /*
          * Since $availablePermissions and $rolePermissions must have the very same values, we use

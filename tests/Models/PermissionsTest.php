@@ -11,6 +11,7 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
+use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\TrustNoSql;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
@@ -91,9 +92,9 @@ class PermissionsTest extends ModelsTestCase
     {
         $user = User::first();
 
-        $user->detachPermission('namespace/task');
+        $user->detachPermission('permission/first');
 
-        $this->assertEquals(0, $user->permissions->where('name', 'namespace/task')->count());
+        $this->assertEquals(0, $user->permissions->where('name', 'permission/first')->count());
     }
 
     public function testHasPermissionWhenDoesNotHave()
@@ -111,14 +112,33 @@ class PermissionsTest extends ModelsTestCase
         $this->assertTrue($user->hasPermission('permission/first'));
     }
 
+    public function testHasWildcardPermissions()
+    {
+        $user = User::first();
+
+        $user->attachPermissions('permission/first,permission/second,permission/third');
+
+        $this->assertTrue($user->hasPermission('permission/*'));
+        $this->assertTrue($user->hasPermission('permission/all'));
+    }
+
+    public function testDoesntHaveWildcardPermissions()
+    {
+        $user = User::first();
+        $user->detachPermission('permission/third');
+
+        $this->assertEquals(2, $user->permissions()->count());
+
+        $this->assertFalse($user->hasPermission('permission/*'));
+        $this->assertFalse($user->hasPermission('permission/all'));
+    }
+
     public function testHasPermissionAliases()
     {
         $user = User::first();
 
         $this->assertTrue($user->hasPermissions('permission/first'));
         $this->assertTrue($user->does('permission/first'));
-        $this->assertTrue($user->hasPermission('permission/*'));
-        $this->assertTrue($user->hasPermission('permission/all'));
         $this->assertFalse($user->hasPermission('permission/everything'));
     }
 

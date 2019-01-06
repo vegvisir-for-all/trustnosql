@@ -13,9 +13,9 @@ namespace Vegvisir\TrustNoSql\Tests\Grabbable;
 
 use Vegvisir\TrustNoSql\TrustNoSql;
 use Vegvisir\TrustNoSql\Tests\TestCase;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Top as GrabbableTop;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Middle as GrabbableMiddle;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom as GrabbableBottom;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Top;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Middle;
+use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesOverwritten;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesNotOverwritten;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeNone;
@@ -27,11 +27,34 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class GrabbableTest extends GrabbableTestCase
 {
+    public function testCreated()
+    {
+        $grabbablesData = [
+            'bottom',
+            'middle',
+            'modeBoth',
+            'modeEither',
+            'modeExplicit',
+            'modeGrabbable',
+            'modeNone',
+            'rulesNotOverwritten',
+            'rulesOverwritten',
+            'top',
+        ];
+
+        foreach ($grabbablesData as $grabbableName) {
+            $grabbableClassName = "\\Vegvisir\\TrustNoSql\\Tests\\Infrastructure\\Grabbables\\" . ucfirst($grabbableName);
+
+            $grabbable = $grabbableClassName::where('name', kebab_case($grabbableName))->first();
+            $this->assertEquals(kebab_case($grabbableName), $grabbable->name);
+        }
+    }
+
     public function testIsGrabbable()
     {
-        $top = new GrabbableTop;
-        $middle = new GrabbableMiddle;
-        $bottom = new GrabbableBottom;
+        $top = new Top;
+        $middle = new Middle;
+        $bottom = new Bottom;
         $this->assertTrue(is_a($top, \Vegvisir\TrustNoSql\Models\Grabbable::class));
         $this->assertTrue(is_a($middle, \Vegvisir\TrustNoSql\Models\Grabbable::class));
         $this->assertTrue(is_a($bottom, \Vegvisir\TrustNoSql\Models\Grabbable::class));
@@ -47,9 +70,9 @@ class GrabbableTest extends GrabbableTestCase
          */
 
         $grabbables = [
-            'top' => new GrabbableTop,
-            'middle' => new GrabbableMiddle,
-            'bottom' => new GrabbableBottom,
+            'top' => Top::where('name', 'top')->first(),
+            'middle' => Middle::where('name', 'middle')->first(),
+            'bottom' => Bottom::where('name', 'bottom')->first(),
         ];
 
         $methods = [
@@ -66,16 +89,19 @@ class GrabbableTest extends GrabbableTestCase
 
     public function testRulesOverwritten()
     {
-        $rulesOverwritten = new RulesOverwritten;
+        $rulesOverwritten = RulesOverwritten::where('name', 'rules-overwritten')->first();
         $this->assertTrue($rulesOverwritten->isGrababilityOverwritten());
+    }
 
-        $rulesNotOverwritten = new RulesNotOverwritten;
+    public function testRulesNotOverwritten()
+    {
+        $rulesNotOverwritten = RulesNotOverwritten::where('name', 'rules-not-overwritten')->first();
         $this->assertFalse($rulesNotOverwritten->isGrababilityOverwritten());
     }
 
     public function testModeNone()
     {
-        $modeNone = new ModeNone;
+        $modeNone = ModeNone::where('name', 'mode-none')->first();
         $this->assertEquals($modeNone::MODE_NONE, $modeNone->getGrababilityMode());
 
         $user = User::where(1)->first();
@@ -85,42 +111,28 @@ class GrabbableTest extends GrabbableTestCase
 
     public function testModeExplicit()
     {
-        $modeExplicit = new ModeExplicit;
+        $modeExplicit = ModeExplicit::where('name', 'mode-explicit')->first();
         $this->assertEquals($modeExplicit::MODE_EXPLICIT, $modeExplicit->getGrababilityMode());
-
-        // ---
-
-        $modeExplicit->save();
-
-        $this->assertTrue($modeExplicit->canBeGrabbedBy(User::where(1)->first()));
+        $user = User::where(1)->first();
+        $this->assertTrue($modeExplicit->canBeGrabbedBy($user));
     }
 
     public function testModeGrabbable()
     {
-        $modeGrabbable = new ModeGrabbable;
+        $modeGrabbable = ModeGrabbable::where('name', 'mode-grabbable')->first();
         $this->assertEquals($modeGrabbable::MODE_GRABBABLE, $modeGrabbable->getGrababilityMode());
 
-        // ---
-
-        $modeGrabbable->save();
-
         $user = User::where(1)->orderBy('_id', 'desc')->first();
-
         $this->assertTrue($modeGrabbable->canBeGrabbedBy($user));
 
         $user = User::where(1)->orderBy('_id', 'asc')->first();
-
         $this->assertFalse($modeGrabbable->canBeGrabbedBy($user));
     }
 
     public function testModeBoth()
     {
-        $modeBoth = new ModeBoth;
+        $modeBoth = ModeBoth::where('name', 'mode-both')->first();
         $this->assertEquals($modeBoth::MODE_BOTH, $modeBoth->getGrababilityMode());
-
-        // ---
-
-        $modeBoth->save();
 
         $first = User::where(1)->first();
         $last = User::where(1)->orderBy('_id', 'desc')->first();
@@ -133,10 +145,6 @@ class GrabbableTest extends GrabbableTestCase
     {
         $modeEither = new ModeEither;
         $this->assertEquals($modeEither::MODE_EITHER, $modeEither->getGrababilityMode());
-
-        // ---
-
-        $modeEither->save();
 
         $first = User::where(1)->first();
         $last = User::where(1)->orderBy('_id', 'desc')->first();

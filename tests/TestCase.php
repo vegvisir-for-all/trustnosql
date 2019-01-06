@@ -15,13 +15,11 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-    protected $factories = __DIR__.'/database/factories/models';
+    protected $factories = __DIR__.'/database/factories/users';
 
     public function setUp()
     {
         parent::setUp();
-
-        //var_dump($this->factories);
 
         $this->withFactories($this->factories);
     }

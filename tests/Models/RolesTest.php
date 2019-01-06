@@ -59,20 +59,25 @@ class RolesTest extends ModelsTestCase
 
     public function testRejectCreateExists()
     {
-        $role = Role::create(['name' => 'role-fourth']);
+        try {
+            $role = Role::create(['name' => 'role-fourth']);
+        } catch (\Exception $e) {
+        }
         $this->assertEquals(1, Role::where('name', 'role-fourth')->count());
     }
 
     public function testRejectCreateIllegalChars()
     {
-        $role = Role::create(['name' => 'role/fourth']);
+        try {
+            $role = Role::create(['name' => 'role/fourth']);
+        } catch (\Exception $e) {
+        }
         $this->assertEquals(0, Role::where('name', 'role/fourth')->count());
     }
 
     public function testDelete()
     {
         Role::where('name', 'role-fourth')->delete();
-
         $this->assertEquals(0, Role::where('name', 'role-fourth')->count());
     }
 
@@ -83,36 +88,28 @@ class RolesTest extends ModelsTestCase
     public function testAttachingToUsersSingle()
     {
         $user = User::first();
-
         $user->attachRole('role-first');
-
         $this->assertEquals(1, $user->roles()->where('name', 'role-first')->count());
     }
 
     public function testAttachingToUsersMultiple()
     {
         $user = User::first();
-
         $user->attachRole('role-second,role-third');
-
         $this->assertEquals(3, $user->roles()->count());
     }
 
     public function testDetachingFromUsersSingle()
     {
         $user = User::first();
-
         $user->detachRole('role-first');
-
         $this->assertEquals(0, $user->roles()->where('name', 'role-first')->count());
     }
 
     public function testDetachingFromUsersMultiple()
     {
         $user = User::first();
-
         $user->detachRole('role-second,role-third');
-
         $this->assertEquals(0, $user->roles()->count());
     }
 
@@ -146,8 +143,6 @@ class RolesTest extends ModelsTestCase
         $this->assertTrue($user->hasRoles(['role-first']));
         $this->assertTrue($user->isA('role-first'));
         $this->assertTrue($user->isAn('role-first'));
-
-        // @todo Tests for facade class
     }
 
     /**
@@ -158,9 +153,7 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $team->attachRole('role-first');
-
         $this->assertEquals(1, $team->roles()->where('name', 'role-first')->count());
     }
 
@@ -168,9 +161,7 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $team->attachRoles('role-second,role-third');
-
         $this->assertEquals(3, $team->roles()->count());
     }
 
@@ -178,9 +169,7 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $team->detachRole('role-first');
-
         $this->assertEquals(0, $team->roles()->where('name', 'role-first')->count());
     }
 
@@ -188,9 +177,7 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $team->detachRole('role-second,role-third');
-
         $this->assertEquals(0, $team->roles()->count());
     }
 
@@ -199,7 +186,6 @@ class RolesTest extends ModelsTestCase
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
         $team->attachRole('role-first');
-
         $this->assertTrue($team->hasRole('role-first'));
     }
 
@@ -207,7 +193,6 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $team->attachRoles('role-second,role-third');
         $this->assertTrue($team->hasRole('role-first,role-second,role-third', true));
         $this->assertTrue($team->hasRole(['role-first', 'role-second', 'role-third'], true));
@@ -217,7 +202,6 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $this->assertTrue($team->hasRole('role-third,role-fourth,role-fifth', false));
         $this->assertTrue($team->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
     }
@@ -226,7 +210,6 @@ class RolesTest extends ModelsTestCase
     {
         $team = Team::where('name', 'team-first')->first();
         $this->assertNotNull($team);
-
         $this->assertTrue($team->hasRoles('role-first'));
         $this->assertTrue($team->hasRoles(['role-first']));
         $this->assertTrue($team->isA('role-first'));
@@ -243,9 +226,7 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->attachRole('role-first');
-
         $this->assertEquals(1, $permission->roles()->where('name', 'role-first')->count());
     }
 
@@ -253,9 +234,7 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->attachRoles('role-second,role-third');
-
         $this->assertEquals(3, $permission->roles()->count());
     }
 
@@ -263,9 +242,7 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->detachRole('role-first');
-
         $this->assertEquals(0, $permission->roles()->where('name', 'role-first')->count());
     }
 
@@ -273,9 +250,7 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->detachRole('role-second,role-third');
-
         $this->assertEquals(0, $permission->roles()->count());
     }
 
@@ -283,9 +258,7 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->attachRole('role-first');
-
         $this->assertTrue($permission->hasRole('role-first'));
     }
 
@@ -293,7 +266,6 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $permission->attachRoles('role-second,role-third');
         $this->assertTrue($permission->hasRole('role-first,role-second,role-third', true));
         $this->assertTrue($permission->hasRole(['role-first', 'role-second', 'role-third'], true));
@@ -303,7 +275,6 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $this->assertTrue($permission->hasRole('role-third,role-fourth,role-fifth', false));
         $this->assertTrue($permission->hasRole(['role-third', 'role-fourth', 'role-fifth'], false));
     }
@@ -312,12 +283,9 @@ class RolesTest extends ModelsTestCase
     {
         $permission = Permission::where('name', 'permission/first')->first();
         $this->assertNotNull($permission);
-
         $this->assertTrue($permission->hasRoles('role-first'));
         $this->assertTrue($permission->hasRoles(['role-first']));
         $this->assertTrue($permission->isA('role-first'));
         $this->assertTrue($permission->isAn('role-first'));
-
-        // @todo Tests for facade class
     }
 }

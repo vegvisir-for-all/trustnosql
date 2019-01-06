@@ -7,6 +7,13 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
 class ModeEither extends TrustNoSqlGrabbable
 {
+    /**
+     * Fillable properties of the model.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'owner_ids'];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

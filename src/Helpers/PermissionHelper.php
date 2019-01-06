@@ -50,7 +50,7 @@ class PermissionHelper extends HelperProxy
      */
     public static function getWildcards()
     {
-        return Config::get('trustnosql.permissions.wildcards', ['*', 'all']);
+        return Config::get('trustnosql.permissions.wildcards');
     }
 
     /**
@@ -64,7 +64,7 @@ class PermissionHelper extends HelperProxy
     {
         $permissionNameExploded = explode(static::NAMESPACE_DELIMITER, $permissionName);
 
-        return \in_array($permissionNameExploded[1], static::getWildcards(), true);
+        return \in_array($permissionNameExploded[1], static::getWildcards());
     }
 
     /**

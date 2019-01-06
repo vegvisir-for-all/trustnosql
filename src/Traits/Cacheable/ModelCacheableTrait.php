@@ -70,10 +70,6 @@ trait ModelCacheableTrait
             .'_'
             .$this->id;
 
-        if (null !== $namespace) {
-            $cacheKey .= '_'.$namespace;
-        }
-
         return Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () use ($entityModelName, $namespace) {
             return $this->getModelCurrentEntities($entityModelName, $namespace, true);
         });
