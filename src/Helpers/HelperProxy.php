@@ -13,6 +13,11 @@ namespace Vegvisir\TrustNoSql\Helpers;
 
 class HelperProxy
 {
+    /**
+     * Delimiter for comma-separated entity string.
+     *
+     * @var string
+     */
     const ENTITIES_DELIMITER = ',';
 
     /**
@@ -75,11 +80,25 @@ class HelperProxy
         return PermissionHelper::getKeys($permissions);
     }
 
+    /**
+     * Returns array of permissions in given namespace
+     *
+     * @param string $namespace Namespace name
+     *
+     * @return array
+     */
     public static function getPermissionsInNamespace($namespace)
     {
         return PermissionHelper::getPermissionsInNamespace($namespace);
     }
 
+    /**
+     * Return extracted namespace of permission name
+     *
+     * @param string $permission Permission name
+     *
+     * @return string
+     */
     public static function getPermissionNamespace($permission)
     {
         return PermissionHelper::getNamespace($permission);

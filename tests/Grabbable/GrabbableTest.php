@@ -54,8 +54,7 @@ class GrabbableTest extends GrabbableTestCase
 
         $methods = [
             'setGrababilityMode',
-            'explicitelyGrabbedBy',
-            'grabbableBy'
+            'explicitelyGrabbedBy'
         ];
 
         foreach ($grabbables as $grabbableName => $grabbableObj) {

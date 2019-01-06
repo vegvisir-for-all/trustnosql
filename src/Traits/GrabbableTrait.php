@@ -18,7 +18,7 @@ trait GrabbableTrait
      *
      * @var bool
      */
-    protected $grababilityLock = false;
+    protected $grababilityLock = true;
 
     /**
      * Grabability mode.
@@ -104,23 +104,6 @@ trait GrabbableTrait
         return \in_array($user->id, $this->grabber_ids, true) || \in_array($user->id, $this->owner_ids, true);
     }
 
-    /**
-     * Function to be overriden in the model to establish grabability rules.
-     *
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function grabbableBy($user)
-    {
-        $this->grababilityLock = true;
-    }
-
-    /**
-     * Checks whether model has overwritten grabability rules.
-     *
-     * @return bool
-     */
     public function isGrababilityOverwritten()
     {
         return !$this->grababilityLock;

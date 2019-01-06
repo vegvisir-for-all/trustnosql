@@ -176,7 +176,6 @@ class BaseChecker
      */
     protected function currentModelCheckSingleWildcardPermission($permission)
     {
-
         if (!Helper::isPermissionWildcard($permission)) {
             throw new NoWildcardPermissionException($permission);
         }

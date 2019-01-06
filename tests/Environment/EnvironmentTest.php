@@ -22,6 +22,11 @@ class EnvironmentTest extends EnvironmentTestCase
         $this->assertSame('mongodb', $defaultDriver);
     }
 
+    public function testUsersCount()
+    {
+        $this->assertEquals(5, User::count());
+    }
+
     public function testUsersCreatedName()
     {
         $users = test_seed_users();

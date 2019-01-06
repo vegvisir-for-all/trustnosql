@@ -67,13 +67,4 @@ interface GrabbableInterface
      * @return bool
      */
     public function explicitelyGrabbedBy($user);
-
-    /**
-     * Function to be overriden in the model to establish grabability rules.
-     *
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function grabbableBy($user);
 }

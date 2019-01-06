@@ -8,6 +8,6 @@ class RulesOverwritten extends TrustNoSqlGrabbable
 {
     public function grabbableBy($user)
     {
-        return true;
+        $this->grababilityLock = false;
     }
 }

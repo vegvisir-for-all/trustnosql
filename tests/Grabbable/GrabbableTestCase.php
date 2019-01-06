@@ -6,7 +6,7 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 
 class GrabbableTestCase extends TestCase
 {
-    protected $factories = __DIR__.'database/factories/grabbable';
+    protected $factories = __DIR__.'/../database/factories/grabbable';
 
     public function getEnvironmentSetUp($app)
     {

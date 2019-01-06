@@ -15,7 +15,8 @@ class ModeGrabbable extends TrustNoSqlGrabbable
 
     public function grabbableBy($user)
     {
+        parent::grabbableBy($user);
         $grabber = User::where(1)->orderBy('_id', 'desc')->first();
-        return $user->id === $grabber->id;
+        return $user->_id === $grabber->_id;
     }
 }

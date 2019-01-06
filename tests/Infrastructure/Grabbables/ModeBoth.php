@@ -23,7 +23,8 @@ class ModeBoth extends TrustNoSqlGrabbable
 
     public function grabbableBy($user)
     {
+        parent::grabbableBy($user);
         $grabber = User::where(1)->first();
-        return $user->id === $grabber->id;
+        return $user->_id === $grabber->_id;
     }
 }

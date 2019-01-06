@@ -160,6 +160,13 @@ class PermissionHelper extends HelperProxy
         return !static::isWildcard($name);
     }
 
+    /**
+     * Returns array of permissions in given namespace
+     *
+     * @param string $namespace Namespace name
+     *
+     * @return array
+     */
     public static function getPermissionsInNamespace($namespace)
     {
         return collect(Permission::where('name', 'like', $namespace . '/%')->get())->map(function ($item) {

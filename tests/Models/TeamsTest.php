@@ -76,7 +76,8 @@ class TeamsTest extends ModelsTestCase
     {
         try {
             $team = Team::create(['name' => 'team-fourth']);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         $this->assertEquals(1, Team::where('name', 'team-fourth')->count());
     }
 
@@ -84,7 +85,8 @@ class TeamsTest extends ModelsTestCase
     {
         try {
             $team = Team::create(['name' => 'team/fourth']);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         $this->assertEquals(0, Team::where('team', 'role/fourth')->count());
     }
 
