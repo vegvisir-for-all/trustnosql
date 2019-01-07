@@ -50,5 +50,5 @@ if (null == Cache::get('create_grabbables')) {
         $grabbableClassName::create($arguments);
     }
 
-    Cache::put('create_grabbables', 2);
+    Cache::put('create_grabbables', true, 2);
 }

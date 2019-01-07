@@ -13,12 +13,6 @@ namespace Vegvisir\TrustNoSql\Traits;
 
 trait GrabbableTrait
 {
-    /**
-     * If false, then grabbableBy method was overriden.
-     *
-     * @var bool
-     */
-    protected $grababilityLock = true;
 
     /**
      * Grabability mode.
@@ -26,6 +20,15 @@ trait GrabbableTrait
      * @var int
      */
     protected $grababilityMode = 3;
+
+    public function __call($name, $arguments)
+    {
+        if($name == 'grabbableBy') {
+            return false;
+        }
+
+        parent::__call($name, $arguments);
+    }
 
     /**
      * Set grabability mode.
@@ -62,15 +65,15 @@ trait GrabbableTrait
 
                 break;
             case static::MODE_GRABBABLE:
-                return $this->grababilityLock ? true : $this->grabbableBy($user);
+                return $this->grabbableBy($user);
 
                 break;
             case static::MODE_BOTH:
-                return ($this->explicitelyGrabbedBy($user)) && ($this->grababilityLock ? true : $this->grabbableBy($user));
+                return ($this->explicitelyGrabbedBy($user)) && ($this->grabbableBy($user));
 
                 break;
             case static::MODE_EITHER:
-                return ($this->explicitelyGrabbedBy($user)) || ($this->grababilityLock ? true : $this->grabbableBy($user));
+                return ($this->explicitelyGrabbedBy($user)) || ($this->grabbableBy($user));
 
                 break;
             default:
