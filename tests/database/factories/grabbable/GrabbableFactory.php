@@ -7,8 +7,6 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeEither;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeExplicit;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeGrabbable;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeNone;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesNotOverwritten;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesOverwritten;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Top;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
@@ -28,8 +26,6 @@ if (null == Cache::get('create_grabbables')) {
     'modeExplicit',
     'modeGrabbable',
     'modeNone',
-    'rulesNotOverwritten',
-    'rulesOverwritten',
     'top',
 ];
 

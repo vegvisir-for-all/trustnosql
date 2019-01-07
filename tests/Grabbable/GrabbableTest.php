@@ -16,8 +16,6 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Top;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Middle;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\Bottom;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesOverwritten;
-use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\RulesNotOverwritten;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeNone;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeExplicit;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Grabbables\ModeGrabbable;
@@ -37,8 +35,6 @@ class GrabbableTest extends GrabbableTestCase
             'modeExplicit',
             'modeGrabbable',
             'modeNone',
-            'rulesNotOverwritten',
-            'rulesOverwritten',
             'top',
         ];
 
@@ -85,18 +81,6 @@ class GrabbableTest extends GrabbableTestCase
                 $this->assertTrue(method_exists(get_class($grabbableObj), $methodName));
             }
         }
-    }
-
-    public function testRulesOverwritten()
-    {
-        $rulesOverwritten = RulesOverwritten::where('name', 'rules-overwritten')->first();
-        $this->assertTrue($rulesOverwritten->isGrababilityOverwritten());
-    }
-
-    public function testRulesNotOverwritten()
-    {
-        $rulesNotOverwritten = RulesNotOverwritten::where('name', 'rules-not-overwritten')->first();
-        $this->assertFalse($rulesNotOverwritten->isGrababilityOverwritten());
     }
 
     public function testModeNone()

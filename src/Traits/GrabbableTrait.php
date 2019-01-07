@@ -21,15 +21,6 @@ trait GrabbableTrait
      */
     protected $grababilityMode = 3;
 
-    public function __call($name, $arguments)
-    {
-        if($name == 'grabbableBy') {
-            return false;
-        }
-
-        parent::__call($name, $arguments);
-    }
-
     /**
      * Set grabability mode.
      *
@@ -107,8 +98,4 @@ trait GrabbableTrait
         return \in_array($user->id, $this->grabber_ids, true) || \in_array($user->id, $this->owner_ids, true);
     }
 
-    public function isGrababilityOverwritten()
-    {
-        return !$this->grababilityLock;
-    }
 }
