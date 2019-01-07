@@ -15,11 +15,12 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-Permission::where(1)->delete();
-Role::where(1)->delete();
-Team::where(1)->delete();
+if (null == Cache::get('create_grabbables')) {
+    Permission::where(1)->delete();
+    Role::where(1)->delete();
+    Team::where(1)->delete();
 
-$grabbablesData = [
+    $grabbablesData = [
     'bottom',
     'middle',
     'modeBoth',
@@ -32,19 +33,22 @@ $grabbablesData = [
     'top',
 ];
 
-foreach ($grabbablesData as $grabbableName) {
-    $grabbableClassName = "\\Vegvisir\\TrustNoSql\\Tests\\Infrastructure\\Grabbables\\" . ucfirst($grabbableName);
+    foreach ($grabbablesData as $grabbableName) {
+        $grabbableClassName = "\\Vegvisir\\TrustNoSql\\Tests\\Infrastructure\\Grabbables\\" . ucfirst($grabbableName);
 
-    $arguments = ['name' => kebab_case($grabbableName)];
+        $arguments = ['name' => kebab_case($grabbableName)];
 
-    if ($grabbableName == 'modeGrabbable' || $grabbableName == 'modeBoth') {
-        $ownerIds = [
+        if ($grabbableName == 'modeGrabbable' || $grabbableName == 'modeBoth') {
+            $ownerIds = [
             User::where(1)->first()->id,
             User::where(1)->orderBy('_id', 'desc')->first()->id
         ];
 
-        $arguments['owner_ids'] = $ownerIds;
+            $arguments['owner_ids'] = $ownerIds;
+        }
+
+        $grabbableClassName::create($arguments);
     }
 
-    $grabbableClassName::create($arguments);
+    Cache::put('create_grabbables', 2);
 }

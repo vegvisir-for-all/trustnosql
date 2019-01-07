@@ -4,32 +4,35 @@ use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 
-Permission::where(1)->delete();
+if (null == Cache::get('create_events')) {
+    Permission::where(1)->delete();
 
-$permissionData = [
+    $permissionData = [
     'name' => 'permission/test',
     'display_name' => 'Permission Test',
     'description' => 'Permission Test'
 ];
 
-Permission::create($permissionData);
+    Permission::create($permissionData);
 
-Role::where(1)->delete();
+    Role::where(1)->delete();
 
-$roleData = [
+    $roleData = [
     'name' => 'role-test',
     'display_name' => 'Role Test',
     'description' => 'Role Test'
 ];
 
-Role::create($roleData);
+    Role::create($roleData);
 
-Team::where(1)->delete();
+    Team::where(1)->delete();
 
-$teamData = [
+    $teamData = [
     'name' => 'team-test',
     'display_name' => 'Team Test',
     'description' => 'Team Test'
 ];
 
-Team::create($teamData);
+    Team::create($teamData);
+    Cache::put('create_events', true, 2);
+}

@@ -1,12 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 
-Permission::where(1)->delete();
+if (null == Cache::get('create_models')) {
+    Permission::where(1)->delete();
 
-$permissionsData = [
+    $permissionsData = [
     [
         'name' => 'permission/first',
         'display_name' => 'Permission First',
@@ -29,13 +31,13 @@ $permissionsData = [
     ],
 ];
 
-foreach ($permissionsData as $permissionData) {
-    Permission::create($permissionData);
-}
+    foreach ($permissionsData as $permissionData) {
+        Permission::create($permissionData);
+    }
 
-Role::where(1)->delete();
+    Role::where(1)->delete();
 
-$rolesData = [
+    $rolesData = [
     [
         'name' => 'role-first',
         'display_name' => 'Role First',
@@ -58,13 +60,13 @@ $rolesData = [
     ],
 ];
 
-foreach ($rolesData as $roleData) {
-    Role::create($roleData);
-}
+    foreach ($rolesData as $roleData) {
+        Role::create($roleData);
+    }
 
-Team::where(1)->delete();
+    Team::where(1)->delete();
 
-$teamsData = [
+    $teamsData = [
     [
         'name' => 'team-first',
         'display_name' => 'Team First',
@@ -87,6 +89,9 @@ $teamsData = [
     ],
 ];
 
-foreach ($teamsData as $teamData) {
-    Team::create($teamData);
+    foreach ($teamsData as $teamData) {
+        Team::create($teamData);
+    }
+
+    Cache::put('create_models', true, 2);
 }
