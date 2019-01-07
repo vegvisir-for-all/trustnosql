@@ -72,23 +72,23 @@ class TeamsTest extends ModelsTestCase
         }
     }
 
-    public function testRejectCreateExists()
-    {
-        try {
-            $team = Team::create(['name' => 'team-fourth']);
-        } catch (\Exception $e) {
-        }
-        $this->assertEquals(1, Team::where('name', 'team-fourth')->count());
-    }
+    // public function testRejectCreateExists()
+    // {
+    //     try {
+    //         $team = Team::create(['name' => 'team-fourth']);
+    //     } catch (\Exception $e) {
+    //     }
+    //     $this->assertEquals(1, Team::where('name', 'team-fourth')->count());
+    // }
 
-    public function testRejectCreateIllegalChars()
-    {
-        try {
-            $team = Team::create(['name' => 'team/fourth']);
-        } catch (\Exception $e) {
-        }
-        $this->assertEquals(0, Team::where('team', 'role/fourth')->count());
-    }
+    // public function testRejectCreateIllegalChars()
+    // {
+    //     try {
+    //         $team = Team::create(['name' => 'team/fourth']);
+    //     } catch (\Exception $e) {
+    //     }
+    //     $this->assertEquals(0, Team::where('team', 'role/fourth')->count());
+    // }
 
     public function testDelete()
     {

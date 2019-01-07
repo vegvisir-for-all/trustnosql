@@ -57,20 +57,20 @@ class PermissionsTest extends ModelsTestCase
         }
     }
 
-    public function testRejectCreateExists()
-    {
-        $permission = Permission::create(['name' => 'permission/first']);
-        $this->assertEquals(1, $permission->where('name', 'permission/first')->count());
-    }
+    // public function testRejectCreateExists()
+    // {
+    //     $permission = Permission::create(['name' => 'permission/first']);
+    //     $this->assertEquals(1, $permission->where('name', 'permission/first')->count());
+    // }
 
-    public function testRejectCreateWildcard()
-    {
-        $permission = Permission::create(['name' => 'permission/*']);
-        $permission2 = Permission::create(['name' => 'permission/all']);
+    // public function testRejectCreateWildcard()
+    // {
+    //     $permission = Permission::create(['name' => 'permission/*']);
+    //     $permission2 = Permission::create(['name' => 'permission/all']);
 
-        $this->assertNull($permission);
-        $this->assertNull($permission2);
-    }
+    //     $this->assertNull($permission);
+    //     $this->assertNull($permission2);
+    // }
 
     public function testDelete()
     {
