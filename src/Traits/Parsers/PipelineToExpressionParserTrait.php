@@ -11,12 +11,15 @@
 
 namespace Vegvisir\TrustNoSql\Traits\Parsers;
 
+use Illuminate\Support\Facades\Config;
+use Vegvisir\TrustNoSql\Models\Role;
+
 trait PipelineToExpressionParserTrait
 {
     /**
      * Translate pipeline to expression.
      *
-     * @param $entitnyName
+     * @param $entityName
      * @param $entitiesPipeline
      * @param mixed $entityName
      *
@@ -26,12 +29,13 @@ trait PipelineToExpressionParserTrait
      */
     public static function pipelineToExpression($entityName, $entitiesPipeline)
     {
+
         if (!\is_string($entitiesPipeline) || !$entitiesPipeline) {
             return 'true';
         }
 
-        $areAmpersands = false !== strpos('&', $entitiesPipeline) ? true : false;
-        $areBars = false !== strpos('|', $entitiesPipeline) ? true : false;
+        $areAmpersands = false !== strpos($entitiesPipeline, '&') ? true : false;
+        $areBars = false !== strpos($entitiesPipeline, '|') ? true : false;
 
         if ($areAmpersands && $areBars) {
             throw new \Exception();
@@ -40,6 +44,36 @@ trait PipelineToExpressionParserTrait
         $pattern = '/([A-Za-z0-9\*\/]+)/im';
         $replace = $entityName.':\1';
 
-        return preg_replace($pattern, $replace, $entitiesPipeline);
+        $entitiesPipeline = preg_replace($pattern, $replace, $entitiesPipeline);
+
+        if($entityName !== 'role' || ($entityName == 'role' && false == Config::get('trustnosql.teams.use_teams'))) {
+            return $entitiesPipeline;
+        }
+
+        $roleNames = explode($areAmpersands ? '&' : '|', $entitiesPipeline);
+
+        foreach($roleNames as $roleName) {
+
+            $roleName = str_replace('role:', '', $roleName);
+
+            $role = Role::where('name', $roleName)->first();
+
+            $teams = collect($role->teams)->map(function ($item, $key) {
+                return 'team:' . $item->name;
+            })->toArray();
+
+            if(count($teams) > 1) {
+                $teamsExpression = implode('|', $teams);
+            } elseif(count($teams) == 1) {
+                $teamsExpression = $teams[0];
+            } else {
+                $teamsExpression = '';
+            }
+
+            $entitiesPipeline = str_replace('role:' . $roleName, '(role:' . $roleName . "&($teamsExpression))", $entitiesPipeline);
+        }
+
+        return $entitiesPipeline;
+
     }
 }

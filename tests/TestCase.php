@@ -24,6 +24,17 @@ class TestCase extends OrchestraTestCase
         $this->withFactories($this->factories);
     }
 
+    /**
+    * Get application timezone.
+    *
+    * @param  \Illuminate\Foundation\Application  $app
+    * @return string|null
+    */
+    protected function getApplicationTimezone($app)
+    {
+        return 'Europe/Warsaw';
+    }
+
     protected function getEnvironmentSetUp($app)
     {
         // Setup mongodb connection

@@ -28,6 +28,7 @@ class BaseMiddleware
      */
     protected function unauthorized()
     {
+
         $handling = Config::get('trustnosql.middleware.handling', 'abort');
         $handler = Config::get("trustnosql.middleware.handlers.{$handling}");
 
@@ -79,12 +80,14 @@ class BaseMiddleware
      */
     protected function authorize($request, Closure $next, $expression, $guard = null, $negateExpression = false)
     {
-        $user = static::authUser($guard);
+        if(null === ($user = static::authUser($guard))) {
+            return $this->unauthorized();
+        }
 
         $parsingResult = LogicStringParser::expressionToBool($expression, Helper::getUserLogicProxy($user));
 
         if ($parsingResult === $negateExpression) {
-            $this->unauthorized();
+            return $this->unauthorized();
         }
 
         return $next($request);

@@ -97,5 +97,4 @@ trait GrabbableTrait
 
         return \in_array($user->id, $this->grabber_ids, true) || \in_array($user->id, $this->owner_ids, true);
     }
-
 }

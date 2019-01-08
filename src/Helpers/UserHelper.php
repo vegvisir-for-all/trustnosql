@@ -37,6 +37,7 @@ class UserHelper extends HelperProxy
     public static function logicProxy($user)
     {
         return function ($middlewareNamespace, $entityName) use ($user) {
+
             if (null === $user) {
                 return false;
             }
