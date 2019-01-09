@@ -27,9 +27,12 @@ trait ExpressionToBoolParserTrait
      */
     public static function expressionToBool($logicString, Closure $closure)
     {
+
         static::checkBrackets($logicString);
 
         $logicString = static::doubleOperands(static::addBracketsToInstructions(static::cleanWhitespace($logicString)));
+
+        $i = 0;
 
         while (static::hasAnyBrackets($logicString)) {
             /**
@@ -113,7 +116,7 @@ trait ExpressionToBoolParserTrait
     {
         $matches = [];
 
-        while (1 === preg_match_all('/\((true|false)([\&\|]{2})(true|false)\)/im', $logicString, $matches)) {
+        while (1 <= preg_match_all('/\((true|false)([\&\|]{2})(true|false)\)/im', $logicString, $matches)) {
             foreach ($matches[0] as $key => $fullString) {
                 $result = '||' === $matches[2][$key]
                     ? filter_var($matches[1][$key], FILTER_VALIDATE_BOOLEAN) || filter_var($matches[3][$key], FILTER_VALIDATE_BOOLEAN)
