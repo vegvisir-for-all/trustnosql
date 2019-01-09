@@ -21,9 +21,6 @@
         <testsuite name="TrustNoSql Models Test Suite">
             <directory suffix="Test.php">./tests/Models</directory>
         </testsuite>
-        <testsuite name="TrustNoSql Grabbable Test Suite">
-            <directory suffix="Test.php">./tests/Grabbable</directory>
-        </testsuite>
         <testsuite name="TrustNoSql Events Test Suite">
             <directory suffix="Test.php">./tests/Events</directory>
         </testsuite>
@@ -35,7 +32,6 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix="Test.php">./tests/Environment</directory>
             <directory suffix="Test.php">./tests/Models</directory>
-            <directory suffix="Test.php">./tests/Grabbable</directory>
             <directory suffix="Test.php">./tests/Events</directory>
             <directory suffix="Test.php">./tests/Middleware</directory>
         </whitelist>
