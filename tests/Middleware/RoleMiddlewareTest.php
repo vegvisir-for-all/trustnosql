@@ -100,6 +100,86 @@ class RoleMiddlewareTest extends MiddlewareTestCase
 
     }
 
+    public function testHandleIsLoggedInWithOneRoleTeamOffShouldRedirectWithoutError()
+    {
+
+        Config::set('trustnosql.teams.use_teams', false);
+        Config::set('trustnosql.middleware.handling', 'redirect');
+
+        $middleware = new RoleMiddleware;
+        $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
+
+        $user->shouldReceive('hasRole')
+            ->with('admin')
+            ->andReturn(false);
+
+        $user->shouldReceive('hasRole')
+            ->with('manager')
+            ->andReturn(true);
+
+        $this->guard->shouldReceive('guest')->andReturn(false);
+        Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
+        $this->guard->shouldReceive('user')->andReturn($user);
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager'));
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'api'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'api'));
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'web'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'web'));
+
+    }
+
+    public function testHandleIsLoggedInWithOneRoleTeamOffShouldRedirectWithError()
+    {
+
+        Config::set('trustnosql.teams.use_teams', false);
+        Config::set('trustnosql.middleware.handling', 'redirect');
+        Config::set('trustnosql.middleware.handlers.redirect.message.content', 'The message was flashed');
+
+        $middleware = new RoleMiddleware;
+        $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
+
+        $user->shouldReceive('hasRole')
+            ->with('admin')
+            ->andReturn(false);
+
+        $user->shouldReceive('hasRole')
+            ->with('manager')
+            ->andReturn(true);
+
+        $this->guard->shouldReceive('guest')->andReturn(false);
+        Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
+        $this->guard->shouldReceive('user')->andReturn($user);
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager'));
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'api'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'api'));
+
+        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'web'));
+        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
+        }, 'admin&manager', 'web'));
+
+        $this->assertArrayHasKey('error', session()->all());
+        $this->assertEquals('The message was flashed', session()->get('error'));
+
+    }
+
     public function testHandleIsLoggedInWithOneRoleTeamOffShouldNotAbort()
     {
 
