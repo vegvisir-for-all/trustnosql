@@ -11,9 +11,11 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
-class TrustMiddlewareTest extends MiddlewareTestCase
+use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
+
+class TeamMiddlewareTest extends MiddlewareTestCase
 {
-    public function testTrustMiddleware()
+    public function testTeamMiddleware()
     {
     }
 }

@@ -26,6 +26,12 @@
         </testsuite>
         <testsuite name="TrustNoSql Middleware Test Suite">
             <directory suffix="Test.php">./tests/Middleware</directory>
+            <directory suffix="Test.php">./tests/Middleware/Ability</directory>
+            <directory suffix="Test.php">./tests/Middleware/Permission</directory>
+            <directory suffix="Test.php">./tests/Middleware/Reject</directory>
+            <directory suffix="Test.php">./tests/Middleware/Role</directory>
+            <directory suffix="Test.php">./tests/Middleware/Team</directory>
+            <directory suffix="Test.php">./tests/Middleware/Trust</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -34,6 +40,12 @@
             <directory suffix="Test.php">./tests/Models</directory>
             <directory suffix="Test.php">./tests/Events</directory>
             <directory suffix="Test.php">./tests/Middleware</directory>
+            <directory suffix="Test.php">./tests/Middleware/Ability</directory>
+            <directory suffix="Test.php">./tests/Middleware/Permission</directory>
+            <directory suffix="Test.php">./tests/Middleware/Reject</directory>
+            <directory suffix="Test.php">./tests/Middleware/Role</directory>
+            <directory suffix="Test.php">./tests/Middleware/Team</directory>
+            <directory suffix="Test.php">./tests/Middleware/Trust</directory>
         </whitelist>
     </filter>
 </phpunit>

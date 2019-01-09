@@ -12,6 +12,7 @@
 namespace Vegvisir\TrustNoSql\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Config;
 
 class Team extends BaseMiddleware
 {
@@ -28,6 +29,11 @@ class Team extends BaseMiddleware
      */
     public function handle($request, Closure $next, $teams, $guard = null)
     {
+
+        if(false === Config::get('trustnosql.teams.use_teams')) {
+            return $this->forceAuthorize($request, $next);
+        }
+
         $expression = $this->parseToExpression('team', $teams);
 
         return $this->authorize($request, $next, '('.$expression.')', $guard);

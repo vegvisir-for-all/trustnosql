@@ -11,7 +11,11 @@
 
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
-class PermissionMiddlewareTest extends MiddlewareTestCase
-{
+use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
+class AbilityMiddlewareTest extends MiddlewareTestCase
+{
+    public function testAbilityMiddleware()
+    {
+    }
 }

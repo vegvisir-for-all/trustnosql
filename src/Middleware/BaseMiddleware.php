@@ -94,6 +94,17 @@ class BaseMiddleware
     }
 
     /**
+     * Forces authorization.
+     * 
+     * @param \Illuminate\Http\Request  $request
+     * @param Closure                   $next
+     */
+    protected function forceAuthorize($request, Closure $next)
+    {
+        return $next($request);
+    }
+
+    /**
      * Translate entity pipeline to expression (like in the trust middleware).
      *
      * @param string $entityName       Name of the entity

@@ -19,23 +19,10 @@ use Vegvisir\TrustNoSql\Middleware\Role as RoleMiddleware;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
+use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
 class RoleMiddlewareTest extends MiddlewareTestCase
 {
-    public function testHandleIsGuestShouldAbort403()
-    {
-
-        Config::set('trustnosql.teams.use_teams', false);
-
-        $middleware = new RoleMiddleware;
-
-        Auth::shouldReceive('guard')->with('web')->andReturn($this->guard);
-        $this->guard->shouldReceive('guest')->andReturn(true);
-        App::shouldReceive('abort')->with(403)->andReturn(403);
-
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin', 'web'));
-    }
 
     public function testHandleIsLoggedInWithMismatchingRoleShouldAbort403()
     {
