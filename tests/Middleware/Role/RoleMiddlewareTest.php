@@ -24,42 +24,56 @@ use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 class RoleMiddlewareTest extends MiddlewareTestCase
 {
 
-    public function testHandleIsLoggedInWithMismatchingRoleShouldAbort403()
+    public function testRolesConjunction_TeamOff_ShouldAbort403()
     {
-
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', false);
 
         $middleware = new RoleMiddleware;
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
-            ->with(
-                m::anyOf('admin', 'user')
-            )
+            ->with('admin')
+            ->andReturn(true);
+        
+        $user->shouldReceive('hasRole')
+            ->with('superadmin')
             ->andReturn(false);
 
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
         App::shouldReceive('abort')->with(403)->andReturn(403);
 
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
         $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin|user'));
+        }, 'admin&superadmin'));
         $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin|user', 'api'));
+        }, 'admin&superadmin', 'api'));
         $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin|user', 'web'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&user'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&user', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&user', 'web'));
+        }, 'admin&superadmin', 'web'));
     }
 
-    public function testHandleIsLoggedInWithOneRoleTeamOffShouldAbort403()
+    public function testRolesConjunction_TeamOff_ShouldBeOk()
     {
-
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', false);
 
         $middleware = new RoleMiddleware;
@@ -67,109 +81,42 @@ class RoleMiddlewareTest extends MiddlewareTestCase
 
         $user->shouldReceive('hasRole')
             ->with('admin')
-            ->andReturn(false);
-
+            ->andReturn(true);
+        
         $user->shouldReceive('hasRole')
-            ->with('manager')
+            ->with('superadmin')
             ->andReturn(true);
 
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
         App::shouldReceive('abort')->with(403)->andReturn(403);
 
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&manager'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
-
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&superadmin'));
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&superadmin', 'api'));
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&superadmin', 'web'));
     }
 
-    public function testHandleIsLoggedInWithOneRoleTeamOffShouldRedirectWithoutError()
+    public function testRolesDisjunction_Team_Off_ShouldAbort403()
     {
-
-        Config::set('trustnosql.teams.use_teams', false);
-        Config::set('trustnosql.middleware.handling', 'redirect');
-
-        $middleware = new RoleMiddleware;
-        $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
-
-        $user->shouldReceive('hasRole')
-            ->with('admin')
-            ->andReturn(false);
-
-        $user->shouldReceive('hasRole')
-            ->with('manager')
-            ->andReturn(true);
-
-        $this->guard->shouldReceive('guest')->andReturn(false);
-        Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
-        $this->guard->shouldReceive('user')->andReturn($user);
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager'));
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
-
-    }
-
-    public function testHandleIsLoggedInWithOneRoleTeamOffShouldRedirectWithError()
-    {
-
-        Config::set('trustnosql.teams.use_teams', false);
-        Config::set('trustnosql.middleware.handling', 'redirect');
-        Config::set('trustnosql.middleware.handlers.redirect.message.content', 'The message was flashed');
-
-        $middleware = new RoleMiddleware;
-        $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
-
-        $user->shouldReceive('hasRole')
-            ->with('admin')
-            ->andReturn(false);
-
-        $user->shouldReceive('hasRole')
-            ->with('manager')
-            ->andReturn(true);
-
-        $this->guard->shouldReceive('guest')->andReturn(false);
-        Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
-        $this->guard->shouldReceive('user')->andReturn($user);
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager'));
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
-
-        $this->assertObjectHasAttribute('content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
-        $this->assertAttributeContains('/home', 'content', $middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
-
-        $this->assertArrayHasKey('error', session()->all());
-        $this->assertEquals('The message was flashed', session()->get('error'));
-
-    }
-
-    public function testHandleIsLoggedInWithOneRoleTeamOffShouldNotAbort()
-    {
-
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', false);
 
         $middleware = new RoleMiddleware;
@@ -178,26 +125,41 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $user->shouldReceive('hasRole')
             ->with('admin')
             ->andReturn(false);
-
+        
         $user->shouldReceive('hasRole')
-            ->with('manager')
-            ->andReturn(true);
+            ->with('superadmin')
+            ->andReturn(false);
 
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
+        App::shouldReceive('abort')->with(403)->andReturn(403);
 
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin|manager'));
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin|manager', 'api'));
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin|manager', 'web'));
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|superadmin'));
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|superadmin', 'api'));
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|superadmin', 'web'));
     }
 
-    public function testHandleIsLoggedInWithTwoRolesTeamOffShouldNotAbort()
+    public function testRolesDisjunction_teamOff_ShouldBeOk()
     {
-
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', false);
 
         $middleware = new RoleMiddleware;
@@ -206,25 +168,41 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $user->shouldReceive('hasRole')
             ->with('admin')
             ->andReturn(true);
-
+        
         $user->shouldReceive('hasRole')
-            ->with('manager')
-            ->andReturn(true);
+            ->with('superadmin')
+            ->andReturn(false);
 
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
+        App::shouldReceive('abort')->with(403)->andReturn(403);
 
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
         $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin&manager'));
+        }, 'admin|superadmin'));
         $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin&manager', 'api'));
+        }, 'admin|superadmin', 'api'));
         $this->assertNull($middleware->handle($this->request, function () {
-        }, 'admin&manager', 'web'));
+        }, 'admin|superadmin', 'web'));
     }
 
-    public function testHandleIsLoggedInWithTwoRolesTeamOnShouldAbort403()
+    public function testRoles_TeamOn_ShouldAbort403()
     {
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', true);
 
         $admin = Role::create(['name' => 'admin']);
@@ -238,16 +216,36 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $admin->attachTeams('team');
         $manager->attachTeams('team');
 
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
         App::shouldReceive('abort')->with(403)->andReturn(403);
 
-        $this->assertEquals(403, $middleware->handle($this->request, function () {}, 'admin|manager'));
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|manager'));
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|manager', 'api'));
+        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        }, 'admin|manager', 'web'));
     }
 
-    public function testHandleIsLoggedInWithTwoRolesTeamOnShouldNotAbort()
+    public function testRoles_TeamOn_ShouldBeOk()
     {
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
         Config::set('trustnosql.teams.use_teams', true);
         $user = User::where(1)->first();
         $admin = Role::where('name', 'admin')->first();
@@ -260,10 +258,27 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $admin->attachTeams('team');
         $manager->attachTeams('team');
 
+
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
 
-        $this->assertNull($middleware->handle($this->request, function () {}, 'admin&manager'));
+
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&manager'));
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&manager', 'api'));
+        $this->assertNull($middleware->handle($this->request, function () {
+        }, 'admin&manager', 'web'));
     }
 }

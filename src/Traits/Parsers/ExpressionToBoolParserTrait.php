@@ -27,7 +27,6 @@ trait ExpressionToBoolParserTrait
      */
     public static function expressionToBool($logicString, Closure $closure)
     {
-
         static::checkBrackets($logicString);
 
         $logicString = static::doubleOperands(static::addBracketsToInstructions(static::cleanWhitespace($logicString)));
@@ -162,7 +161,7 @@ trait ExpressionToBoolParserTrait
     protected static function instructionToBool($logicString, Closure $closure)
     {
         $matches = [];
-        while (1 === preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $logicString, $matches)) {
+        while (1 <= preg_match('/\([A-Za-z0-9*]*\:[A-Za-z0-9*\/]*\)/im', $logicString, $matches)) {
             $exploded = explode(':', substr($matches[0], 1, \strlen($matches[0]) - 2));
 
             $result = $closure($exploded[0], $exploded[1]);
@@ -198,7 +197,7 @@ trait ExpressionToBoolParserTrait
      */
     protected static function checkBrackets($logicString)
     {
-        $logicString = preg_replace('/[A-Za-z\:\&\|\/\*]/', '', $logicString);
+        $logicString = preg_replace('/[A-Za-z\:\&\|\/\*\-\_]/', '', $logicString);
 
         $checker = new BracketChecker();
         $checker->setString($logicString);

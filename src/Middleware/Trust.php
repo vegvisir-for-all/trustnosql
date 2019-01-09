@@ -27,6 +27,6 @@ class Trust extends BaseMiddleware
      */
     public function handle($request, Closure $next, $expression, $guard = null)
     {
-        return $this->authorize($request, $next, $expression, $guard);
+        return $this->authorize($request, $next, '(' . $expression . ')', $guard);  
     }
 }
