@@ -29,6 +29,6 @@ class Permission extends BaseMiddleware
     {
         $expression = $this->parseToExpression('permission', $teams);
 
-        return $this->authorize($request, $next, '('.$expression.')', $guard, true);
+        return $this->authorize($request, $next, '('.$expression.')', $guard);
     }
 }

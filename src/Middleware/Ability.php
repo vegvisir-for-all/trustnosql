@@ -12,6 +12,7 @@
 namespace Vegvisir\TrustNoSql\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Config;
 
 class Ability extends BaseMiddleware
 {
@@ -32,7 +33,11 @@ class Ability extends BaseMiddleware
     {
         $rolesExpression = $this->parseToExpression('role', $roles);
         $permissionsExpression = $this->parseToExpression('permission', $permissions);
-        $teamsExpression = $this->parseToExpression('team', $teams);
+        if(false === Config::get('trustnosql.teams.use_teams')) {
+            $teamsExpression = '(true)';
+        } else {
+            $teamsExpression = $this->parseToExpression('team', $teams);
+        }
 
         $operand = filter_var($requireAll, FILTER_VALIDATE_BOOLEAN) ? '&' : '|';
 
