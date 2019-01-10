@@ -7,7 +7,6 @@ use Vegvisir\TrustNoSql\Tests\TestCase;
 
 class MiddlewareTestCase extends TestCase
 {
-
     protected $request;
 
     protected $guard;

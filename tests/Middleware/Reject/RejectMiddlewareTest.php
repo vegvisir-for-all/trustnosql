@@ -21,7 +21,7 @@ use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 class RejectMiddlewareTest extends MiddlewareTestCase
 {
     public function testRejectMiddleware_TeamOff_ShouldAbort403()
-    { 
+    {
         /*
         |------------------------------------------------------------
         | Set
@@ -69,15 +69,18 @@ class RejectMiddlewareTest extends MiddlewareTestCase
             '(role:third&permission:permission/third)|(role:first&permission:permission/first)'
         ];
 
-        foreach($expressions as $expression) {
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'api'));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'web'));
+        foreach ($expressions as $expression) {
+            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            }, $expression));
+            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            }, $expression, 'api'));
+            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            }, $expression, 'web'));
         }
     }
 
     public function testTrustMiddleware_TeamOff_ShouldBeOk()
-    { 
+    {
         /*
         |------------------------------------------------------------
         | Set
@@ -125,10 +128,13 @@ class RejectMiddlewareTest extends MiddlewareTestCase
             '(role:third&permission:permission/third)|(role:fourth&permission:permission/first)'
         ];
 
-        foreach($expressions as $expression) {
-            $this->assertNull($middleware->handle($this->request, function () {}, $expression));
-            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'api'));
-            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'web'));
+        foreach ($expressions as $expression) {
+            $this->assertNull($middleware->handle($this->request, function () {
+            }, $expression));
+            $this->assertNull($middleware->handle($this->request, function () {
+            }, $expression, 'api'));
+            $this->assertNull($middleware->handle($this->request, function () {
+            }, $expression, 'web'));
         }
     }
 }

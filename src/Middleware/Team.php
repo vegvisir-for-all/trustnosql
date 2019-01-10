@@ -29,8 +29,7 @@ class Team extends BaseMiddleware
      */
     public function handle($request, Closure $next, $teams, $guard = null)
     {
-
-        if(false === Config::get('trustnosql.teams.use_teams')) {
+        if (false === Config::get('trustnosql.teams.use_teams')) {
             return $this->forceAuthorize($request, $next);
         }
 

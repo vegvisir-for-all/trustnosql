@@ -29,7 +29,6 @@ trait PipelineToExpressionParserTrait
      */
     public static function pipelineToExpression($entityName, $entitiesPipeline)
     {
-
         if (!\is_string($entitiesPipeline) || !$entitiesPipeline) {
             return 'true';
         }
@@ -46,14 +45,13 @@ trait PipelineToExpressionParserTrait
 
         $entitiesPipeline = preg_replace($pattern, $replace, $entitiesPipeline);
 
-        if($entityName !== 'role' || ($entityName === 'role' && false === Config::get('trustnosql.teams.use_teams'))) {
+        if ($entityName !== 'role' || ($entityName === 'role' && false === Config::get('trustnosql.teams.use_teams'))) {
             return $entitiesPipeline;
         }
 
         $roleNames = explode($areAmpersands ? '&' : '|', $entitiesPipeline);
 
-        foreach($roleNames as $roleName) {
-
+        foreach ($roleNames as $roleName) {
             $roleName = str_replace('role:', '', $roleName);
 
             $role = Role::where('name', $roleName)->first();
@@ -62,9 +60,9 @@ trait PipelineToExpressionParserTrait
                 return 'team:' . $item->name;
             })->toArray();
 
-            if(count($teams) > 1) {
+            if (count($teams) > 1) {
                 $teamsExpression = '&(' . implode('|', $teams) . ')';
-            } elseif(count($teams) == 1) {
+            } elseif (count($teams) == 1) {
                 $teamsExpression = '&' . $teams[0];
             } else {
                 $teamsExpression = '';
@@ -74,6 +72,5 @@ trait PipelineToExpressionParserTrait
         }
 
         return $entitiesPipeline;
-
     }
 }

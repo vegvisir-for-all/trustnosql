@@ -23,7 +23,6 @@ use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
 class RoleMiddlewareTest extends MiddlewareTestCase
 {
-
     public function testRolesConjunction_TeamOff_ShouldAbort403()
     {
         /*

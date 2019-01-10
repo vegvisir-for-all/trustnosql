@@ -28,7 +28,6 @@ class BaseMiddleware
      */
     protected function unauthorized()
     {
-
         $handling = Config::get('trustnosql.middleware.handling', 'abort');
         $handler = Config::get("trustnosql.middleware.handlers.{$handling}");
 
@@ -80,7 +79,7 @@ class BaseMiddleware
      */
     protected function authorize($request, Closure $next, $expression, $guard = null, $negateExpression = false)
     {
-        if(null === ($user = static::authUser($guard))) {
+        if (null === ($user = static::authUser($guard))) {
             return $this->unauthorized();
         }
 
@@ -95,7 +94,7 @@ class BaseMiddleware
 
     /**
      * Forces authorization.
-     * 
+     *
      * @param \Illuminate\Http\Request  $request
      * @param Closure                   $next
      */

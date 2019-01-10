@@ -27,7 +27,6 @@ class Role extends BaseMiddleware
      */
     public function handle($request, Closure $next, $expression, $guard = null)
     {
-
         $expression = $this->parseToExpression('role', $expression);
 
         return $this->authorize($request, $next, '('.$expression.')', $guard);
