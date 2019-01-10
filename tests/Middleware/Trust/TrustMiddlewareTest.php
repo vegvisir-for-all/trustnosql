@@ -32,19 +32,14 @@ class TrustMiddlewareTest extends MiddlewareTestCase
         $middleware = new TrustMiddleware;
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
-        $user->shouldReceive('hasPermission')
-            ->with(m::anyOf('permission/first', 'permission/second'))
+        $user->shouldReceive('hasRole')
+            ->with(m::anyOf('first', 'second', 'permission/first', 'permission/second'))
             ->andReturn(true);
-        $user->shouldReceive('hasPermission')
-            ->with(m::anyOf('permission/third', 'permission/fourth'))
+        $user->shouldReceive('hasRole')
+            ->with(m::anyOf('third', 'fourth', 'permission/third', 'permission/fourth'))
             ->andReturn(false);
 
-        $user->shouldReceive('hasRole')
-            ->with(m::anyOf('first', 'second'))
-            ->andReturn(true);
-        $user->shouldReceive('hasRole')
-            ->with(m::anyOf('third', 'fourth'))
-            ->andReturn(false);
+        $user->shouldReceive('hasPermission')->andReturn(false);
 
         /*
         |------------------------------------------------------------
@@ -66,8 +61,8 @@ class TrustMiddlewareTest extends MiddlewareTestCase
             'role:first&role:third',
             '(role:first&role:third)|role:fourth',
             '(role:third|permission:permission/first)&permission:permission/third',
-            '(permission:permission/first|permission:permission/third)&&role:fourth',
-            '(role:third&permission:permission/third)|(role:fourth&permission:permission:permission/first)'
+            '(permission:permission/first|permission:permission/third)&role:fourth',
+            '(role:third&permission:permission/third)|(role:fourth&permission:permission/first)'
         ];
 
         foreach($expressions as $expression) {
@@ -75,13 +70,6 @@ class TrustMiddlewareTest extends MiddlewareTestCase
             $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'api'));
             $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'web'));
         }
-
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second', 'web'));
     }
 
     public function testTrustMiddleware_TeamOff_ShouldBeOk()
@@ -130,8 +118,8 @@ class TrustMiddlewareTest extends MiddlewareTestCase
             'role:first|role:third',
             '(role:first&role:third)|(role:fourth|role:second)',
             '(role:first&permission:permission/first)|permission:permission/third',
-            '(permission:permission/first|permission:permission/third)&&role:first',
-            '(role:third&permission:permission/third)|(role:first&permission:permission:permission/first)'
+            '(permission:permission/first|permission:permission/third)&role:first',
+            '(role:third&permission:permission/third)|(role:first&permission:permission/first)'
         ];
 
         foreach($expressions as $expression) {
@@ -139,12 +127,5 @@ class TrustMiddlewareTest extends MiddlewareTestCase
             $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'api'));
             $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'web'));
         }
-
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second'));
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second', 'api'));
-        $this->assertNull($middleware->handle($this->request, function () {
-        }, 'permission/first&permission/second', 'web'));
     }
 }

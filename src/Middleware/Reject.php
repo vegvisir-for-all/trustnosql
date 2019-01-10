@@ -25,8 +25,8 @@ class Reject extends BaseMiddleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $expression, $guard)
+    public function handle($request, Closure $next, $expression, $guard = null)
     {
-        return $this->authorize($request, $next, $expression, $guard, true);
+        return $this->authorize($request, $next, '(' . $expression . ')', $guard, true);
     }
 }
