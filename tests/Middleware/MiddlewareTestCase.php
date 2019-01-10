@@ -36,7 +36,6 @@ class MiddlewareTestCase extends TestCase
         ]);
 
         $app['config']->set('trustnosql.middleware', [
-            'register' => true,
             'handling' => 'abort',
             'handlers' => [
                 'abort' => [

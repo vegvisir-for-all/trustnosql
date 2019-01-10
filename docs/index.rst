@@ -10,17 +10,14 @@ Introduction
 What is TrustNoSql
 ==================
 
-TrustNoSql is a Laravel (>=5.3) role/permission manager for MongoDB-based applications. It supports roles, permissions, and teams, provides a complex way of determining ownage (grabbing) of objects, and offers a nice CLI for your convenience. TrustNoSql is built atop a great `jenssegers/laravel-mongodb <https://github.com/jenssegers/laravel-mongodb>`_ package, and it's inspired by `Laratrust <https://github.com/santigarcor/laratrust>`_.
+TrustNoSql is a Laravel (>=5.4) role/permission manager for MongoDB-based applications. It supports roles, permissions, and teams, and offers a nice CLI for your convenience. TrustNoSql is built atop a great `jenssegers/laravel-mongodb <https://github.com/jenssegers/laravel-mongodb>`_ package, and it's inspired by `Laratrust <https://github.com/santigarcor/laratrust>`_.
 
-**TrustNoSql is in the development phase. We can take no responsibility for any damage it creates when used in production projects. However, we hope to publish a stable version soon.**
-
-**This documentation is also under development. We work day and night to complete it as soon as possible.**
+**This documentation of TrustNoSql is currently under development. We work day and night to complete it as soon as possible.**
 
 Key features
 ============
 
 * permission/role/team
-* grabbable (ownable) objects support with two ways to determining ownership
 * cache support
 * middleware with complex matching rules (SQL-like)
 * custom model events
@@ -192,50 +189,6 @@ In your models directory, create a base model for team, using a TrustNoSql team 
 
 ``Vegvisir\TrustNoSql\Models\Team`` extends Moloquent model. ``Vegvisir\TrustNoSql\Traits\TeamTrait`` provides necessary methods.
 
-
-Grabbable
----------
-
-Grabbable is a model that every model of your application having ownage (grabability) rules should extend. Supposing, you have an e-learning platform and you want to give access to lessons only for those users, who are enlisted for particular courses, you should extend your Lesson and Course models with following Grabbable model:
-
-.. code-block:: php
-
-    <?php
-
-    namespace App\Models;
-
-    use Vegvisir\TrustNoSql\Models\Grabbable as TrustNoSqlGrabbable;
-    use Vegvisir\TrustNoSql\Models\GrabableTrait as TrustNoSqlGrababbleTrait;
-
-    class Grababble extends TrustNoSqlGrababble
-    {
-        use TrustNoSqlGrababbleTrait;
-    }
-
-And then, in your ``Lesson`` and ``Course`` models add ``Grababble`` model as their parent:
-
-.. code-block:: php
-
-    <?php
-
-    namespace App\Models;
-
-    class Course extends Grababble
-    {
-        // grabability methods
-    }
-
-.. code-block:: php
-
-    <?php
-
-    namespace App\Models;
-
-    class Lesson extends Grababble
-    {
-        // grabability methods
-    }
-
 Middleware setup
 ================
 
@@ -247,7 +200,6 @@ If you want to use middleware in your application, add folowing lines to your ``
 
     protected $routeMiddleware = [
         // ...
-        'ability' => \Vegvisir\TrustNoSql\Middleware\Ability::class,
         'permission' => \Vegvisir\TrustNoSql\Middleware\Permission::class,
         'role' => \Vegvisir\TrustNoSql\Middleware\Role::class,
         'reject' => \Vegvisir\TrustNoSql\Middleware\Reject::class,
@@ -279,6 +231,94 @@ You'll see that the ``config/trustnosql.php`` file is divided into few sections,
 * Permissions
 * Teams
 * User models
+
+Cache
+=====
+
+Use cache
+^^^^^^^^^
+
+Set ``use_cache`` to ``false`` if you don't want to use cache.
+
+CLI
+===
+
+Use CLI
+^^^^^^^
+
+Set ``use_cli`` to ``false`` if you don't want TrustNoSql service provider to register artisan commands.
+
+Signature
+^^^^^^^^^
+
+You can change the default ``trustnosql`` signature to any of your choice. Set ``signature`` to the signature of your choice.
+
+Collections
+===========
+
+You can set collection names for roles, permissions, teams and users. If you use default names, omit that section.
+
+Events
+======
+
+Settings for custom model events handling within TrustNoSql.
+
+TrustNoSql offers custom model events functionality. You can specify your own event handlers for such events as attaching permissions/roles/teams to user or detaching them.
+
+Use events
+^^^^^^^^^^
+
+Set ``use_events`` to ``false`` if you don't want to use custom model events within TrustNoSql at all.
+
+Observers
+^^^^^^^^^
+
+If you want to specify your own event handlers, you need to create model observers and declare them in the ``observers`` section of the events config.
+
+Supposing, you put your ``PermissionObserver``, ``RoleObserver``, ``TeamObserver`` and ``UserObserver`` under ``app\observers``, your configuration should look as following:
+
+.. code-block:: php
+
+    <?php
+
+    return [
+        // ...
+
+        'events' => [
+
+            // Whether to use events
+            'use_events' => true,
+
+            // Observers list
+            'observers' => [
+
+                // Observer for Permission model
+                'Permission' => \App\PermissionObserver::class,
+
+                // Observer for Role model
+                'Role' => \App\RoleObserver::class,
+
+                // Observer for Team model
+                'Team' => \App\TeamObserver::class,
+
+                // Observer for application user model
+                'User' => \App\UserObserver::class,
+            ],
+        ],
+    ];
+
+You can override some of the observers, not all four.
+
+Middleware
+==========
+
+Handling
+^^^^^^^^
+
+You can choose from two available handling methods, that TrustNoSql middleware will call whenever user is not authorized to access a resource: ``abort`` and ``redirect``.
+
+``abort`` handler means that application will throw a 403 exception. ``redirect`` means the application will redirect user to other route - moreover, an error message can be flashed.
+
 
 Usage
 #####
