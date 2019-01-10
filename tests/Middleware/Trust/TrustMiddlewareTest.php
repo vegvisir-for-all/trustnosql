@@ -33,13 +33,18 @@ class TrustMiddlewareTest extends MiddlewareTestCase
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
-            ->with(m::anyOf('first', 'second', 'permission/first', 'permission/second'))
+            ->with(m::anyOf('first', 'second'))
             ->andReturn(true);
         $user->shouldReceive('hasRole')
-            ->with(m::anyOf('third', 'fourth', 'permission/third', 'permission/fourth'))
+            ->with(m::anyOf('third', 'fourth'))
             ->andReturn(false);
 
-        $user->shouldReceive('hasPermission')->andReturn(false);
+        $user->shouldReceive('hasPermission')
+            ->with(m::anyOf('permission/first', 'permission/second'))
+            ->andReturn(true);
+        $user->shouldReceive('hasPermission')
+            ->with(m::anyOf('permission/third', 'permission/fourth'))
+            ->andReturn(false);
 
         /*
         |------------------------------------------------------------
@@ -123,9 +128,9 @@ class TrustMiddlewareTest extends MiddlewareTestCase
         ];
 
         foreach($expressions as $expression) {
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'api'));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'web'));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'api'));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'web'));
         }
     }
 }

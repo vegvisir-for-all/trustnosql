@@ -126,9 +126,9 @@ class RejectMiddlewareTest extends MiddlewareTestCase
         ];
 
         foreach($expressions as $expression) {
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'api'));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {}, $expression, 'web'));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'api'));
+            $this->assertNull($middleware->handle($this->request, function () {}, $expression, 'web'));
         }
     }
 }
