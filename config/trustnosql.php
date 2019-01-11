@@ -98,9 +98,6 @@ return [
     |
     */
     'middleware' => [
-        // Define if the TrustNoSql middleware are registered automatically in the service provider
-        'register' => true,
-
         /*
          * Method to be called in the middleware return case.
          * Available: abort|redirect
