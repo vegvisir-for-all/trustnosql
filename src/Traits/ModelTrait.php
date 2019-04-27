@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -47,7 +47,7 @@ trait ModelTrait
         'permissions',
         'roles',
         'teams',
-        'users'
+        'users',
     ];
 
     public function __call($name, $arguments)
@@ -139,6 +139,40 @@ trait ModelTrait
     }
 
     /**
+     * Returns cached or db-generated list of current model's entities.
+     *
+     * @param string      $entityModelName Name of the model
+     * @param null|string $namespace       Permission namespace
+     * @param bool        $forceNoCache    If set to true, method will not use cached data
+     *
+     * @return array
+     */
+    public function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
+    {
+        /**
+         * If TrustNoSql uses cache and $forceNoCache is false, this should be retrieved from cache.
+         */
+        if (!$forceNoCache && Config::get('trustnosql.cache.use_cache')) {
+            return $this->{str_replace('Current', 'Cached', __FUNCTION__)}($entityModelName, $namespace);
+        }
+
+        /**
+         * Otherwise, retrieve a list of current entities from the DB.
+         */
+        $entityCollection = $this->{strtolower(str_plural($entityModelName))}();
+
+        if (null !== $namespace) {
+            $entityCollection = $entityCollection->where('name', 'like', $namespace.'/%');
+        }
+
+        $field = 'users' === $entityModelName ? 'email' : 'name';
+
+        return collect($entityCollection->get()->sortBy('name'))->map(function ($item, $key) use ($field) {
+            return $item->{$field};
+        })->toArray();
+    }
+
+    /**
      * Boots trait:
      * 1. flushes cache on deletion and saving
      * 2. removing of attached ids in case of deletion.
@@ -157,9 +191,7 @@ trait ModelTrait
         }
 
         static::saving(function ($model) {
-            /**
-             * We need to verify name of the model being created
-             */
+            // We need to verify name of the model being created
             if (!Helper::checkName($model)) {
                 exit;
             }
@@ -199,40 +231,6 @@ trait ModelTrait
     protected function modelChecker()
     {
         return (new CheckProxy($this))->getChecker();
-    }
-
-    /**
-     * Returns cached or db-generated list of current model's entities.
-     *
-     * @param string      $entityModelName Name of the model
-     * @param null|string $namespace       Permission namespace
-     * @param bool        $forceNoCache    If set to true, method will not use cached data
-     *
-     * @return array
-     */
-    public function getModelCurrentEntities($entityModelName, $namespace = null, $forceNoCache = false)
-    {
-        /**
-         * If TrustNoSql uses cache and $forceNoCache is false, this should be retrieved from cache.
-         */
-        if (!$forceNoCache && Config::get('trustnosql.cache.use_cache')) {
-            return $this->{str_replace('Current', 'Cached', __FUNCTION__)}($entityModelName, $namespace);
-        }
-
-        /**
-         * Otherwise, retrieve a list of current entities from the DB.
-         */
-        $entityCollection = $this->{strtolower(str_plural($entityModelName))}();
-
-        if (null !== $namespace) {
-            $entityCollection = $entityCollection->where('name', 'like', $namespace.'/%');
-        }
-
-        $field = 'users' === $entityModelName ? 'email' : 'name';
-
-        return collect($entityCollection->get()->sortBy('name'))->map(function ($item, $key) use ($field) {
-            return $item->{$field};
-        })->toArray();
     }
 
     /**

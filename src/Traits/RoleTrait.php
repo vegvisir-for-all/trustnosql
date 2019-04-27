@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -27,7 +27,7 @@ trait RoleTrait
     protected $fillable = [
         'name',
         'display_name',
-        'description'
+        'description',
     ];
 
     /**

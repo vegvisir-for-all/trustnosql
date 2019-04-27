@@ -5,16 +5,19 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
 namespace Vegvisir\TrustNoSql\Tests\Environment;
 
-use Vegvisir\TrustNoSql\Tests\TestCase;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class EnvironmentTest extends EnvironmentTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class EnvironmentTest extends EnvironmentTestCase
 {
     public function testMongoConnection()
     {
@@ -24,7 +27,7 @@ class EnvironmentTest extends EnvironmentTestCase
 
     public function testUsersCount()
     {
-        $this->assertEquals(5, User::count());
+        $this->assertSame(5, User::count());
     }
 
     public function testUsersCreatedName()

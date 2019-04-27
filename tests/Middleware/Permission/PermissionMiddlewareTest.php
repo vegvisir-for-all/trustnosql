@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Mockery as m;
 use Vegvisir\TrustNoSql\Middleware\Permission as PermissionMiddleware;
-use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
-class PermissionMiddlewareTest extends MiddlewareTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class PermissionMiddlewareTest extends MiddlewareTestCase
 {
-    public function testPermissionsConjunction_ShouldAbort403()
+    public function testPermissionsConjunctionShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -29,16 +32,18 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with('permission/first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasPermission')
             ->with('permission/second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -55,15 +60,15 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first&permission/second'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first&permission/second', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first&permission/second', 'web'));
     }
 
-    public function testPermissionsConjunction_ShouldBeOk()
+    public function testPermissionsConjunctionShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -72,16 +77,18 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with('permission/first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasPermission')
             ->with('permission/second')
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -106,7 +113,7 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         }, 'permission/first&permission/second', 'web'));
     }
 
-    public function testPermissionsDisjunction_ShouldAbort403()
+    public function testPermissionsDisjunctionShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -115,16 +122,18 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with('permission/first')
-            ->andReturn(false);
-        
+            ->andReturn(false)
+        ;
+
         $user->shouldReceive('hasPermission')
             ->with('permission/second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -141,15 +150,15 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first|permission/second'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first|permission/second', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/first|permission/second', 'web'));
     }
 
-    public function testPermissionsDisjunction_ShouldBeOk()
+    public function testPermissionsDisjunctionShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -158,16 +167,18 @@ class PermissionMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with('permission/first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasPermission')
             ->with('permission/second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------

@@ -3,5 +3,5 @@
 /code/
 composer.lock
 phpdoc.dist.xml
-.php_cs*
+.php_cs.cache
 .phpunit.result.cache

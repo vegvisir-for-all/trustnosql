@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -81,7 +81,7 @@ class HelperProxy
     }
 
     /**
-     * Returns array of permissions in given namespace
+     * Returns array of permissions in given namespace.
      *
      * @param string $namespace Namespace name
      *
@@ -93,7 +93,7 @@ class HelperProxy
     }
 
     /**
-     * Return extracted namespace of permission name
+     * Return extracted namespace of permission name.
      *
      * @param string $permission Permission name
      *
@@ -257,7 +257,7 @@ class HelperProxy
     }
 
     /**
-     * Alias for getUserKeys
+     * Alias for getUserKeys.
      *
      * @param array|string $users Comma-separated user names or array of them
      *
@@ -312,13 +312,14 @@ class HelperProxy
      * other than role, permission and team. You can specify model name and name to check
      * or just a model being created.
      *
-     * @param string|object $model Model being created or its name
-     * @param string|null $name (Optional) name of the entity being created
+     * @param object|string $model Model being created or its name
+     * @param null|string   $name  (Optional) name of the entity being created
+     *
      * @return bool
      */
     public static function checkName($model, $name = null)
     {
-        if (!is_object($model)) {
+        if (!\is_object($model)) {
             $model = new $model();
         } else {
             $name = $model->name;
@@ -331,15 +332,19 @@ class HelperProxy
         switch (class_basename($model)) {
             case 'Permission':
                 return PermissionHelper::checkPermissionName($name);
+
                 break;
             case 'Role':
                 return RoleHelper::checkRoleName($name);
+
                 break;
             case 'Team':
                 return TeamHelper::checkTeamName($name);
+
                 break;
             default:
                 return true;
+
                 break;
         }
     }

@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -64,7 +64,39 @@ class PermissionHelper extends HelperProxy
     {
         $permissionNameExploded = explode(static::NAMESPACE_DELIMITER, $permissionName);
 
-        return \in_array($permissionNameExploded[1], static::getWildcards());
+        return \in_array($permissionNameExploded[1], static::getWildcards(), true);
+    }
+
+    /**
+     * Checks whether given permission name can be used (i.e. if the name
+     * doesn't exist and if the name is not a wildcard name).
+     *
+     * @param string $name Name of the permission
+     *
+     * @return bool
+     */
+    public static function checkPermissionName($name)
+    {
+        if (null !== Permission::where('name', $name)->first()) {
+            // Permission with that name already exists
+            return false;
+        }
+
+        return !static::isWildcard($name);
+    }
+
+    /**
+     * Returns array of permissions in given namespace.
+     *
+     * @param string $namespace Namespace name
+     *
+     * @return array
+     */
+    public static function getPermissionsInNamespace($namespace)
+    {
+        return collect(Permission::where('name', 'like', $namespace.'/%')->get())->map(function ($item) {
+            return $item->name;
+        })->toArray();
     }
 
     /**
@@ -142,35 +174,5 @@ class PermissionHelper extends HelperProxy
     protected static function isOne($object)
     {
         return is_a(\get_class($object), \get_class(new Permission()), true);
-    }
-
-    /**
-     * Checks whether given permission name can be used (i.e. if the name
-     * doesn't exist and if the name is not a wildcard name).
-     *
-     * @param string $name Name of the permission
-     * @return bool
-     */
-    public static function checkPermissionName($name)
-    {
-        if (null !== Permission::where('name', $name)->first()) {
-            // Permission with that name already exists
-            return false;
-        }
-        return !static::isWildcard($name);
-    }
-
-    /**
-     * Returns array of permissions in given namespace
-     *
-     * @param string $namespace Namespace name
-     *
-     * @return array
-     */
-    public static function getPermissionsInNamespace($namespace)
-    {
-        return collect(Permission::where('name', 'like', $namespace . '/%')->get())->map(function ($item) {
-            return $item->name;
-        })->toArray();
     }
 }

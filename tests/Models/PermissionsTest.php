@@ -5,22 +5,24 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-use Vegvisir\TrustNoSql\Helper;
-use Vegvisir\TrustNoSql\TrustNoSql;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class PermissionsTest extends ModelsTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class PermissionsTest extends ModelsTestCase
 {
     public function testCount()
     {
-        $this->assertEquals(4, Permission::count());
+        $this->assertSame(4, Permission::count());
     }
 
     public function testCreated()
@@ -29,22 +31,22 @@ class PermissionsTest extends ModelsTestCase
             [
                 'name' => 'permission/first',
                 'display_name' => 'Permission First',
-                'description' => 'Permission First'
+                'description' => 'Permission First',
             ],
             [
                 'name' => 'permission/second',
                 'display_name' => 'Permission Second',
-                'description' => 'Permission Second'
+                'description' => 'Permission Second',
             ],
             [
                 'name' => 'permission/third',
                 'display_name' => 'Permission Third',
-                'description' => 'Permission Third'
+                'description' => 'Permission Third',
             ],
             [
                 'name' => 'permission/fourth',
                 'display_name' => 'Permission Fourth',
-                'description' => 'Permission Fourth'
+                'description' => 'Permission Fourth',
             ],
         ];
 
@@ -52,8 +54,8 @@ class PermissionsTest extends ModelsTestCase
             $permission = Permission::where('name', $permissionData['name'])->first();
 
             $this->assertNotNull($permission);
-            $this->assertEquals($permissionData['name'], $permission->name);
-            $this->assertEquals($permissionData['display_name'], $permission->display_name);
+            $this->assertSame($permissionData['name'], $permission->name);
+            $this->assertSame($permissionData['display_name'], $permission->display_name);
         }
     }
 
@@ -76,7 +78,7 @@ class PermissionsTest extends ModelsTestCase
     {
         Permission::where('name', 'permission/fourth')->delete();
 
-        $this->assertEquals(0, Permission::where('name', 'permission/fourth')->count());
+        $this->assertSame(0, Permission::where('name', 'permission/fourth')->count());
     }
 
     public function testAttachingToUsers()
@@ -85,7 +87,7 @@ class PermissionsTest extends ModelsTestCase
 
         $user->attachPermission('permission/first');
 
-        $this->assertEquals(1, $user->permissions->where('name', 'permission/first')->count());
+        $this->assertSame(1, $user->permissions->where('name', 'permission/first')->count());
     }
 
     public function testDetachingFromUsers()
@@ -94,7 +96,7 @@ class PermissionsTest extends ModelsTestCase
 
         $user->detachPermission('permission/first');
 
-        $this->assertEquals(0, $user->permissions->where('name', 'permission/first')->count());
+        $this->assertSame(0, $user->permissions->where('name', 'permission/first')->count());
     }
 
     public function testHasPermissionWhenDoesNotHave()
@@ -127,7 +129,7 @@ class PermissionsTest extends ModelsTestCase
         $user = User::first();
         $user->detachPermission('permission/third');
 
-        $this->assertEquals(2, $user->permissions()->count());
+        $this->assertSame(2, $user->permissions()->count());
 
         $this->assertFalse($user->hasPermission('permission/*'));
         $this->assertFalse($user->hasPermission('permission/all'));
@@ -154,5 +156,10 @@ class PermissionsTest extends ModelsTestCase
         $user = User::first();
 
         $this->assertFalse($user->canRemovePermission());
+    }
+
+    /** TODO */
+    public function testHasPermissionThroughRole()
+    {
     }
 }

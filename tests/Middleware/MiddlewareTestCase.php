@@ -1,11 +1,24 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @license GNU General Public License, version 3
+ */
+
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 use Mockery as m;
 use Vegvisir\TrustNoSql\Tests\TestCase;
 
-class MiddlewareTestCase extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class MiddlewareTestCase extends TestCase
 {
     protected $request;
 
@@ -19,20 +32,20 @@ class MiddlewareTestCase extends TestCase
 
         $app['config']->set('auth', [
             'defaults' => [
-                'guard' => 'web'
+                'guard' => 'web',
             ],
             'guards' => [
                 'web' => [
                     'driver' => 'session',
-                    'provider' => 'users'
-                ]
+                    'provider' => 'users',
+                ],
             ],
             'providers' => [
                 'users' => [
                     'driver' => 'eloquent',
-                    'model' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User::class
-                ]
-            ]
+                    'model' => \Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User::class,
+                ],
+            ],
         ]);
 
         $app['config']->set('trustnosql.middleware', [
@@ -48,7 +61,7 @@ class MiddlewareTestCase extends TestCase
                         'content' => '',
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $this->request = m::mock('Illuminate\Http\Request');

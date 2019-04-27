@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -45,7 +45,7 @@ trait PipelineToExpressionParserTrait
 
         $entitiesPipeline = preg_replace($pattern, $replace, $entitiesPipeline);
 
-        if ($entityName !== 'role' || ($entityName === 'role' && false === Config::get('trustnosql.teams.use_teams'))) {
+        if ('role' !== $entityName || ('role' === $entityName && false === Config::get('trustnosql.teams.use_teams'))) {
             return $entitiesPipeline;
         }
 
@@ -57,18 +57,18 @@ trait PipelineToExpressionParserTrait
             $role = Role::where('name', $roleName)->first();
 
             $teams = collect($role->teams)->map(function ($item, $key) {
-                return 'team:' . $item->name;
+                return 'team:'.$item->name;
             })->toArray();
 
-            if (count($teams) > 1) {
-                $teamsExpression = '&(' . implode('|', $teams) . ')';
-            } elseif (count($teams) == 1) {
-                $teamsExpression = '&' . $teams[0];
+            if (\count($teams) > 1) {
+                $teamsExpression = '&('.implode('|', $teams).')';
+            } elseif (1 === \count($teams)) {
+                $teamsExpression = '&'.$teams[0];
             } else {
                 $teamsExpression = '';
             }
 
-            $entitiesPipeline = str_replace('role:' . $roleName, '(role:' . $roleName . "$teamsExpression)", $entitiesPipeline);
+            $entitiesPipeline = str_replace('role:'.$roleName, '(role:'.$roleName."${teamsExpression})", $entitiesPipeline);
         }
 
         return $entitiesPipeline;

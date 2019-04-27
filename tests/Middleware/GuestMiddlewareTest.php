@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TrustNoSql package.
+ * TrustNoSql provides comprehensive role/permission/team functionality
+ * for Laravel applications using MongoDB database.
+ *
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @license GNU General Public License, version 3
+ */
+
 namespace Vegvisir\TrustNoSql\Tests\Middleware;
 
 use Illuminate\Support\Facades\App;
@@ -9,20 +18,21 @@ use Mockery as m;
 use Vegvisir\TrustNoSql\Middleware\Permission as PermissionMiddleware;
 use Vegvisir\TrustNoSql\Middleware\Role as RoleMiddleware;
 use Vegvisir\TrustNoSql\Middleware\Team as TeamMiddleware;
-use Vegvisir\TrustNoSql\Models\Permission as Permission;
-use Vegvisir\TrustNoSql\Models\Role as Role;
-use Vegvisir\TrustNoSql\Models\Team as Team;
 
-class GuestMiddlewareTest extends MiddlewareTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class GuestMiddlewareTest extends MiddlewareTestCase
 {
-    public function testGuestPermission_ShouldAbort403()
+    public function testGuestPermissionShouldAbort403()
     {
         /*
         |------------------------------------------------------------
         | Set
         |------------------------------------------------------------
         */
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -38,15 +48,15 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/test'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/test', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'permission/test', 'web'));
     }
 
-    public function testGuestPermission_ShouldRedirectWithoutError()
+    public function testGuestPermissionShouldRedirectWithoutError()
     {
         /*
         |------------------------------------------------------------
@@ -56,7 +66,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.teams.use_teams', false);
         Config::set('trustnosql.middleware.handling', 'redirect');
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -88,7 +98,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'permission/first&manager', 'web'));
     }
 
-    public function testGuestPermission_ShouldRedirectWithError()
+    public function testGuestPermissionShouldRedirectWithError()
     {
         /*
         |------------------------------------------------------------
@@ -99,7 +109,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.middleware.handling', 'redirect');
         Config::set('trustnosql.middleware.handlers.redirect.message.content', 'The message was flashed');
 
-        $middleware = new PermissionMiddleware;
+        $middleware = new PermissionMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -131,10 +141,10 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'permission/first&manager', 'web'));
 
         $this->assertArrayHasKey('error', session()->all());
-        $this->assertEquals('The message was flashed', session()->get('error'));
+        $this->assertSame('The message was flashed', session()->get('error'));
     }
 
-    public function testGuestRole_ShouldAbort403()
+    public function testGuestRoleShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -143,7 +153,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -159,15 +169,15 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin', 'web'));
     }
 
-    public function testGuestRole_ShouldRedirectWithoutError()
+    public function testGuestRoleShouldRedirectWithoutError()
     {
         /*
         |------------------------------------------------------------
@@ -177,7 +187,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.teams.use_teams', false);
         Config::set('trustnosql.middleware.handling', 'redirect');
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -209,7 +219,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'admin&manager', 'web'));
     }
 
-    public function testGuestRole_ShouldRedirectWithError()
+    public function testGuestRoleShouldRedirectWithError()
     {
         /*
         |------------------------------------------------------------
@@ -220,7 +230,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.middleware.handling', 'redirect');
         Config::set('trustnosql.middleware.handlers.redirect.message.content', 'The message was flashed');
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -252,10 +262,10 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'admin&manager', 'web'));
 
         $this->assertArrayHasKey('error', session()->all());
-        $this->assertEquals('The message was flashed', session()->get('error'));
+        $this->assertSame('The message was flashed', session()->get('error'));
     }
 
-    public function testGuestTeam_TeamOff_ShouldBeOk()
+    public function testGuestTeamTeamOffShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -263,8 +273,8 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         Config::set('trustnosql.teams.use_teams', false);
-        
-        $middleware = new TeamMiddleware;
+
+        $middleware = new TeamMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -287,7 +297,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'team', 'web'));
     }
 
-    public function testGuestTeam_TeamOn_ShouldAbort403()
+    public function testGuestTeamTeamOnShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -295,8 +305,8 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         Config::set('trustnosql.teams.use_teams', true);
-        
-        $middleware = new TeamMiddleware;
+
+        $middleware = new TeamMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -312,15 +322,15 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'team'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'team', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'team', 'web'));
     }
 
-    public function testGuestTeam_TeamOn_ShouldRedirectWithoutError()
+    public function testGuestTeamTeamOnShouldRedirectWithoutError()
     {
         /*
         |------------------------------------------------------------
@@ -330,7 +340,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.teams.use_teams', true);
         Config::set('trustnosql.middleware.handling', 'redirect');
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -362,7 +372,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'team', 'web'));
     }
 
-    public function testGuestTeam_TeamOn_ShouldRedirectWithError()
+    public function testGuestTeamTeamOnShouldRedirectWithError()
     {
         /*
         |------------------------------------------------------------
@@ -373,7 +383,7 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         Config::set('trustnosql.middleware.handling', 'redirect');
         Config::set('trustnosql.middleware.handlers.redirect.message.content', 'The message was flashed');
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
 
         /*
         |------------------------------------------------------------
@@ -405,6 +415,6 @@ class GuestMiddlewareTest extends MiddlewareTestCase
         }, 'team', 'web'));
 
         $this->assertArrayHasKey('error', session()->all());
-        $this->assertEquals('The message was flashed', session()->get('error'));
+        $this->assertSame('The message was flashed', session()->get('error'));
     }
 }

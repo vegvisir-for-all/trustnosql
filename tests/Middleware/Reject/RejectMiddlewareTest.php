@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Mockery as m;
 use Vegvisir\TrustNoSql\Middleware\Reject as RejectMiddleware;
-use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
-class RejectMiddlewareTest extends MiddlewareTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class RejectMiddlewareTest extends MiddlewareTestCase
 {
-    public function testRejectMiddleware_TeamOff_ShouldAbort403()
+    public function testRejectMiddlewareTeamOffShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -29,22 +32,26 @@ class RejectMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RejectMiddleware;
+        $middleware = new RejectMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with(m::anyOf('permission/first', 'permission/second'))
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
         $user->shouldReceive('hasPermission')
             ->with(m::anyOf('permission/third', 'permission/fourth'))
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         $user->shouldReceive('hasRole')
             ->with(m::anyOf('first', 'second'))
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
         $user->shouldReceive('hasRole')
             ->with(m::anyOf('third', 'fourth'))
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -66,20 +73,20 @@ class RejectMiddlewareTest extends MiddlewareTestCase
             '(role:first&role:third)|(role:fourth|role:second)',
             '(role:first&permission:permission/first)|permission:permission/third',
             '(permission:permission/first|permission:permission/third)&role:first',
-            '(role:third&permission:permission/third)|(role:first&permission:permission/first)'
+            '(role:third&permission:permission/third)|(role:first&permission:permission/first)',
         ];
 
         foreach ($expressions as $expression) {
-            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            $this->assertSame(403, $middleware->handle($this->request, function () {
             }, $expression));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            $this->assertSame(403, $middleware->handle($this->request, function () {
             }, $expression, 'api'));
-            $this->assertEquals(403, $middleware->handle($this->request, function () {
+            $this->assertSame(403, $middleware->handle($this->request, function () {
             }, $expression, 'web'));
         }
     }
 
-    public function testTrustMiddleware_TeamOff_ShouldBeOk()
+    public function testTrustMiddlewareTeamOffShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -88,22 +95,26 @@ class RejectMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RejectMiddleware;
+        $middleware = new RejectMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasPermission')
             ->with(m::anyOf('permission/first', 'permission/second'))
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
         $user->shouldReceive('hasPermission')
             ->with(m::anyOf('permission/third', 'permission/fourth'))
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         $user->shouldReceive('hasRole')
             ->with(m::anyOf('first', 'second'))
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
         $user->shouldReceive('hasRole')
             ->with(m::anyOf('third', 'fourth'))
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -125,7 +136,7 @@ class RejectMiddlewareTest extends MiddlewareTestCase
             '(role:first&role:third)|role:fourth',
             '(role:third|permission:permission/first)&permission:permission/third',
             '(permission:permission/first|permission:permission/third)&role:fourth',
-            '(role:third&permission:permission/third)|(role:fourth&permission:permission/first)'
+            '(role:third&permission:permission/third)|(role:fourth&permission:permission/first)',
         ];
 
         foreach ($expressions as $expression) {

@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -87,8 +87,8 @@ class BaseChecker
     protected function currentModelHasEntities($entitiesModel, $entitiesList, $requireAll)
     {
         if (!\is_object($entitiesModel)) {
-            if ($entitiesModel == 'User') {
-                $className = "\\" . Config::get('trustnosql.user_models.users');
+            if ('User' === $entitiesModel) {
+                $className = '\\'.Config::get('trustnosql.user_models.users');
             } else {
                 $className = "\\Vegvisir\\TrustNoSql\\Models\\${entitiesModel}";
             }
@@ -150,6 +150,15 @@ class BaseChecker
             }
         }
 
+        if (Helper::isUser($this->model) && Helper::isPermission($entityModel)) {
+            // Checking for permissions for user roles
+            foreach ($this->model->roles() as $role) {
+                if ($role->hasPermission($entityName)) {
+                    return true;
+                }
+            }
+        }
+
         return $hasEntity;
     }
 
@@ -176,10 +185,9 @@ class BaseChecker
         /**
          * Current permissions for a role, with a given namespace.
          */
+        $modelName = \get_class($this->model);
 
-        $modelName = get_class($this->model);
-
-        if (\is_a($modelName, Config::get('trustnosql.user_models.users'), true)) {
+        if (is_a($modelName, Config::get('trustnosql.user_models.users'), true)) {
             $modelName = 'User';
         }
 
@@ -190,6 +198,18 @@ class BaseChecker
          * the array_diff function to check for differences. If there are none, the return array of
          * array_diff should be empty.
          */
-        return empty(array_diff($availablePermissions, $modelPermissions));
+        if ((bool) empty(array_diff($availablePermissions, $modelPermissions))) {
+            return true;
+        }
+
+        if (Helper::isUser($this->model)) {
+            foreach ($this->model->roles() as $role) {
+                if ($role->hasPermission($permission)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

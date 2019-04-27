@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -36,6 +36,29 @@ class RoleHelper extends HelperProxy
     }
 
     /**
+     * Checks whether given role name can be used (i.e. if the name
+     * doesn't exist.
+     *
+     * @param string $name Name of the role
+     *
+     * @return bool
+     */
+    public static function checkRoleName($name)
+    {
+        if (null !== Role::where('name', $name)->first()) {
+            // Role with that name already exists
+            return false;
+        }
+        $pattern = '/(^[\p{L}0-9-_]*+)$/mu';
+        if (1 !== preg_match($pattern, $name)) {
+            // Wrong pattern for name
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Gets an array of roles' keys (_ids).
      *
      * @param array|string $roles Comma-separated values or array
@@ -63,26 +86,5 @@ class RoleHelper extends HelperProxy
     protected static function isOne($object)
     {
         return is_a(\get_class($object), \get_class(new Role()), true);
-    }
-
-    /**
-     * Checks whether given role name can be used (i.e. if the name
-     * doesn't exist.
-     *
-     * @param string $name Name of the role
-     * @return bool
-     */
-    public static function checkRoleName($name)
-    {
-        if (null !== Role::where('name', $name)->first()) {
-            // Role with that name already exists
-            return false;
-        }
-        $pattern = '/(^[\p{L}0-9-_]*+)$/mu';
-        if (1 !== preg_match($pattern, $name)) {
-            // Wrong pattern for name
-            return false;
-        }
-        return true;
     }
 }

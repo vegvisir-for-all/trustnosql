@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -13,11 +13,10 @@ namespace Vegvisir\TrustNoSql\Traits\Aliases;
 
 trait ModelAliasesTrait
 {
-
     /**
-     * Alias for hasPermission
+     * Alias for hasPermission.
      *
-     * @param string $permissionName Permission name.
+     * @param string $permissionName permission name
      *
      * @return bool
      */
@@ -27,9 +26,9 @@ trait ModelAliasesTrait
     }
 
     /**
-     * Alias for hasRole
+     * Alias for hasRole.
      *
-     * @param string $roleName Role name.
+     * @param string $roleName role name
      *
      * @return bool
      */
@@ -39,9 +38,9 @@ trait ModelAliasesTrait
     }
 
     /**
-     * Alias for hasRole
+     * Alias for hasRole.
      *
-     * @param string $roleName Role name.
+     * @param string $roleName role name
      *
      * @return bool
      */
@@ -51,9 +50,9 @@ trait ModelAliasesTrait
     }
 
     /**
-     * Alias for hasTeam
+     * Alias for hasTeam.
      *
-     * @param string $teamName Team name.
+     * @param string $teamName team name
      *
      * @return bool
      */

@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Mockery as m;
 use Vegvisir\TrustNoSql\Middleware\Team as TeamMiddleware;
-use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
-class TeamMiddlewareTest extends MiddlewareTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class TeamMiddlewareTest extends MiddlewareTestCase
 {
-    public function testTeamsConjunction_ShouldAbort403()
+    public function testTeamsConjunctionShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -29,16 +32,18 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', true);
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasTeam')
             ->with('first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasTeam')
             ->with('second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -55,15 +60,15 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first&second'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first&second', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first&second', 'web'));
     }
 
-    public function testTeamsConjunction_ShouldBeOk()
+    public function testTeamsConjunctionShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -72,16 +77,18 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', true);
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasTeam')
             ->with('first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasTeam')
             ->with('second')
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -106,7 +113,7 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         }, 'first&second', 'web'));
     }
 
-    public function testTeamsDisjunction_ShouldAbort403()
+    public function testTeamsDisjunctionShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -115,16 +122,18 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', true);
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasTeam')
             ->with('first')
-            ->andReturn(false);
-        
+            ->andReturn(false)
+        ;
+
         $user->shouldReceive('hasTeam')
             ->with('second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -141,15 +150,15 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first|second'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first|second', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'first|second', 'web'));
     }
 
-    public function testTeamsDisjunction_ShouldBeOk()
+    public function testTeamsDisjunctionShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -158,16 +167,18 @@ class TeamMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', true);
 
-        $middleware = new TeamMiddleware;
+        $middleware = new TeamMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasTeam')
             ->with('first')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasTeam')
             ->with('second')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------

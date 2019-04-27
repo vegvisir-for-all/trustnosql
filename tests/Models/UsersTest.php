@@ -5,36 +5,37 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
 namespace Vegvisir\TrustNoSql\Tests\Models;
 
-use Illuminate\Support\Facades\Config;
-use Vegvisir\TrustNoSql\Helper;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Permission;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
 
-class UsersTest extends ModelsTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class UsersTest extends ModelsTestCase
 {
     public function testCount()
     {
-        $this->assertEquals(5, User::count());
+        $this->assertSame(5, User::count());
     }
 
     /**
-     * ATTACHING TO PERMISSIONS
+     * ATTACHING TO PERMISSIONS.
      */
-
     public function testAttachingToPermissionsSingle()
     {
         $user = User::first();
         $permission = Permission::where('name', 'permission/first')->first();
         $permission->attachUser($user->email);
-        $this->assertEquals(1, $permission->users()->where('email', $user->email)->count());
+        $this->assertSame(1, $permission->users()->where('email', $user->email)->count());
     }
 
     public function testAttachingToPermissionsMultiple()
@@ -42,8 +43,8 @@ class UsersTest extends ModelsTestCase
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
         $permission = Permission::where('name', 'permission/first')->first();
-        $permission->attachUser($second->email . ',' . $third->email);
-        $this->assertEquals(3, $permission->users()->count());
+        $permission->attachUser($second->email.','.$third->email);
+        $this->assertSame(3, $permission->users()->count());
     }
 
     public function testDetachingFromPermissionsSingle()
@@ -51,7 +52,7 @@ class UsersTest extends ModelsTestCase
         $permission = Permission::where('name', 'permission/first')->first();
         $first = User::first();
         $permission->detachUser($first->email);
-        $this->assertEquals(0, $permission->users()->where('email', $first->email)->count());
+        $this->assertSame(0, $permission->users()->where('email', $first->email)->count());
     }
 
     public function testDetachingFromPermissionsMultiple()
@@ -59,8 +60,8 @@ class UsersTest extends ModelsTestCase
         $permission = Permission::where('name', 'permission/first')->first();
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
-        $permission->detachUser($second->email . ',' . $third->email);
-        $this->assertEquals(0, $permission->users()->count());
+        $permission->detachUser($second->email.','.$third->email);
+        $this->assertSame(0, $permission->users()->count());
     }
 
     public function testPermissionHasUserSinglePermissionSingleUser()
@@ -86,15 +87,14 @@ class UsersTest extends ModelsTestCase
     }
 
     /**
-     * ATTACHING TO ROLES
+     * ATTACHING TO ROLES.
      */
-
     public function testAttachingToRolesSingle()
     {
         $user = User::first();
         $role = Role::where('name', 'role-first')->first();
         $role->attachUser($user->email);
-        $this->assertEquals(1, $role->users()->where('email', $user->email)->count());
+        $this->assertSame(1, $role->users()->where('email', $user->email)->count());
     }
 
     public function testAttachingToRolesMultiple()
@@ -102,8 +102,8 @@ class UsersTest extends ModelsTestCase
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
         $role = Role::where('name', 'role-first')->first();
-        $role->attachUser($second->email . ',' . $third->email);
-        $this->assertEquals(3, $role->users()->count());
+        $role->attachUser($second->email.','.$third->email);
+        $this->assertSame(3, $role->users()->count());
     }
 
     public function testDetachingFromRolesSingle()
@@ -111,7 +111,7 @@ class UsersTest extends ModelsTestCase
         $role = Role::where('name', 'role-first')->first();
         $first = User::first();
         $role->detachUser($first->email);
-        $this->assertEquals(0, $role->users()->where('email', $first->email)->count());
+        $this->assertSame(0, $role->users()->where('email', $first->email)->count());
     }
 
     public function testDetachingFromRolesMultiple()
@@ -119,8 +119,8 @@ class UsersTest extends ModelsTestCase
         $role = Role::where('name', 'role-first')->first();
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
-        $role->detachUser($second->email . ',' . $third->email);
-        $this->assertEquals(0, $role->users()->count());
+        $role->detachUser($second->email.','.$third->email);
+        $this->assertSame(0, $role->users()->count());
     }
 
     public function testRoleHasUserSingleRoleSingleUser()
@@ -146,15 +146,14 @@ class UsersTest extends ModelsTestCase
     }
 
     /**
-     * ATTACHING TO TEAMS
+     * ATTACHING TO TEAMS.
      */
-
     public function testAttachingToTeamsSingle()
     {
         $user = User::first();
         $team = Team::where('name', 'team-first')->first();
         $team->attachUser($user->email);
-        $this->assertEquals(1, $team->users()->where('email', $user->email)->count());
+        $this->assertSame(1, $team->users()->where('email', $user->email)->count());
     }
 
     public function testAttachingToTeamsMultiple()
@@ -162,8 +161,8 @@ class UsersTest extends ModelsTestCase
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
         $team = Team::where('name', 'team-first')->first();
-        $team->attachUser($second->email . ',' . $third->email);
-        $this->assertEquals(3, $team->users()->count());
+        $team->attachUser($second->email.','.$third->email);
+        $this->assertSame(3, $team->users()->count());
     }
 
     public function testDetachingFromTeamsSingle()
@@ -171,7 +170,7 @@ class UsersTest extends ModelsTestCase
         $team = Team::where('name', 'team-first')->first();
         $first = User::first();
         $team->detachUser($first->email);
-        $this->assertEquals(0, $team->users()->where('email', $first->email)->count());
+        $this->assertSame(0, $team->users()->where('email', $first->email)->count());
     }
 
     public function testDetachingFromTeamsMultiple()
@@ -179,8 +178,8 @@ class UsersTest extends ModelsTestCase
         $team = Team::where('name', 'team-first')->first();
         $second = User::skip(1)->first();
         $third = User::skip(2)->first();
-        $team->detachUser($second->email . ',' . $third->email);
-        $this->assertEquals(0, $team->users()->count());
+        $team->detachUser($second->email.','.$third->email);
+        $this->assertSame(0, $team->users()->count());
     }
 
     public function testTeamHasUserSingleTeamSingleUser()

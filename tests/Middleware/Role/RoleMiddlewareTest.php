@@ -5,7 +5,7 @@
  * TrustNoSql provides comprehensive role/permission/team functionality
  * for Laravel applications using MongoDB database.
  *
- * @copyright 2018 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
+ * @copyright 2018-19 Vegvisir Sp. z o.o. <vegvisir.for.all@gmail.com>
  * @license GNU General Public License, version 3
  */
 
@@ -19,11 +19,14 @@ use Vegvisir\TrustNoSql\Middleware\Role as RoleMiddleware;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Role;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\Team;
 use Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User;
-use Vegvisir\TrustNoSql\Tests\Middleware\MiddlewareTestCase;
 
-class RoleMiddlewareTest extends MiddlewareTestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class RoleMiddlewareTest extends MiddlewareTestCase
 {
-    public function testRolesConjunction_TeamOff_ShouldAbort403()
+    public function testRolesConjunctionTeamOffShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -32,16 +35,18 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
             ->with('admin')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasRole')
             ->with('superadmin')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -58,15 +63,15 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin&superadmin'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin&superadmin', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin&superadmin', 'web'));
     }
 
-    public function testRolesConjunction_TeamOff_ShouldBeOk()
+    public function testRolesConjunctionTeamOffShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -75,16 +80,18 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
             ->with('admin')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasRole')
             ->with('superadmin')
-            ->andReturn(true);
+            ->andReturn(true)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -109,7 +116,7 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         }, 'admin&superadmin', 'web'));
     }
 
-    public function testRolesDisjunction_Team_Off_ShouldAbort403()
+    public function testRolesDisjunctionTeamOffShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -118,16 +125,18 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
             ->with('admin')
-            ->andReturn(false);
-        
+            ->andReturn(false)
+        ;
+
         $user->shouldReceive('hasRole')
             ->with('superadmin')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -144,15 +153,15 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|superadmin'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|superadmin', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|superadmin', 'web'));
     }
 
-    public function testRolesDisjunction_teamOff_ShouldBeOk()
+    public function testRolesDisjunctionTeamOffShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -161,16 +170,18 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         */
         Config::set('trustnosql.teams.use_teams', false);
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
         $user = m::mock('Vegvisir\TrustNoSql\Tests\Infrastructure\Models\User')->makePartial();
 
         $user->shouldReceive('hasRole')
             ->with('admin')
-            ->andReturn(true);
-        
+            ->andReturn(true)
+        ;
+
         $user->shouldReceive('hasRole')
             ->with('superadmin')
-            ->andReturn(false);
+            ->andReturn(false)
+        ;
 
         /*
         |------------------------------------------------------------
@@ -195,7 +206,7 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         }, 'admin|superadmin', 'web'));
     }
 
-    public function testRoles_TeamOn_ShouldAbort403()
+    public function testRolesTeamOnShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -209,7 +220,7 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $team = Team::create(['name' => 'team']);
         $user = User::where(1)->first();
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
 
         $user->attachRoles('admin,manager');
         $admin->attachTeams('team');
@@ -230,15 +241,15 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|manager'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|manager', 'api'));
-        $this->assertEquals(403, $middleware->handle($this->request, function () {
+        $this->assertSame(403, $middleware->handle($this->request, function () {
         }, 'admin|manager', 'web'));
     }
 
-    public function testRoles_TeamOn_ShouldBeOk()
+    public function testRolesTeamOnShouldBeOk()
     {
         /*
         |------------------------------------------------------------
@@ -250,13 +261,12 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $admin = Role::where('name', 'admin')->first();
         $manager = Role::where('name', 'manager')->first();
 
-        $middleware = new RoleMiddleware;
+        $middleware = new RoleMiddleware();
 
         $user->attachRoles('admin,manager');
         $user->attachTeams('team');
         $admin->attachTeams('team');
         $manager->attachTeams('team');
-
 
         /*
         |------------------------------------------------------------
@@ -266,7 +276,6 @@ class RoleMiddlewareTest extends MiddlewareTestCase
         $this->guard->shouldReceive('guest')->andReturn(false);
         Auth::shouldReceive('guard')->with(m::anyOf('api', 'web'))->andReturn($this->guard);
         $this->guard->shouldReceive('user')->andReturn($user);
-
 
         /*
         |------------------------------------------------------------
