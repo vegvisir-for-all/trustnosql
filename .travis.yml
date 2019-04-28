@@ -17,10 +17,9 @@ install:
   - docker-compose build --build-arg PHP_VERSION=${TRAVIS_PHP_VERSION}
 
 script:
-  - mkdir -p build/logs
   - docker-compose up --exit-code-from php
 
 after_script:
-  - mv build/logs/coverage.xml build/logs/coverage.xml.bak
-  - sed 's#/code/##g' build/logs/coverage.xml.bak > build/logs/coverage.xml
+  - mv coverage.xml coverage.xml.bak
+  - sed 's#/code/##g' coverage.xml.bak > coverage.xml
   - php vendor/bin/php-coveralls -v
